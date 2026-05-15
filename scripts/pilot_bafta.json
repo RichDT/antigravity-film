@@ -1,0 +1,1619 @@
+[
+  {
+    "name": "Best Film",
+    "nominations": [
+      {
+        "filmTitle": "The Aviator",
+        "filmUrl": "/wiki/The_Aviator_(2004_film)",
+        "people": [
+          {
+            "name": "Michael Mann",
+            "url": "/wiki/Michael_Mann"
+          },
+          {
+            "name": "Sandy Climan",
+            "url": "/wiki/Sandy_Climan"
+          },
+          {
+            "name": "Graham King",
+            "url": "/wiki/Graham_King"
+          },
+          {
+            "name": "Charles Evans Jr.",
+            "url": "/wiki/Charles_Evans_Jr."
+          }
+        ],
+        "isWinner": true,
+        "role": null
+      },
+      {
+        "filmTitle": "Eternal Sunshine of the Spotless Mind",
+        "filmUrl": "/wiki/Eternal_Sunshine_of_the_Spotless_Mind",
+        "people": [
+          {
+            "name": "Steve Golin",
+            "url": "/wiki/Steve_Golin"
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      },
+      {
+        "filmTitle": "Finding Neverland",
+        "filmUrl": "/wiki/Finding_Neverland_(film)",
+        "people": [
+          {
+            "name": "Richard N. Gladstein",
+            "url": "/wiki/Richard_N._Gladstein"
+          },
+          {
+            "name": "Nellie Bellflower",
+            "url": "/wiki/Nellie_Bellflower"
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      },
+      {
+        "filmTitle": "The Motorcycle Diaries",
+        "filmUrl": "/wiki/The_Motorcycle_Diaries_(film)",
+        "people": [
+          {
+            "name": "Michael Nozik",
+            "url": "/wiki/Michael_Nozik"
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      },
+      {
+        "filmTitle": "Vera Drake",
+        "filmUrl": "/wiki/Vera_Drake",
+        "people": [
+          {
+            "name": "Simon Channing Williams",
+            "url": "/wiki/Simon_Channing_Williams"
+          },
+          {
+            "name": "Alain Sarde",
+            "url": "/wiki/Alain_Sarde"
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      }
+    ]
+  },
+  {
+    "name": "Best Direction",
+    "nominations": [
+      {
+        "filmTitle": "Vera Drake",
+        "filmUrl": "/wiki/Vera_Drake",
+        "people": [
+          {
+            "name": "Mike Leigh",
+            "url": "/wiki/Mike_Leigh"
+          }
+        ],
+        "isWinner": true,
+        "role": null
+      },
+      {
+        "filmTitle": "Finding Neverland",
+        "filmUrl": "/wiki/Finding_Neverland_(film)",
+        "people": [
+          {
+            "name": "Marc Forster",
+            "url": "/wiki/Marc_Forster"
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      },
+      {
+        "filmTitle": "The Aviator",
+        "filmUrl": "/wiki/The_Aviator_(2004_film)",
+        "people": [
+          {
+            "name": "Martin Scorsese",
+            "url": "/wiki/Martin_Scorsese"
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      },
+      {
+        "filmTitle": "Collateral",
+        "filmUrl": "/wiki/Collateral_(film)",
+        "people": [
+          {
+            "name": "Michael Mann",
+            "url": "/wiki/Michael_Mann"
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      },
+      {
+        "filmTitle": "Eternal Sunshine of the Spotless Mind",
+        "filmUrl": "/wiki/Eternal_Sunshine_of_the_Spotless_Mind",
+        "people": [
+          {
+            "name": "Michel Gondry",
+            "url": "/wiki/Michel_Gondry"
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      }
+    ]
+  },
+  {
+    "name": "Best Actor in a Leading Role",
+    "nominations": [
+      {
+        "filmTitle": "Ray",
+        "filmUrl": "/wiki/Ray_(film)",
+        "people": [
+          {
+            "name": "Jamie Foxx",
+            "url": "/wiki/Jamie_Foxx"
+          },
+          {
+            "name": "Ray Charles",
+            "url": "/wiki/Ray_Charles"
+          }
+        ],
+        "isWinner": true,
+        "role": "Ray Charles"
+      },
+      {
+        "filmTitle": "Eternal Sunshine of the Spotless Mind",
+        "filmUrl": "/wiki/Eternal_Sunshine_of_the_Spotless_Mind",
+        "people": [
+          {
+            "name": "Jim Carrey",
+            "url": "/wiki/Jim_Carrey"
+          }
+        ],
+        "isWinner": false,
+        "role": "Joel Barish"
+      },
+      {
+        "filmTitle": "Finding Neverland",
+        "filmUrl": "/wiki/Finding_Neverland_(film)",
+        "people": [
+          {
+            "name": "Johnny Depp",
+            "url": "/wiki/Johnny_Depp"
+          },
+          {
+            "name": "J. M. Barrie",
+            "url": "/wiki/J._M._Barrie"
+          }
+        ],
+        "isWinner": false,
+        "role": "J. M. Barrie"
+      },
+      {
+        "filmTitle": "The Aviator",
+        "filmUrl": "/wiki/The_Aviator_(2004_film)",
+        "people": [
+          {
+            "name": "Leonardo DiCaprio",
+            "url": "/wiki/Leonardo_DiCaprio"
+          },
+          {
+            "name": "Howard Hughes",
+            "url": "/wiki/Howard_Hughes"
+          }
+        ],
+        "isWinner": false,
+        "role": "Howard Hughes"
+      },
+      {
+        "filmTitle": "The Motorcycle Diaries",
+        "filmUrl": "/wiki/The_Motorcycle_Diaries_(film)",
+        "people": [
+          {
+            "name": "Gael García Bernal",
+            "url": "/wiki/Gael_Garc%C3%ADa_Bernal"
+          },
+          {
+            "name": "Che Guevara",
+            "url": "/wiki/Che_Guevara"
+          }
+        ],
+        "isWinner": false,
+        "role": "Che Guevara"
+      }
+    ]
+  },
+  {
+    "name": "Best Actress in a Leading Role",
+    "nominations": [
+      {
+        "filmTitle": "Vera Drake",
+        "filmUrl": "/wiki/Vera_Drake",
+        "people": [
+          {
+            "name": "Imelda Staunton",
+            "url": "/wiki/Imelda_Staunton"
+          }
+        ],
+        "isWinner": true,
+        "role": "Vera Drake"
+      },
+      {
+        "filmTitle": "Monster",
+        "filmUrl": "/wiki/Monster_(2003_film)",
+        "people": [
+          {
+            "name": "Charlize Theron",
+            "url": "/wiki/Charlize_Theron"
+          },
+          {
+            "name": "Aileen Wuornos",
+            "url": "/wiki/Aileen_Wuornos"
+          }
+        ],
+        "isWinner": false,
+        "role": "Aileen Wuornos"
+      },
+      {
+        "filmTitle": "Eternal Sunshine of the Spotless Mind",
+        "filmUrl": "/wiki/Eternal_Sunshine_of_the_Spotless_Mind",
+        "people": [
+          {
+            "name": "Kate Winslet",
+            "url": "/wiki/Kate_Winslet"
+          }
+        ],
+        "isWinner": false,
+        "role": "Clementine Kruczynski"
+      },
+      {
+        "filmTitle": "Finding Neverland",
+        "filmUrl": "/wiki/Finding_Neverland_(film)",
+        "people": [
+          {
+            "name": "Kate Winslet",
+            "url": "/wiki/Kate_Winslet"
+          },
+          {
+            "name": "Sylvia Llewelyn Davies",
+            "url": "/wiki/Sylvia_Llewelyn_Davies"
+          }
+        ],
+        "isWinner": false,
+        "role": "Sylvia Llewelyn Davies"
+      },
+      {
+        "filmTitle": "House of Flying Daggers",
+        "filmUrl": "/wiki/House_of_Flying_Daggers",
+        "people": [
+          {
+            "name": "Zhang Ziyi",
+            "url": "/wiki/Zhang_Ziyi"
+          }
+        ],
+        "isWinner": false,
+        "role": "Mei"
+      }
+    ]
+  },
+  {
+    "name": "Best Actor in a Supporting Role",
+    "nominations": [
+      {
+        "filmTitle": "Closer",
+        "filmUrl": "/wiki/Closer_(2004_film)",
+        "people": [
+          {
+            "name": "Clive Owen",
+            "url": "/wiki/Clive_Owen"
+          }
+        ],
+        "isWinner": true,
+        "role": "Larry Gray"
+      },
+      {
+        "filmTitle": "The Aviator",
+        "filmUrl": "/wiki/The_Aviator_(2004_film)",
+        "people": [
+          {
+            "name": "Alan Alda",
+            "url": "/wiki/Alan_Alda"
+          },
+          {
+            "name": "Owen Brewster",
+            "url": "/wiki/Owen_Brewster"
+          }
+        ],
+        "isWinner": false,
+        "role": "Owen Brewster"
+      },
+      {
+        "filmTitle": "Collateral",
+        "filmUrl": "/wiki/Collateral_(film)",
+        "people": [
+          {
+            "name": "Jamie Foxx",
+            "url": "/wiki/Jamie_Foxx"
+          }
+        ],
+        "isWinner": false,
+        "role": "Max Durocher"
+      },
+      {
+        "filmTitle": "Vera Drake",
+        "filmUrl": "/wiki/Vera_Drake",
+        "people": [
+          {
+            "name": "Phil Davis",
+            "url": "/wiki/Phil_Davis_(actor)"
+          }
+        ],
+        "isWinner": false,
+        "role": "Stanley Drake"
+      },
+      {
+        "filmTitle": "The Motorcycle Diaries",
+        "filmUrl": "/wiki/The_Motorcycle_Diaries_(film)",
+        "people": [
+          {
+            "name": "Rodrigo de la Serna",
+            "url": "/wiki/Rodrigo_de_la_Serna"
+          },
+          {
+            "name": "Alberto Granado",
+            "url": "/wiki/Alberto_Granado"
+          }
+        ],
+        "isWinner": false,
+        "role": "Alberto Granado"
+      }
+    ]
+  },
+  {
+    "name": "Best Actress in a Supporting Role",
+    "nominations": [
+      {
+        "filmTitle": "The Aviator",
+        "filmUrl": "/wiki/The_Aviator_(2004_film)",
+        "people": [
+          {
+            "name": "Cate Blanchett",
+            "url": "/wiki/Cate_Blanchett"
+          },
+          {
+            "name": "Katharine Hepburn",
+            "url": "/wiki/Katharine_Hepburn"
+          }
+        ],
+        "isWinner": true,
+        "role": "Katharine Hepburn"
+      },
+      {
+        "filmTitle": "Vera Drake",
+        "filmUrl": "/wiki/Vera_Drake",
+        "people": [
+          {
+            "name": "Heather Craney",
+            "url": "/wiki/Heather_Craney"
+          }
+        ],
+        "isWinner": false,
+        "role": "Joyce Drake"
+      },
+      {
+        "filmTitle": "Finding Neverland",
+        "filmUrl": "/wiki/Finding_Neverland_(film)",
+        "people": [
+          {
+            "name": "Julie Christie",
+            "url": "/wiki/Julie_Christie"
+          }
+        ],
+        "isWinner": false,
+        "role": "Emma du Maurier"
+      },
+      {
+        "filmTitle": "The Manchurian Candidate",
+        "filmUrl": "/wiki/The_Manchurian_Candidate_(2004_film)",
+        "people": [
+          {
+            "name": "Meryl Streep",
+            "url": "/wiki/Meryl_Streep"
+          }
+        ],
+        "isWinner": false,
+        "role": "Eleanor Prentiss Shaw"
+      },
+      {
+        "filmTitle": "Closer",
+        "filmUrl": "/wiki/Closer_(2004_film)",
+        "people": [
+          {
+            "name": "Natalie Portman",
+            "url": "/wiki/Natalie_Portman"
+          }
+        ],
+        "isWinner": false,
+        "role": "Alice Ayres / Jane Jones"
+      }
+    ]
+  },
+  {
+    "name": "Best Original Screenplay",
+    "nominations": [
+      {
+        "filmTitle": "Eternal Sunshine of the Spotless Mind",
+        "filmUrl": "/wiki/Eternal_Sunshine_of_the_Spotless_Mind",
+        "people": [
+          {
+            "name": "Charlie Kaufman",
+            "url": "/wiki/Charlie_Kaufman"
+          }
+        ],
+        "isWinner": true,
+        "role": null
+      },
+      {
+        "filmTitle": "The Aviator",
+        "filmUrl": "/wiki/The_Aviator_(2004_film)",
+        "people": [
+          {
+            "name": "John Logan",
+            "url": "/wiki/John_Logan_(writer)"
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      },
+      {
+        "filmTitle": "Collateral",
+        "filmUrl": "/wiki/Collateral_(film)",
+        "people": [
+          {
+            "name": "Stuart Beattie",
+            "url": "/wiki/Stuart_Beattie"
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      },
+      {
+        "filmTitle": "Ray",
+        "filmUrl": "/wiki/Ray_(film)",
+        "people": [
+          {
+            "name": "James L. White",
+            "url": "/wiki/James_L._White_(screenwriter)"
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      },
+      {
+        "filmTitle": "Vera Drake",
+        "filmUrl": "/wiki/Vera_Drake",
+        "people": [
+          {
+            "name": "Mike Leigh",
+            "url": "/wiki/Mike_Leigh"
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      }
+    ]
+  },
+  {
+    "name": "Best Adapted Screenplay",
+    "nominations": [
+      {
+        "filmTitle": "Sideways",
+        "filmUrl": "/wiki/Sideways",
+        "people": [
+          {
+            "name": "Alexander Payne",
+            "url": "/wiki/Alexander_Payne"
+          },
+          {
+            "name": "Jim Taylor",
+            "url": "/wiki/Jim_Taylor_(writer)"
+          }
+        ],
+        "isWinner": true,
+        "role": null
+      },
+      {
+        "filmTitle": "The Chorus",
+        "filmUrl": "/wiki/The_Chorus_(2004_film)",
+        "people": [
+          {
+            "name": "Christophe Barratier",
+            "url": "/wiki/Christophe_Barratier"
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      },
+      {
+        "filmTitle": "Closer",
+        "filmUrl": "/wiki/Closer_(2004_film)",
+        "people": [
+          {
+            "name": "Patrick Marber",
+            "url": "/wiki/Patrick_Marber"
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      },
+      {
+        "filmTitle": "Finding Neverland",
+        "filmUrl": "/wiki/Finding_Neverland_(film)",
+        "people": [
+          {
+            "name": "David Magee",
+            "url": "/wiki/David_Magee"
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      },
+      {
+        "filmTitle": "The Motorcycle Diaries",
+        "filmUrl": "/wiki/The_Motorcycle_Diaries_(film)",
+        "people": [
+          {
+            "name": "José Rivera",
+            "url": "/wiki/Jos%C3%A9_Rivera_(playwright)"
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      }
+    ]
+  },
+  {
+    "name": "Best Cinematography",
+    "nominations": [
+      {
+        "filmTitle": "Collateral",
+        "filmUrl": "/wiki/Collateral_(film)",
+        "people": [
+          {
+            "name": "Dion Beebe",
+            "url": "/wiki/Dion_Beebe"
+          },
+          {
+            "name": "Paul Cameron",
+            "url": "/wiki/Paul_Cameron_(cinematographer)"
+          }
+        ],
+        "isWinner": true,
+        "role": null
+      },
+      {
+        "filmTitle": "The Aviator",
+        "filmUrl": "/wiki/The_Aviator_(2004_film)",
+        "people": [
+          {
+            "name": "Robert Richardson",
+            "url": "/wiki/Robert_Richardson_(cinematographer)"
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      },
+      {
+        "filmTitle": "Finding Neverland",
+        "filmUrl": "/wiki/Finding_Neverland_(film)",
+        "people": [
+          {
+            "name": "Roberto Schaefer",
+            "url": "/wiki/Roberto_Schaefer"
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      },
+      {
+        "filmTitle": "House of Flying Daggers",
+        "filmUrl": "/wiki/House_of_Flying_Daggers",
+        "people": [
+          {
+            "name": "Zhao Xiaoding",
+            "url": "/wiki/Zhao_Xiaoding"
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      },
+      {
+        "filmTitle": "The Motorcycle Diaries",
+        "filmUrl": "/wiki/The_Motorcycle_Diaries_(film)",
+        "people": [
+          {
+            "name": "Éric Gautier",
+            "url": "/wiki/%C3%89ric_Gautier"
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      }
+    ]
+  },
+  {
+    "name": "Best Costume Design",
+    "nominations": [
+      {
+        "filmTitle": "Vera Drake",
+        "filmUrl": "/wiki/Vera_Drake",
+        "people": [
+          {
+            "name": "Jacqueline Durran",
+            "url": "/wiki/Jacqueline_Durran"
+          }
+        ],
+        "isWinner": true,
+        "role": null
+      },
+      {
+        "filmTitle": "The Aviator",
+        "filmUrl": "/wiki/The_Aviator_(2004_film)",
+        "people": [
+          {
+            "name": "Sandy Powell",
+            "url": "/wiki/Sandy_Powell_(costume_designer)"
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      },
+      {
+        "filmTitle": "Finding Neverland",
+        "filmUrl": "/wiki/Finding_Neverland_(film)",
+        "people": [
+          {
+            "name": "Alexandra Byrne",
+            "url": "/wiki/Alexandra_Byrne"
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      },
+      {
+        "filmTitle": "House of Flying Daggers",
+        "filmUrl": "/wiki/House_of_Flying_Daggers",
+        "people": [
+          {
+            "name": "Emi Wada",
+            "url": "/wiki/Emi_Wada"
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      },
+      {
+        "filmTitle": "The Merchant of Venice",
+        "filmUrl": "/wiki/The_Merchant_of_Venice_(2004_film)",
+        "people": [
+          {
+            "name": "Sammy Sheldon",
+            "url": null
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      }
+    ]
+  },
+  {
+    "name": "Best Editing",
+    "nominations": [
+      {
+        "filmTitle": "Eternal Sunshine of the Spotless Mind",
+        "filmUrl": "/wiki/Eternal_Sunshine_of_the_Spotless_Mind",
+        "people": [
+          {
+            "name": "Valdís Óskarsdóttir",
+            "url": "/wiki/Vald%C3%ADs_%C3%93skarsd%C3%B3ttir"
+          }
+        ],
+        "isWinner": true,
+        "role": null
+      },
+      {
+        "filmTitle": "The Aviator",
+        "filmUrl": "/wiki/The_Aviator_(2004_film)",
+        "people": [
+          {
+            "name": "Thelma Schoonmaker",
+            "url": "/wiki/Thelma_Schoonmaker"
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      },
+      {
+        "filmTitle": "Collateral",
+        "filmUrl": "/wiki/Collateral_(film)",
+        "people": [
+          {
+            "name": "Jim Miller",
+            "url": "/wiki/Jim_Miller_(film_editor)"
+          },
+          {
+            "name": "Paul Rubell",
+            "url": "/wiki/Paul_Rubell"
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      },
+      {
+        "filmTitle": "House of Flying Daggers",
+        "filmUrl": "/wiki/House_of_Flying_Daggers",
+        "people": [
+          {
+            "name": "Long Cheng",
+            "url": null
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      },
+      {
+        "filmTitle": "Vera Drake",
+        "filmUrl": "/wiki/Vera_Drake",
+        "people": [
+          {
+            "name": "Jim Clark",
+            "url": "/wiki/Jim_Clark_(film_editor)"
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      }
+    ]
+  },
+  {
+    "name": "Best Makeup and Hair",
+    "nominations": [
+      {
+        "filmTitle": "The Aviator",
+        "filmUrl": "/wiki/The_Aviator_(2004_film)",
+        "people": [
+          {
+            "name": "Siân Grigg",
+            "url": "/wiki/Si%C3%A2n_Grigg"
+          }
+        ],
+        "isWinner": true,
+        "role": null
+      },
+      {
+        "filmTitle": "Finding Neverland",
+        "filmUrl": "/wiki/Finding_Neverland_(film)",
+        "people": [
+          {
+            "name": "Christine Blundell",
+            "url": "/wiki/Christine_Blundell"
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      },
+      {
+        "filmTitle": "Harry Potter and the Prisoner of Azkaban",
+        "filmUrl": "/wiki/Harry_Potter_and_the_Prisoner_of_Azkaban_(film)",
+        "people": [
+          {
+            "name": "Amanda Knight",
+            "url": "/wiki/Amanda_Knight"
+          },
+          {
+            "name": "Nick Dudman",
+            "url": "/wiki/Nick_Dudman"
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      },
+      {
+        "filmTitle": "House of Flying Daggers",
+        "filmUrl": "/wiki/House_of_Flying_Daggers",
+        "people": [
+          {
+            "name": "Kwan Lee-Na",
+            "url": null
+          },
+          {
+            "name": "Yang Xiaohai",
+            "url": null
+          },
+          {
+            "name": "Chau Siu-Mui",
+            "url": null
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      },
+      {
+        "filmTitle": "Vera Drake",
+        "filmUrl": "/wiki/Vera_Drake",
+        "people": [
+          {
+            "name": "Christine Blundell",
+            "url": "/wiki/Christine_Blundell"
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      }
+    ]
+  },
+  {
+    "name": "Best Original Music",
+    "nominations": [
+      {
+        "filmTitle": "The Motorcycle Diaries",
+        "filmUrl": "/wiki/The_Motorcycle_Diaries_(film)",
+        "people": [
+          {
+            "name": "Gustavo Santaolalla",
+            "url": "/wiki/Gustavo_Santaolalla"
+          }
+        ],
+        "isWinner": true,
+        "role": null
+      },
+      {
+        "filmTitle": "The Aviator",
+        "filmUrl": "/wiki/The_Aviator_(2004_film)",
+        "people": [
+          {
+            "name": "Howard Shore",
+            "url": "/wiki/Howard_Shore"
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      },
+      {
+        "filmTitle": "The Chorus",
+        "filmUrl": "/wiki/The_Chorus_(2004_film)",
+        "people": [
+          {
+            "name": "Bruno Coulais",
+            "url": "/wiki/Bruno_Coulais"
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      },
+      {
+        "filmTitle": "Finding Neverland",
+        "filmUrl": "/wiki/Finding_Neverland_(film)",
+        "people": [
+          {
+            "name": "Jan A. P. Kaczmarek",
+            "url": "/wiki/Jan_A._P._Kaczmarek"
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      },
+      {
+        "filmTitle": "Ray",
+        "filmUrl": "/wiki/Ray_(film)",
+        "people": [
+          {
+            "name": "Craig Armstrong",
+            "url": "/wiki/Craig_Armstrong_(composer)"
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      }
+    ]
+  },
+  {
+    "name": "Best Production Design",
+    "nominations": [
+      {
+        "filmTitle": "The Aviator",
+        "filmUrl": "/wiki/The_Aviator_(2004_film)",
+        "people": [
+          {
+            "name": "Dante Ferretti",
+            "url": "/wiki/Dante_Ferretti"
+          }
+        ],
+        "isWinner": true,
+        "role": null
+      },
+      {
+        "filmTitle": "Finding Neverland",
+        "filmUrl": "/wiki/Finding_Neverland_(film)",
+        "people": [
+          {
+            "name": "Gemma Jackson",
+            "url": "/wiki/Gemma_Jackson"
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      },
+      {
+        "filmTitle": "Harry Potter and the Prisoner of Azkaban",
+        "filmUrl": "/wiki/Harry_Potter_and_the_Prisoner_of_Azkaban_(film)",
+        "people": [
+          {
+            "name": "Stuart Craig",
+            "url": "/wiki/Stuart_Craig"
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      },
+      {
+        "filmTitle": "House of Flying Daggers",
+        "filmUrl": "/wiki/House_of_Flying_Daggers",
+        "people": [
+          {
+            "name": "Huo Tingxiao",
+            "url": null
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      },
+      {
+        "filmTitle": "Vera Drake",
+        "filmUrl": "/wiki/Vera_Drake",
+        "people": [
+          {
+            "name": "Eve Stewart",
+            "url": "/wiki/Eve_Stewart"
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      }
+    ]
+  },
+  {
+    "name": "Best Sound",
+    "nominations": [
+      {
+        "filmTitle": "Ray",
+        "filmUrl": "/wiki/Ray_(film)",
+        "people": [
+          {
+            "name": "Steve Cantamessa",
+            "url": "/wiki/Steve_Cantamessa"
+          },
+          {
+            "name": "Scott Millan",
+            "url": "/wiki/Scott_Millan"
+          },
+          {
+            "name": "Greg Orloff",
+            "url": "/wiki/Greg_Orloff"
+          },
+          {
+            "name": "Bob Beemer",
+            "url": "/wiki/Bob_Beemer"
+          }
+        ],
+        "isWinner": true,
+        "role": null
+      },
+      {
+        "filmTitle": "The Aviator",
+        "filmUrl": "/wiki/The_Aviator_(2004_film)",
+        "people": [
+          {
+            "name": "Philip Stockton",
+            "url": "/wiki/Philip_Stockton"
+          },
+          {
+            "name": "Eugene Gearty",
+            "url": "/wiki/Eugene_Gearty"
+          },
+          {
+            "name": "Petur Hliddal",
+            "url": "/wiki/Petur_Hliddal"
+          },
+          {
+            "name": "Tom Fleischman",
+            "url": "/wiki/Tom_Fleischman"
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      },
+      {
+        "filmTitle": "Collateral",
+        "filmUrl": "/wiki/Collateral_(film)",
+        "people": [
+          {
+            "name": "Lee Orloff",
+            "url": "/wiki/Lee_Orloff"
+          },
+          {
+            "name": "Michael Minkler",
+            "url": "/wiki/Michael_Minkler"
+          },
+          {
+            "name": "Myron Nettinga",
+            "url": "/wiki/Myron_Nettinga"
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      },
+      {
+        "filmTitle": "House of Flying Daggers",
+        "filmUrl": "/wiki/House_of_Flying_Daggers",
+        "people": [
+          {
+            "name": "Roger Savage",
+            "url": "/wiki/Roger_Savage"
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      },
+      {
+        "filmTitle": "Spider-Man 2",
+        "filmUrl": "/wiki/Spider-Man_2",
+        "people": [
+          {
+            "name": "Paul N. J. Ottosson",
+            "url": "/wiki/Paul_N._J._Ottosson"
+          },
+          {
+            "name": "Kevin O'Connell",
+            "url": "/wiki/Kevin_O%27Connell_(sound_mixer)"
+          },
+          {
+            "name": "Greg P. Russell",
+            "url": "/wiki/Greg_P._Russell"
+          },
+          {
+            "name": "Jeffrey J. Haboush",
+            "url": "/wiki/Jeffrey_J._Haboush"
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      }
+    ]
+  },
+  {
+    "name": "Best Special Visual Effects",
+    "nominations": [
+      {
+        "filmTitle": "The Day After Tomorrow",
+        "filmUrl": "/wiki/The_Day_After_Tomorrow",
+        "people": [
+          {
+            "name": "Karen Goulekas",
+            "url": "/wiki/Karen_Goulekas"
+          },
+          {
+            "name": "Neil Corbould",
+            "url": "/wiki/Neil_Corbould"
+          },
+          {
+            "name": "Greg Strause",
+            "url": "/wiki/Greg_and_Colin_Strause"
+          }
+        ],
+        "isWinner": true,
+        "role": null
+      },
+      {
+        "filmTitle": "The Aviator",
+        "filmUrl": "/wiki/The_Aviator_(2004_film)",
+        "people": [
+          {
+            "name": "Robert Legato",
+            "url": "/wiki/Robert_Legato"
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      },
+      {
+        "filmTitle": "Harry Potter and the Prisoner of Azkaban",
+        "filmUrl": "/wiki/Harry_Potter_and_the_Prisoner_of_Azkaban_(film)",
+        "people": [
+          {
+            "name": "John Richardson",
+            "url": "/wiki/John_Richardson_(special_effects_designer)"
+          },
+          {
+            "name": "Roger Guyett",
+            "url": "/wiki/Roger_Guyett"
+          },
+          {
+            "name": "Tim Burke",
+            "url": "/wiki/Tim_Burke_(visual_effects_supervisor)"
+          },
+          {
+            "name": "Bill George",
+            "url": "/wiki/Bill_George_(visual_effects_supervisor)"
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      },
+      {
+        "filmTitle": "House of Flying Daggers",
+        "filmUrl": "/wiki/House_of_Flying_Daggers",
+        "people": [
+          {
+            "name": "Angie Lam",
+            "url": null
+          },
+          {
+            "name": "Andy Brown",
+            "url": null
+          },
+          {
+            "name": "Kirsty Millar",
+            "url": null
+          },
+          {
+            "name": "Luke Hetherington",
+            "url": null
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      },
+      {
+        "filmTitle": "Spider-Man 2",
+        "filmUrl": "/wiki/Spider-Man_2",
+        "people": [
+          {
+            "name": "John Dykstra",
+            "url": "/wiki/John_Dykstra"
+          },
+          {
+            "name": "Scott Stokdyk",
+            "url": "/wiki/Scott_Stokdyk"
+          },
+          {
+            "name": "Anthony LaMolinara",
+            "url": "/wiki/Anthony_LaMolinara"
+          },
+          {
+            "name": "John Frazier",
+            "url": "/wiki/John_Frazier"
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      }
+    ]
+  },
+  {
+    "name": "Outstanding British Film",
+    "nominations": [
+      {
+        "filmTitle": "My Summer of Love",
+        "filmUrl": "/wiki/My_Summer_of_Love",
+        "people": [
+          {
+            "name": "Tanya Seghatchian",
+            "url": "/wiki/Tanya_Seghatchian"
+          },
+          {
+            "name": "Paweł Pawlikowski",
+            "url": "/wiki/Pawe%C5%82_Pawlikowski"
+          }
+        ],
+        "isWinner": true,
+        "role": null
+      },
+      {
+        "filmTitle": "Dead Man's Shoes",
+        "filmUrl": "/wiki/Dead_Man%27s_Shoes_(2004_film)",
+        "people": [
+          {
+            "name": "Mark Herbert",
+            "url": "/wiki/Mark_Herbert"
+          },
+          {
+            "name": "Shane Meadows",
+            "url": "/wiki/Shane_Meadows"
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      },
+      {
+        "filmTitle": "Harry Potter and the Prisoner of Azkaban",
+        "filmUrl": "/wiki/Harry_Potter_and_the_Prisoner_of_Azkaban_(film)",
+        "people": [
+          {
+            "name": "David Heyman",
+            "url": "/wiki/David_Heyman"
+          },
+          {
+            "name": "Chris Columbus",
+            "url": "/wiki/Chris_Columbus_(filmmaker)"
+          },
+          {
+            "name": "Alfonso Cuarón",
+            "url": "/wiki/Alfonso_Cuar%C3%B3n"
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      },
+      {
+        "filmTitle": "Shaun of the Dead",
+        "filmUrl": "/wiki/Shaun_of_the_Dead",
+        "people": [
+          {
+            "name": "Nira Park",
+            "url": "/wiki/Nira_Park"
+          },
+          {
+            "name": "Edgar Wright",
+            "url": "/wiki/Edgar_Wright"
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      },
+      {
+        "filmTitle": "Vera Drake",
+        "filmUrl": "/wiki/Vera_Drake",
+        "people": [
+          {
+            "name": "Simon Channing Williams",
+            "url": "/wiki/Simon_Channing_Williams"
+          },
+          {
+            "name": "Alain Sarde",
+            "url": "/wiki/Alain_Sarde"
+          },
+          {
+            "name": "Mike Leigh",
+            "url": "/wiki/Mike_Leigh"
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      }
+    ]
+  },
+  {
+    "name": "Outstanding Debut by a British Writer, Director or Producer",
+    "nominations": [
+      {
+        "filmTitle": "A Way of Life",
+        "filmUrl": "/wiki/A_Way_of_Life_(2004_film)",
+        "people": [
+          {
+            "name": "Amma Asante",
+            "url": "/wiki/Amma_Asante"
+          }
+        ],
+        "isWinner": true,
+        "role": null
+      },
+      {
+        "filmTitle": "AfterLife",
+        "filmUrl": "/wiki/AfterLife_(film)",
+        "people": [
+          {
+            "name": "Andrea Gibb",
+            "url": "/wiki/Andrea_Gibb"
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      },
+      {
+        "filmTitle": "Dear Frankie",
+        "filmUrl": "/wiki/Dear_Frankie",
+        "people": [
+          {
+            "name": "Shona Auerbach",
+            "url": "/wiki/Shona_Auerbach"
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      },
+      {
+        "filmTitle": "Layer Cake",
+        "filmUrl": "/wiki/Layer_Cake_(film)",
+        "people": [
+          {
+            "name": "Matthew Vaughn",
+            "url": "/wiki/Matthew_Vaughn"
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      },
+      {
+        "filmTitle": "Shaun of the Dead",
+        "filmUrl": "/wiki/Shaun_of_the_Dead",
+        "people": [
+          {
+            "name": "Nira Park",
+            "url": "/wiki/Nira_Park"
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      }
+    ]
+  },
+  {
+    "name": "Best Short Animation",
+    "nominations": [
+      {
+        "filmTitle": "Birthday Boy",
+        "filmUrl": "/wiki/Birthday_Boy_(2004_film)",
+        "people": [
+          {
+            "name": "Andrew Gregory",
+            "url": null
+          },
+          {
+            "name": "Park Se-jong",
+            "url": null
+          }
+        ],
+        "isWinner": true,
+        "role": null
+      },
+      {
+        "filmTitle": "City Paradise",
+        "filmUrl": null,
+        "people": [
+          {
+            "name": "Erika Forzy",
+            "url": null
+          },
+          {
+            "name": "Gaelle Denis",
+            "url": null
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      },
+      {
+        "filmTitle": "Heavy Pockets",
+        "filmUrl": null,
+        "people": [
+          {
+            "name": "Jane Robertson",
+            "url": null
+          },
+          {
+            "name": "Sarah Cox",
+            "url": null
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      },
+      {
+        "filmTitle": "His Passionate Bride",
+        "filmUrl": null,
+        "people": [
+          {
+            "name": "Sylvie Bringas",
+            "url": null
+          },
+          {
+            "name": "Monika Forsberg",
+            "url": null
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      },
+      {
+        "filmTitle": "Little Things",
+        "filmUrl": null,
+        "people": [
+          {
+            "name": "Daniel Greaves",
+            "url": null
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      }
+    ]
+  },
+  {
+    "name": "Best Short Film",
+    "nominations": [
+      {
+        "filmTitle": "The Banker",
+        "filmUrl": null,
+        "people": [
+          {
+            "name": "Hattie Dalton",
+            "url": "/wiki/Hattie_Dalton"
+          }
+        ],
+        "isWinner": true,
+        "role": null
+      },
+      {
+        "filmTitle": "Can't Stop Breathing",
+        "filmUrl": null,
+        "people": [
+          {
+            "name": "Ravinder Basra",
+            "url": null
+          },
+          {
+            "name": "Amy Neil",
+            "url": null
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      },
+      {
+        "filmTitle": "Elephant Boy",
+        "filmUrl": null,
+        "people": [
+          {
+            "name": "Rene Mohandas",
+            "url": null
+          },
+          {
+            "name": "Durdana Shaikh",
+            "url": null
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      },
+      {
+        "filmTitle": "Knitting a Love Song",
+        "filmUrl": null,
+        "people": [
+          {
+            "name": "Debbie Ballin",
+            "url": null
+          },
+          {
+            "name": "Annie Watson",
+            "url": null
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      },
+      {
+        "filmTitle": "Six Shooter",
+        "filmUrl": "/wiki/Six_Shooter_(film)",
+        "people": [
+          {
+            "name": "Kenton Allen",
+            "url": "/wiki/Kenton_Allen"
+          },
+          {
+            "name": "Martin McDonagh",
+            "url": "/wiki/Martin_McDonagh"
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      }
+    ]
+  },
+  {
+    "name": "Best Film Not in the English Language",
+    "nominations": [
+      {
+        "filmTitle": "The Motorcycle Diaries",
+        "filmUrl": "/wiki/The_Motorcycle_Diaries_(film)",
+        "people": [
+          {
+            "name": "Michael Nozik",
+            "url": "/wiki/Michael_Nozik"
+          },
+          {
+            "name": "Walter Salles",
+            "url": "/wiki/Walter_Salles"
+          }
+        ],
+        "isWinner": true,
+        "role": null
+      },
+      {
+        "filmTitle": "Bad Education",
+        "filmUrl": "/wiki/Bad_Education_(2004_film)",
+        "people": [
+          {
+            "name": "Agustín Almodóvar",
+            "url": "/wiki/Agust%C3%ADn_Almod%C3%B3var"
+          },
+          {
+            "name": "Pedro Almodóvar",
+            "url": "/wiki/Pedro_Almod%C3%B3var"
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      },
+      {
+        "filmTitle": "The Chorus",
+        "filmUrl": "/wiki/The_Chorus_(2004_film)",
+        "people": [
+          {
+            "name": "Arthur Cohn",
+            "url": "/wiki/Arthur_Cohn"
+          },
+          {
+            "name": "Jacques Perrin",
+            "url": "/wiki/Jacques_Perrin"
+          },
+          {
+            "name": "Christophe Barratier",
+            "url": "/wiki/Christophe_Barratier"
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      },
+      {
+        "filmTitle": "House of Flying Daggers",
+        "filmUrl": "/wiki/House_of_Flying_Daggers",
+        "people": [
+          {
+            "name": "William Kong",
+            "url": "/wiki/William_Kong"
+          },
+          {
+            "name": "Zhang Yimou",
+            "url": "/wiki/Zhang_Yimou"
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      },
+      {
+        "filmTitle": "A Very Long Engagement",
+        "filmUrl": "/wiki/A_Very_Long_Engagement",
+        "people": [
+          {
+            "name": "Francis Boespflug",
+            "url": "/wiki/Francis_Boespflug"
+          },
+          {
+            "name": "Jean-Pierre Jeunet",
+            "url": "/wiki/Jean-Pierre_Jeunet"
+          }
+        ],
+        "isWinner": false,
+        "role": null
+      }
+    ]
+  }
+]

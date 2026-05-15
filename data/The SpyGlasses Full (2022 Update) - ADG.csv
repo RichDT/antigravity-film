@@ -1,0 +1,385 @@
+Year,Film,Nominee,Category,Won,Concordance
+2024,Civil War,Caty Maxey,Contemporary Film,FALSE,Art Direction
+2024,Conclave,Suzie Davies,Contemporary Film,TRUE,Art Direction
+2024,Emilia Pérez,Emmanuelle Duplay,Contemporary Film,FALSE,Art Direction
+2024,The Substance,Stanislas Reydellet,Contemporary Film,FALSE,Art Direction
+2024,Twisters,Patrick M. Suillivan,Contemporary Film,FALSE,Art Direction
+2024,Alien: Romulus,Naaman Marshall,Fantasy Film,FALSE,Art Direction
+2024,Beetlejuice Beetlejuice,Mark Scruton,Fantasy Film,FALSE,Art Direction
+2024,Dune: Part Two,Patrice Vermette,Fantasy Film,FALSE,Art Direction
+2024,Furiosa: A Mad Max Saga,Colin Gibson,Fantasy Film,FALSE,Art Direction
+2024,Wicked,Nathan Crowley,Fantasy Film,TRUE,Art Direction
+2024,A Complete Unknown,François Audouy,Period Film,FALSE,Art Direction
+2024,Gladiator II,Arthur Max,Period Film,FALSE,Art Direction
+2024,Nosferatu,Craig Lathrop,Period Film,TRUE,Art Direction
+2024,Saturday Night,Jess Gonchor,Period Film,FALSE,Art Direction
+2024,The Brutalist,Judy Becker,Period Film,FALSE,Art Direction
+2024,Flow,Gints Zilbalodis,Animated Film,FALSE,Art Direction
+2024,Inside Out 2,Jason Deamer,Animated Film,FALSE,Art Direction
+2024,Moana 2,Ian Gooding,Animated Film,FALSE,Art Direction
+2024,The Wild Robot,Raymond Zibach,Animated Film,TRUE,Art Direction
+2024,Wallace & Gromit: Vengeance Most Fowl,Matt Perry,Animated Film,FALSE,Art Direction
+2023,Beau Is Afraid,Fiona Crombie,Contemporary Film,FALSE,Art Direction
+2023,John Wick: Chapter 4,Kevin Kavanaugh,Contemporary Film,FALSE,Art Direction
+2023,Mission: Impossible — Dead Reckoning Part One,Gary Freeman,Contemporary Film,FALSE,Art Direction
+2023,Saltburn,Suzie Davies,Contemporary Film,TRUE,Art Direction
+2023,The Killer,Donald Graham Burt,Contemporary Film,FALSE,Art Direction
+2023,Barbie,Sarah Greenwood,Fantasy Film,FALSE,Art Direction
+2023,Guardians of the Galaxy Vol. 3,Beth Mickle,Fantasy Film,FALSE,Art Direction
+2023,Poor Things,James Price,Fantasy Film,TRUE,Art Direction
+2023,Poor Things,Shona Heath,Fantasy Film,TRUE,Art Direction
+2023,The Creator,James Clyne,Fantasy Film,FALSE,Art Direction
+2023,Wonka,Nathan Crowley,Fantasy Film,FALSE,Art Direction
+2023,Asteroid City,Adam Stockhausen,Period Film,FALSE,Art Direction
+2023,Killers of the Flower Moon,Jack Fisk,Period Film,FALSE,Art Direction
+2023,Maestro,Kevin Thompson,Period Film,FALSE,Art Direction
+2023,Napoleon,Arthur Max,Period Film,FALSE,Art Direction
+2023,Oppenheimer,Ruth de Jong,Period Film,TRUE,Art Direction
+2023,Elemental,Don Shank,Animated Film,FALSE,Art Direction
+2023,Spider-Man: Across the Spider-Verse,Patrick o'Keefe,Animated Film,TRUE,Art Direction
+2023,Teenage Mutant Ninja Turtles: Mutant Mayhem,Yashar Kassai,Animated Film,FALSE,Art Direction
+2023,The Boy and the Heron,Yoji Takeshige,Animated Film,FALSE,Art Direction
+2023,The Super Mario Bros. Movie,Guillaume Aretos,Animated Film,FALSE,Art Direction
+2022,"Bardo, False Chronicle of a Handful of Truths",Eugenio Caballero,Contemporary Film,FALSE,Art Direction
+2022,Bullet Train,David Scheunemann,Contemporary Film,FALSE,Art Direction
+2022,Glass Onion: A 'Knives Out' Mystery,Rick Heinrichs,Contemporary Film,TRUE,Art Direction
+2022,Tár,Marco Bittner Rosser,Contemporary Film,FALSE,Art Direction
+2022,Top Gun: Maverick,Jeremy Hindle,Contemporary Film,FALSE,Art Direction
+2022,Avatar: The Way of Water,Dylan Cole,Fantasy Film,FALSE,Art Direction
+2022,Avatar: The Way of Water,Ben Procter,Fantasy Film,FALSE,Art Direction
+2022,Black Panther: Wakanda Forever,Hannah Beacher,Fantasy Film,FALSE,Art Direction
+2022,Everything Everywhere All at Once,Jason Kisvarday,Fantasy Film,TRUE,Art Direction
+2022,Nope,Ruth de Jong,Fantasy Film,FALSE,Art Direction
+2022,The Batman,James Chinlund,Fantasy Film,FALSE,Art Direction
+2022,All Quiet on the Western Front,Christian M. Goldbeck,Period Film,FALSE,Art Direction
+2022,Babylon,Florencia Martin,Period Film,TRUE,Art Direction
+2022,Elvis,Catherine Martin,Period Film,FALSE,Art Direction
+2022,The Fabelmans,Rick Carter,Period Film,FALSE,Art Direction
+2022,White Noise,Jess Gonchor,Period Film,FALSE,Art Direction
+2022,Guillermo del Toro's 'Pinocchio',Curt Enderle,Animated Film,TRUE,Art Direction
+2022,Guillermo del Toro's 'Pinocchio',Guy Davis,Animated Film,TRUE,Art Direction
+2022,Lightyear,Tim Evatt,Animated Film,FALSE,Art Direction
+2022,Marcel the Shell with Shoes On,Liz Toonkel,Animated Film,FALSE,Art Direction
+2022,Puss in Boots: The Last Wish,Nate Wragg,Animated Film,FALSE,Art Direction
+2022,Turning Red,Rona Liu,Animated Film,FALSE,Art Direction
+2021,No Time to Die,Mark Tildesley,Contemporary Film,TRUE,Art Direction
+2021,Candyman,Cara Brower,Contemporary Film,FALSE,Art Direction
+2021,Don't Look Up,Clayton Hartley,Contemporary Film,FALSE,Art Direction
+2021,In the Heights,Nelson Coates,Contemporary Film,FALSE,Art Direction
+2021,The Lost Daughter,Inbal Weinberg,Contemporary Film,FALSE,Art Direction
+2021,Dune,Patrice Vermette,Fantasy Film,TRUE,Art Direction
+2021,Cruella,Fiona Crombie,Fantasy Film,FALSE,Art Direction
+2021,Ghostbusters: Afterlife,François Audouy,Fantasy Film,FALSE,Art Direction
+2021,Shang-Chi and the Legend of the Ten Rings,Sue Chan,Fantasy Film,FALSE,Art Direction
+2021,The Green Knight,Jade Healy,Fantasy Film,FALSE,Art Direction
+2021,Nightmare Alley,Tamara Deverell,Period Film,TRUE,Art Direction
+2021,Licorice Pizza,Florencia Martin,Period Film,FALSE,Art Direction
+2021,The French Dispatch,Adam Stockhausen,Period Film,FALSE,Art Direction
+2021,The Tragedy of Macbeth,Stefan Dechant,Period Film,FALSE,Art Direction
+2021,West Side Story,Adam Stockhausen,Period Film,FALSE,Art Direction
+2021,Encanto,Ian Gooding,Animated Film,TRUE,Art Direction
+2021,Luca,Daniela Strijleva,Animated Film,FALSE,Art Direction
+2021,The Mitchells vs. the Machines,Lindsey Olivares,Animated Film,FALSE,Art Direction
+2021,Encanto,Lorelay Bové,Animated Film,FALSE,Art Direction
+2021,Raya and the Last Dragon,Paul Felix,Animated Film,FALSE,Art Direction
+2021,Raya and the Last Dragon,Mingjue Helen Chen,Animated Film,FALSE,Art Direction
+2021,Raya and the Last Dragon,Cory Loftis,Animated Film,FALSE,Art Direction
+2021,Sing 2,Olivier Adam,Animated Film,FALSE,Art Direction
+2020,Da 5 Bloods,Wynn Thomas,Contemporary Film,TRUE,Art Direction
+2020,I'm Thinking of Ending Things,Molly Hughes,Contemporary Film,FALSE,Art Direction
+2020,Palm Springs,Jason Kisvardy,Contemporary Film,FALSE,Art Direction
+2020,Promising Young Woman,Michael T. Perry,Contemporary Film,FALSE,Art Direction
+2020,The Prom,Jamie Walker McCall,Contemporary Film,FALSE,Art Direction
+2020,Tenet,Nathan Crowley,Fantasy Film,TRUE,Art Direction
+2020,Birds of Prey (and the Fantabulous Emancipation of One Harley Quinn),K. K. Barrett,Fantasy Film,FALSE,Art Direction
+2020,Pinocchio,Dimitri Capuani,Fantasy Film,FALSE,Art Direction
+2020,The Midnight Sky,Jim Bissell,Fantasy Film,FALSE,Art Direction
+2020,Wonder Woman 1984,Aline Bonetto,Fantasy Film,FALSE,Art Direction
+2020,Mank,Donald Graham Burt,Period Film,TRUE,Art Direction
+2020,Ma Rainey's Black Bottom,Mark Ricker,Period Film,FALSE,Art Direction
+2020,Mulan,Grant Major,Period Film,FALSE,Art Direction
+2020,News of the World,David Crank,Period Film,FALSE,Art Direction
+2020,The Trial of the Chicago 7,Shane Valentino,Period Film,FALSE,Art Direction
+2020,Soul,Steve Pilcher,Animated Film,TRUE,Art Direction
+2020,A Shaun the Sheep Movie: Farmageddon,Matt Perry,Animated Film,FALSE,Art Direction
+2020,Onward,Noah Klocek,Animated Film,FALSE,Art Direction
+2020,The Croods: A New Age,Nate Wragg,Animated Film,FALSE,Art Direction
+2020,Wolfwalkers,Ross Stewart,Animated Film,FALSE,Art Direction
+2020,Wolfwalkers,Tomm Moore,Animated Film,FALSE,Art Direction
+2020,Wolfwalkers,Maria Pareja,Animated Film,FALSE,Art Direction
+2019,Parasite,Lee Ha-jun,Contemporary Film,TRUE,Art Direction
+2019,A Beautiful Day in the Neighborhood,Jade Healy,Contemporary Film,FALSE,Art Direction
+2019,John Wick: Chapter 3 – Parabellum,Kevin Kavanaugh,Contemporary Film,FALSE,Art Direction
+2019,Knives Out,David Crank,Contemporary Film,FALSE,Art Direction
+2019,Us,Ruth De Jong,Contemporary Film,FALSE,Art Direction
+2019,Avengers: Endgame,Charles Wood,Fantasy Film,TRUE,Art Direction
+2019,Ad Astra,Kevin Thompson,Fantasy Film,FALSE,Art Direction
+2019,Aladdin,Gemma Jackson,Fantasy Film,FALSE,Art Direction
+2019,Dumbo,Rick Heinrichs,Fantasy Film,FALSE,Art Direction
+2019,Maleficent: Mistress of Evil,Patrick Tatopoulos,Fantasy Film,FALSE,Art Direction
+2019,Star Wars: The Rise of Skywalker,Rick Carter,Fantasy Film,FALSE,Art Direction
+2019,Star Wars: The Rise of Skywalker,Kevin Jenkins,Fantasy Film,FALSE,Art Direction
+2019,Once Upon a Time in Hollywood,Barbara Ling,Period Film,TRUE,Art Direction
+2019,1917,Dennis Gassner,Period Film,FALSE,Art Direction
+2019,Ford v Ferrari,François Audouy,Period Film,FALSE,Art Direction
+2019,Jojo Rabbit,Ra Vincent,Period Film,FALSE,Art Direction
+2019,Joker,Mark Friedberg,Period Film,FALSE,Art Direction
+2019,The Irishman,Bob Shaw,Period Film,FALSE,Art Direction
+2019,Toy Story 4,Bob Pauley,Animated Film,TRUE,Art Direction
+2019,Abominable,Max Boas,Animated Film,FALSE,Art Direction
+2019,Frozen II,Michael Giaimo,Animated Film,FALSE,Art Direction
+2019,How to Train Your Dragon: The Hidden World,Pierre-Olivier Vincent,Animated Film,FALSE,Art Direction
+2019,The Lion King,James Chinlund,Animated Film,FALSE,Art Direction
+2018,Crazy Rich Asians,Nelson Coates,Contemporary Film,TRUE,Art Direction
+2018,A Quiet Place,Jeffrey Beecroft,Contemporary Film,FALSE,Art Direction
+2018,A Star Is Born,Karen Murphy,Contemporary Film,FALSE,Art Direction
+2018,Mission: Impossible – Fallout,Peter Wenham,Contemporary Film,FALSE,Art Direction
+2018,Welcome to Marwen,Stefan Dechant,Contemporary Film,FALSE,Art Direction
+2018,Black Panther,Hannah Beachler,Fantasy Film,TRUE,Art Direction
+2018,Fantastic Beasts: The Crimes of Grindelwald,Stuart Craig,Fantasy Film,FALSE,Art Direction
+2018,Mary Poppins Returns,John Myhre,Fantasy Film,FALSE,Art Direction
+2018,Ready Player One,Adam Stockhausen,Fantasy Film,FALSE,Art Direction
+2018,The House with a Clock in Its Walls,Jon Hutman,Fantasy Film,FALSE,Art Direction
+2018,The Favourite,Fiona Crombie,Period Film,TRUE,Art Direction
+2018,Bohemian Rhapsody,Aaron Haye,Period Film,FALSE,Art Direction
+2018,First Man,Nathan Crowley,Period Film,FALSE,Art Direction
+2018,Roma,Eugenio Caballero,Period Film,FALSE,Art Direction
+2018,The Ballad of Buster Scruggs,Jess Gonchor,Period Film,FALSE,Art Direction
+2018,Isle of Dogs,Adam Stockhausen,Animated Film,TRUE,Art Direction
+2018,Isle of Dogs,Paul Harrod,Animated Film,TRUE,Art Direction
+2018,Dr. Seuss' The Grinch,Colin Stimpson,Animated Film,FALSE,Art Direction
+2018,Incredibles 2,Ralph Eggleston,Animated Film,FALSE,Art Direction
+2018,Ralph Breaks the Internet,Cory Loftis,Animated Film,FALSE,Art Direction
+2018,Spider-Man: Into the Spider-Verse,Justin K. Thompson,Animated Film,FALSE,Art Direction
+2017,Logan,François Audouy,Contemporary Film,TRUE,Art Direction
+2017,Downsizing,Stefania Cella,Contemporary Film,FALSE,Art Direction
+2017,Get Out,Rusty Smith,Contemporary Film,FALSE,Art Direction
+2017,Lady Bird,Chris Jones,Contemporary Film,FALSE,Art Direction
+2017,"Three Billboards Outside Ebbing, Missouri",Inbal Weinberg,Contemporary Film,FALSE,Art Direction
+2017,Blade Runner 2049,Dennis Gassner,Fantasy Film,TRUE,Art Direction
+2017,Beauty and the Beast,Sarah Greenwood,Fantasy Film,FALSE,Art Direction
+2017,Star Wars: The Last Jedi,Rick Heinrichs,Fantasy Film,FALSE,Art Direction
+2017,War for the Planet of the Apes,James Chinlund,Fantasy Film,FALSE,Art Direction
+2017,Wonder Woman,Aline Bonetto,Fantasy Film,FALSE,Art Direction
+2017,The Shape of Water,Paul Denham Austerberry,Period Film,TRUE,Art Direction
+2017,Darkest Hour,Sarah Greenwood,Period Film,FALSE,Art Direction
+2017,Dunkirk,Nathan Crowley,Period Film,FALSE,Art Direction
+2017,Murder on the Orient Express,Jim Clay,Period Film,FALSE,Art Direction
+2017,The Post,Rick Carter,Period Film,FALSE,Art Direction
+2017,Coco,Harley Jessup,Animated Film,TRUE,Art Direction
+2017,Cars 3,William Cone,Animated Film,FALSE,Art Direction
+2017,Cars 3,Jay Shuster,Animated Film,FALSE,Art Direction
+2017,Despicable Me 3,Olivier Adam,Animated Film,FALSE,Art Direction
+2017,Loving Vincent,Matthew Button,Animated Film,FALSE,Art Direction
+2017,The Lego Batman Movie,Grant Freckelton,Animated Film,FALSE,Art Direction
+2016,La La Land,David Wasco,Contemporary Film,TRUE,Art Direction
+2016,Hell or High Water,Tom Duffield,Contemporary Film,FALSE,Art Direction
+2016,Lion,Chris Kennedy,Contemporary Film,FALSE,Art Direction
+2016,Manchester by the Sea,Ruth De Jong,Contemporary Film,FALSE,Art Direction
+2016,Nocturnal Animals,Shane Valentino,Contemporary Film,FALSE,Art Direction
+2016,Passengers,Guy Hendrix Dyas,Fantasy Film,TRUE,Art Direction
+2016,Arrival,Patrice Vermette,Fantasy Film,FALSE,Art Direction
+2016,Doctor Strange,Charles Wood,Fantasy Film,FALSE,Art Direction
+2016,Fantastic Beasts and Where to Find Them,Stuart Craig,Fantasy Film,FALSE,Art Direction
+2016,Rogue One: A Star Wars Story,Doug Chiang,Fantasy Film,FALSE,Art Direction
+2016,Rogue One: A Star Wars Story,Neil Lamont,Fantasy Film,FALSE,Art Direction
+2016,Hidden Figures,Wynn Thomas,Period Film,TRUE,Art Direction
+2016,Café Society,Santo Loquasto,Period Film,FALSE,Art Direction
+2016,Fences,David Gropman,Period Film,FALSE,Art Direction
+2016,Hacksaw Ridge,Barry Robison,Period Film,FALSE,Art Direction
+2016,"Hail, Caesar!",Jess Gonchor,Period Film,FALSE,Art Direction
+2016,Jackie,Jean Rabasse,Period Film,FALSE,Art Direction
+2015,The Martian,Arthur Max,Contemporary Film,TRUE,Art Direction
+2015,Ex Machina,Mark Digby,Contemporary Film,FALSE,Art Direction
+2015,Joy,Judy Becker,Contemporary Film,FALSE,Art Direction
+2015,Sicario,Patrice Vermette,Contemporary Film,FALSE,Art Direction
+2015,Spectre,Dennis Gassner,Contemporary Film,FALSE,Art Direction
+2015,Mad Max: Fury Road,Colin Gibson,Fantasy Film,TRUE,Art Direction
+2015,Cinderella,Dante Ferretti,Fantasy Film,FALSE,Art Direction
+2015,Jurassic World,Edward Verreaux,Fantasy Film,FALSE,Art Direction
+2015,Star Wars: The Force Awakens,Rick Carter,Fantasy Film,FALSE,Art Direction
+2015,Star Wars: The Force Awakens,Darren Gilford,Fantasy Film,FALSE,Art Direction
+2015,Tomorrowland,Scott Chambliss,Fantasy Film,FALSE,Art Direction
+2015,The Revenant,Jack Fisk,Period Film,TRUE,Art Direction
+2015,Bridge of Spies,Adam Stockhausen,Period Film,FALSE,Art Direction
+2015,Crimson Peak,Thomas E. Sanders,Period Film,FALSE,Art Direction
+2015,The Danish Girl,Eve Stewart,Period Film,FALSE,Art Direction
+2015,Trumbo,Mark Ricker,Period Film,FALSE,Art Direction
+2014,Birdman or (The Unexpected Virtue of Ignorance),Kevin Thompson,Contemporary Film,TRUE,Art Direction
+2014,American Sniper,James J. Murakami,Contemporary Film,FALSE,Art Direction
+2014,American Sniper,Charisse Cardenas,Contemporary Film,FALSE,Art Direction
+2014,Foxcatcher,Jess Gonchor,Contemporary Film,FALSE,Art Direction
+2014,Gone Girl,Donald Graham Burt,Contemporary Film,FALSE,Art Direction
+2014,Nightcrawler,Kevin Kavanaugh,Contemporary Film,FALSE,Art Direction
+2014,Guardians of the Galaxy,Charles Wood,Fantasy Film,TRUE,Art Direction
+2014,Captain America: The Winter Soldier,Peter Wenham,Fantasy Film,FALSE,Art Direction
+2014,Dawn of the Planet of the Apes,James Chinlund,Fantasy Film,FALSE,Art Direction
+2014,Interstellar,Nathan Crowley,Fantasy Film,FALSE,Art Direction
+2014,Into the Woods,Dennis Gassner,Fantasy Film,FALSE,Art Direction
+2014,The Grand Budapest Hotel,Adam Stockhausen,Period Film,TRUE,Art Direction
+2014,Inherent Vice,David Crank,Period Film,FALSE,Art Direction
+2014,The Imitation Game,Maria Djurkovic,Period Film,FALSE,Art Direction
+2014,The Theory of Everything,John Paul Kelly,Period Film,FALSE,Art Direction
+2014,Unbroken,Jon Hutman,Period Film,FALSE,Art Direction
+2013,Her,K. K. Barrett,Contemporary Film,TRUE,Art Direction
+2013,August: Osage County,David Gropman,Contemporary Film,FALSE,Art Direction
+2013,Blue Jasmine,Santo Loquasto,Contemporary Film,FALSE,Art Direction
+2013,Captain Phillips,Paul Kirby,Contemporary Film,FALSE,Art Direction
+2013,The Wolf of Wall Street,Bob Shaw,Contemporary Film,FALSE,Art Direction
+2013,Gravity,Andy Nicholson,Fantasy Film,TRUE,Art Direction
+2013,Elysium,Philip Ivey,Fantasy Film,FALSE,Art Direction
+2013,Oblivion,Darren Gilford,Fantasy Film,FALSE,Art Direction
+2013,Star Trek Into Darkness,Scott Chambliss,Fantasy Film,FALSE,Art Direction
+2013,The Hobbit: The Desolation of Smaug,Dan Hennah,Fantasy Film,FALSE,Art Direction
+2013,The Great Gatsby,Catherine Martin,Period Film,TRUE,Art Direction
+2013,12 Years a Slave,Adam Stockhausen,Period Film,FALSE,Art Direction
+2013,American Hustle,Judy Becker,Period Film,FALSE,Art Direction
+2013,Inside Llewyn Davis,Jess Gonchor,Period Film,FALSE,Art Direction
+2013,Saving Mr. Banks,Michael Corenblith,Period Film,FALSE,Art Direction
+2012,Skyfall,Dennis Gassner,Contemporary Film,TRUE,Art Direction
+2012,Flight,Nelson Coates,Contemporary Film,FALSE,Art Direction
+2012,The Best Exotic Marigold Hotel,Alan MacDonald,Contemporary Film,FALSE,Art Direction
+2012,The Impossible,Eugenio Caballero,Contemporary Film,FALSE,Art Direction
+2012,Zero Dark Thirty,Jeremy Hindle,Contemporary Film,FALSE,Art Direction
+2012,Life of Pi,David Gropman,Fantasy Film,TRUE,Art Direction
+2012,Cloud Atlas,Uli Hanisch,Fantasy Film,FALSE,Art Direction
+2012,Prometheus,Arthur Max,Fantasy Film,FALSE,Art Direction
+2012,The Dark Knight Rises,Nathan Crowley,Fantasy Film,FALSE,Art Direction
+2012,The Dark Knight Rises,Kevin Kavanaugh,Fantasy Film,FALSE,Art Direction
+2012,The Hobbit: An Unexpected Journey,Dan Hennah,Fantasy Film,FALSE,Art Direction
+2012,Anna Karenina,Sarah Greenwood,Period Film,TRUE,Art Direction
+2012,Argo,Peter Borck,Period Film,FALSE,Art Direction
+2012,Django Unchained,David F. Klassen,Period Film,FALSE,Art Direction
+2012,Les Misérables,Eve Stewart,Period Film,FALSE,Art Direction
+2012,Lincoln,Rick Carter,Period Film,FALSE,Art Direction
+2011,The Girl with the Dragon Tattoo,Donald Graham Burt,Contemporary Film,TRUE,Art Direction
+2011,Bridesmaids,Jefferson Sage,Contemporary Film,FALSE,Art Direction
+2011,Drive,Beth Mickle,Contemporary Film,FALSE,Art Direction
+2011,Extremely Loud and Incredibly Close,K. K. Barrett,Contemporary Film,FALSE,Art Direction
+2011,The Descendants,Jane Ann Stewart,Contemporary Film,FALSE,Art Direction
+2011,Harry Potter and the Deathly Hallows – Part 2,Stuart Craig,Fantasy Film,TRUE,Art Direction
+2011,Captain America: The First Avenger,Rick Heinrichs,Fantasy Film,FALSE,Art Direction
+2011,Cowboys & Aliens,Scott Chambliss,Fantasy Film,FALSE,Art Direction
+2011,Pirates of the Caribbean: On Stranger Tides,John Myhre,Fantasy Film,FALSE,Art Direction
+2011,The Adventures of Tintin,Kim Sinclair,Fantasy Film,FALSE,Art Direction
+2011,Hugo,Dante Ferretti,Period Film,TRUE,Art Direction
+2011,Anonymous,Sebastian Krawinkel,Period Film,FALSE,Art Direction
+2011,The Artist,Laurence Bennett,Period Film,FALSE,Art Direction
+2011,The Help,Mark Ricker,Period Film,FALSE,Art Direction
+2011,Tinker Tailor Soldier Spy,Maria Djurkovic,Period Film,FALSE,Art Direction
+2010,Black Swan,Thérèse DePrez,Contemporary Film,TRUE,Art Direction
+2010,127 Hours,Suttirat Larlarb,Contemporary Film,FALSE,Art Direction
+2010,The Fighter,Judy Becker,Contemporary Film,FALSE,Art Direction
+2010,The Social Network,Donald Graham Burt,Contemporary Film,FALSE,Art Direction
+2010,The Town,Sharon Seymour,Contemporary Film,FALSE,Art Direction
+2010,Inception,Guy Hendrix Dyas,Fantasy Film,TRUE,Art Direction
+2010,Alice in Wonderland,Robert Stromberg,Fantasy Film,FALSE,Art Direction
+2010,Harry Potter and the Deathly Hallows – Part 1,Stuart Craig,Fantasy Film,FALSE,Art Direction
+2010,The Chronicles of Narnia: The Voyage of the Dawn Treader,Barry Robison,Fantasy Film,FALSE,Art Direction
+2010,Tron: Legacy,Darren Gilford,Fantasy Film,FALSE,Art Direction
+2010,The King's Speech,Eve Stewart,Period Film,TRUE,Art Direction
+2010,Get Low,Geoffrey Kirkland,Period Film,FALSE,Art Direction
+2010,Robin Hood,Arthur Max,Period Film,FALSE,Art Direction
+2010,Shutter Island,Dante Ferretti,Period Film,FALSE,Art Direction
+2010,True Grit,Jess Gonchor,Period Film,FALSE,Art Direction
+2009,The Hurt Locker,Karl Júlíusson,Contemporary Film,TRUE,Art Direction
+2009,Angels & Demons,Allan Cameron,Contemporary Film,FALSE,Art Direction
+2009,The Hangover,Bill Brzeski,Contemporary Film,FALSE,Art Direction
+2009,The Lovely Bones,Naomi Shohan,Contemporary Film,FALSE,Art Direction
+2009,Up in the Air,Steve Saklad,Contemporary Film,FALSE,Art Direction
+2009,Avatar,Rick Carter,Fantasy Film,TRUE,Art Direction
+2009,Avatar,Robert Stromberg,Fantasy Film,TRUE,Art Direction
+2009,District 9,Philip Ivey,Fantasy Film,FALSE,Art Direction
+2009,Harry Potter and the Half-Blood Prince,Stuart Craig,Fantasy Film,FALSE,Art Direction
+2009,Star Trek,Scott Chambliss,Fantasy Film,FALSE,Art Direction
+2009,Where the Wild Things Are,K. K. Barrett,Fantasy Film,FALSE,Art Direction
+2009,Sherlock Holmes,Sarah Greenwood,Period Film,TRUE,Art Direction
+2009,A Serious Man,Jess Gonchor,Period Film,FALSE,Art Direction
+2009,Inglourious Basterds,David Wasco,Period Film,FALSE,Art Direction
+2009,Julie & Julia,Mark Ricker,Period Film,FALSE,Art Direction
+2009,Public Enemies,Nathan Crowley,Period Film,FALSE,Art Direction
+2008,Slumdog Millionaire,Mark Digby,Contemporary Film,TRUE,Art Direction
+2008,Burn After Reading,Jess Gonchor,Contemporary Film,FALSE,Art Direction
+2008,Gran Torino,James J. Murakami,Contemporary Film,FALSE,Art Direction
+2008,Quantum of Solace,Dennis Gassner,Contemporary Film,FALSE,Art Direction
+2008,The Wrestler,Timothy Grimes,Contemporary Film,FALSE,Art Direction
+2008,The Dark Knight,Nathan Crowley,Fantasy Film,TRUE,Art Direction
+2008,Indiana Jones and the Kingdom of the Crystal Skull,Guy Hendrix Dyas,Fantasy Film,FALSE,Art Direction
+2008,Iron Man,J. Michael Riva,Fantasy Film,FALSE,Art Direction
+2008,The Spiderwick Chronicles,James D. Bissell,Fantasy Film,FALSE,Art Direction
+2008,WALL-E,Ralph Eggleston,Fantasy Film,FALSE,Art Direction
+2008,The Curious Case of Benjamin Button,Donald Graham Burt,Period Film,TRUE,Art Direction
+2008,Changeling,James J. Murakami,Period Film,FALSE,Art Direction
+2008,Doubt,David Gropman,Period Film,FALSE,Art Direction
+2008,Frost/Nixon,Michael Corenblith,Period Film,FALSE,Art Direction
+2008,Milk,Bill Groom,Period Film,FALSE,Art Direction
+2007,No Country for Old Men,Jess Gonchor,Contemporary Film,TRUE,Art Direction
+2007,Michael Clayton,Kevin Thompson,Contemporary Film,FALSE,Art Direction
+2007,The Bourne Ultimatum,Peter Wenham,Contemporary Film,FALSE,Art Direction
+2007,The Diving Bell and the Butterfly,Michel Eric,Contemporary Film,FALSE,Art Direction
+2007,The Kite Runner,Carlos Conti,Contemporary Film,FALSE,Art Direction
+2007,The Golden Compass,Dennis Gassner,Fantasy Film,TRUE,Art Direction
+2007,300,James D. Bissell,Fantasy Film,FALSE,Art Direction
+2007,Harry Potter and the Order of the Phoenix,Stuart Craig,Fantasy Film,FALSE,Art Direction
+2007,Pirates of the Caribbean: At World's End,Rick Heinrichs,Fantasy Film,FALSE,Art Direction
+2007,Ratatouille,Harley Jessup,Fantasy Film,FALSE,Art Direction
+2007,There Will Be Blood,Jack Fisk,Period Film,TRUE,Art Direction
+2007,American Gangster,Arthur Max,Period Film,FALSE,Art Direction
+2007,Atonement,Sarah Greenwood,Period Film,FALSE,Art Direction
+2007,Elizabeth: The Golden Age,Guy Hendrix Dyas,Period Film,FALSE,Art Direction
+2007,Sweeney Todd: The Demon Barber of Fleet Street,Dante Ferretti,Period Film,FALSE,Art Direction
+2006,Casino Royale,Peter Lamont,Contemporary Film,TRUE,Art Direction
+2006,Babel,Brigitte Broch,Contemporary Film,FALSE,Art Direction
+2006,The Da Vinci Code,Allan Cameron,Contemporary Film,FALSE,Art Direction
+2006,The Departed,Kristi Zea,Contemporary Film,FALSE,Art Direction
+2006,The Queen,Alan MacDonald,Contemporary Film,FALSE,Art Direction
+2006,Pan's Labyrinth (El laberinto del fauno),Eugenio Caballero,Fantasy Film,TRUE,Art Direction
+2006,Children of Men,Jim Clay,Fantasy Film,FALSE,Art Direction
+2006,Children of Men,Geoffrey Kirkland,Fantasy Film,FALSE,Art Direction
+2006,Pirates of the Caribbean: Dead Man's Chest,Rick Heinrichs,Fantasy Film,FALSE,Art Direction
+2006,Superman Returns,Guy Hendrix Dyas,Fantasy Film,FALSE,Art Direction
+2006,V for Vendetta,Owen Patterson,Fantasy Film,FALSE,Art Direction
+2006,Curse of the Golden Flower,Tingxiao Huo,Period Film,TRUE,Art Direction
+2006,Dreamgirls,John Myhre,Period Film,FALSE,Art Direction
+2006,Flags of Our Fathers,Henry Bumstead,Period Film,FALSE,Art Direction
+2006,The Good Shepherd,Jeannine Oppewall,Period Film,FALSE,Art Direction
+2006,The Prestige,Nathan Crowley,Period Film,FALSE,Art Direction
+2005,Walk the Line,David J. Bomba,Contemporary Film,TRUE,Art Direction
+2005,Crash,Laurence Bennett,Contemporary Film,FALSE,Art Direction
+2005,Jarhead,Dennis Gassner,Contemporary Film,FALSE,Art Direction
+2005,Syriana,Dan Weil,Contemporary Film,FALSE,Art Direction
+2005,The Constant Gardener,Mark Tildesley,Contemporary Film,FALSE,Art Direction
+2005,Memoirs of a Geisha,John Myhre,Fantasy Film,TRUE,Art Direction
+2005,Batman Begins,Nathan Crowley,Fantasy Film,FALSE,Art Direction
+2005,Charlie and the Chocolate Factory,Alex McDowell,Fantasy Film,FALSE,Art Direction
+2005,"Good Night, and Good Luck.",James D. Bissell,Fantasy Film,FALSE,Art Direction
+2005,King Kong,Grant Major,Fantasy Film,FALSE,Art Direction
+2005,Memoirs of a Geisha,John Myhre,Period Film,TRUE,Art Direction
+2005,Batman Begins,Nathan Crowley,Period Film,FALSE,Art Direction
+2005,Charlie and the Chocolate Factory,Alex McDowell,Period Film,FALSE,Art Direction
+2005,"Good Night, and Good Luck.",James D. Bissell,Period Film,FALSE,Art Direction
+2005,King Kong,Grant Major,Period Film,FALSE,Art Direction
+2025,Bugonia,James Price,Contemporary Film,FALSE,Art Direction
+2025,F1,Ben Munro,Contemporary Film,FALSE,Art Direction
+2025,F1,Mark Tildesley,Contemporary Film,FALSE,Art Direction
+2025,Mission: Impossible - The Final Reckoning,Gary Freeman,Contemporary Film,FALSE,Art Direction
+2025,One Battle After Another,Florencia Martin,Contemporary Film,FALSE,Art Direction
+2025,Wake Up Dead Man: A Knives Out Mystery,Rick Heinrichs,Contemporary Film,FALSE,Art Direction
+2025,Frankenstein,Tamara Deverell,Period Film,FALSE,Art Direction
+2025,Hamnet,Fiona Crombie,Period Film,FALSE,Art Direction
+2025,Marty Supreme,Jack Fisk,Period Film,FALSE,Art Direction
+2025,The Phoenician Scheme,Adam Stockhausen,Period Film,FALSE,Art Direction
+2025,Sinners,Hannah Beachler,Period Film,FALSE,Art Direction
+2025,Avatar: Fire and Ash,Dylan Cole,Fantasy Film,FALSE,Art Direction
+2025,Avatar: Fire and Ash,Ben Procter,Fantasy Film,FALSE,Art Direction
+2025,The Fantastic Four: First Steps,Kasra Farahani,Fantasy Film,FALSE,Art Direction
+2025,Mickey 17,Fiona Crombie,Fantasy Film,FALSE,Art Direction
+2025,Superman,Beth Mickle,Fantasy Film,FALSE,Art Direction
+2025,Wicked: For Good,Nathan Crowley,Fantasy Film,FALSE,Art Direction
+2025,The Bad Guys 2,Luc Desmarchelier,Animated Film,FALSE,Art Direction
+2025,Elio,Harley Jessup,Animated Film,FALSE,Art Direction
+2025,KPop Demon Hunters,Mingjue Helen Chen,Animated Film,FALSE,Art Direction
+2025,KPop Demon Hunters,Dave Bleich,Animated Film,FALSE,Art Direction
+2025,The SpongeBob Movie: Search for SquarePants,Sean Haworth,Animated Film,FALSE,Art Direction
+2025,The SpongeBob Movie: Search for SquarePants,Pablo R. Mayer,Animated Film,FALSE,Art Direction
+2025,Zootopia 2,Cory Loftis,Animated Film,FALSE,Art Direction

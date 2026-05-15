@@ -1,0 +1,350 @@
+Year,Category,Nominee,Film,Concordance,Won
+2025,Documentaries,Mstyslav Chernov,2000 Meters to Andriivka,Directing,FALSE
+2025,Documentaries,Geeta Gandbhir,The Perfect Neighbor,Directing,FALSE
+2025,Documentaries,Sara Khaki,Cutting Through Rocks,Directing,FALSE
+2025,Documentaries,Elizabeth Lo,Mistress Dispeller,Directing,FALSE
+2025,Documentaries,Laura Poitras,Cover-Up,Directing,FALSE
+2025,Documentaries,Mohammadreza Eyni,Cutting Through Rocks,Directing,FALSE
+2025,Documentaries,Mark Obenhaus,Cover-Up,Directing,FALSE
+2025,Feature Film,Paul Thomas Anderson,One Battle After Another,Directing,FALSE
+2025,Feature Film,Ryan Coogler,Sinners,Directing,FALSE
+2025,Feature Film,Guillermo del Toro,Frankenstein,Directing,FALSE
+2025,Feature Film,Josh Safdie,Marty Supreme,Directing,FALSE
+2025,Feature Film,Chloé Zhao,Hamnet,Directing,FALSE
+2025,First-Time Feature Film,Hasan Hadi,The President's Cake,Directing,FALSE
+2025,First-Time Feature Film,Harry Lighton,Pillion,Directing,FALSE
+2025,First-Time Feature Film,Charlie Polinger,The Plague,Directing,FALSE
+2025,First-Time Feature Film,Alex Russell,Lurker,Directing,FALSE
+2025,First-Time Feature Film,Eva Victor,"Sorry, Baby",Directing,FALSE
+2024,Documentaries,Brendan Bellomo,Porcelain War,Directing,TRUE
+2024,Documentaries,Slava Leontyev,Porcelain War,Directing,TRUE
+2024,Documentaries,Julian Brave NoiseCat,Sugarcane,Directing,FALSE
+2024,Documentaries,Emily Kassie,Sugarcane,Directing,FALSE
+2024,Documentaries,Johan Grimonprez,Soundtrack to a Coup d'Etat,Directing,FALSE
+2024,Documentaries,Ibrahim Nash'at,Hollywoodgate,Directing,FALSE
+2024,Documentaries,Natalie Rae,Daughters,Directing,FALSE
+2024,Documentaries,Angela Patton,Daughters,Directing,FALSE
+2024,Feature Film,Sean Baker,Anora,Directing,TRUE
+2024,Feature Film,Jacques Audiard,Emilia Pérez,Directing,FALSE
+2024,Feature Film,Edward Berger,Conclave,Directing,FALSE
+2024,Feature Film,Brady Corbet,The Brutalist,Directing,FALSE
+2024,Feature Film,James Mangold,A Complete Unknown,Directing,FALSE
+2024,First-Time Feature Film,RaMell Ross,Nickel Boys,Directing,TRUE
+2024,First-Time Feature Film,Payal Kapadia,All We Imagine as Light,Directing,FALSE
+2024,First-Time Feature Film,Megan Park,My Old Ass,Directing,FALSE
+2024,First-Time Feature Film,Halfdan Ullmann Tøndel,Armand,Directing,FALSE
+2024,First-Time Feature Film,Sean Wang,Didi,Directing,FALSE
+2023,Documentaries,Moses Bwayo,Bobi Wine: The People's President,Directing,FALSE
+2023,Documentaries,Christopher Sharp,Bobi Wine: The People's President,Directing,FALSE
+2023,Documentaries,Mstyslav Chernov,20 Days in Mariupol,Directing,TRUE
+2023,Documentaries,Madeleine Gavin,Beyond Utopia,Directing,FALSE
+2023,Documentaries,Davis Guggenheim,Still: A Michael J. Fox Movie,Directing,FALSE
+2023,Documentaries,D. Smith,Kokomo City,Directing,FALSE
+2023,Feature Film,Greta Gerwig,Barbie,Directing,FALSE
+2023,Feature Film,Yorgos Lanthimos,Poor Things,Directing,FALSE
+2023,Feature Film,Christopher Nolan,Oppenheimer,Directing,TRUE
+2023,Feature Film,Alexander Payne,The Holdovers,Directing,FALSE
+2023,Feature Film,Martin Scorsese,Killers of the Flower Moon,Directing,FALSE
+2023,First-Time Feature Film,Cord Jefferson,American Fiction,Directing,FALSE
+2023,First-Time Feature Film,Manuela Martelli,Chile '76,Directing,FALSE
+2023,First-Time Feature Film,Noora Niasari,Shayda,Directing,FALSE
+2023,First-Time Feature Film,A. V. Rockwell,A Thousand and One,Directing,FALSE
+2023,First-Time Feature Film,Celine Song,Past Lives,Directing,TRUE
+2022,First-Time Feature Film,Alice Diop,Saint Omer,Directing,FALSE
+2022,First-Time Feature Film,Audrey Diwan,Happening,Directing,FALSE
+2022,First-Time Feature Film,John Patton Ford,Emily the Criminal,Directing,FALSE
+2022,First-Time Feature Film,Antoneta Alamat Kusijanović,Murina,Directing,FALSE
+2022,First-Time Feature Film,Charlotte Wells,Aftersun,Directing,TRUE
+2022,Feature Film,Todd Field,Tár,Directing,FALSE
+2022,Feature Film,Joseph Kosinski,Top Gun: Maverick,Directing,FALSE
+2022,Feature Film,Daniel Kwan,Everything Everywhere All at Once,Directing,TRUE
+2022,Feature Film,Daniel Scheinert,Everything Everywhere All at Once,Directing,TRUE
+2022,Feature Film,Martin McDonagh,The Banshees of Inisherin,Directing,FALSE
+2022,Feature Film,Steven Spielberg,The Fabelmans,Directing,FALSE
+2022,Documentaries,Sara Dosa,Fire of Love,Directing,TRUE
+2022,Documentaries,Matthew Heineman,Retrograde,Directing,FALSE
+2022,Documentaries,Laura Poitras,All the Beauty and the Bloodshed,Directing,FALSE
+2022,Documentaries,Daniel Roher,Navalny,Directing,FALSE
+2022,Documentaries,Shaunak Sen,All That Breathes,Directing,FALSE
+2021,First-Time Feature Film,Maggie Gyllenhaal,The Lost Daughter,Directing,TRUE
+2021,First-Time Feature Film,Rebecca Hall,Passing,Directing,FALSE
+2021,First-Time Feature Film,Tatiana Huezo,Prayers for the Stolen,Directing,FALSE
+2021,First-Time Feature Film,Lin-Manuel Miranda,"Tick, Tick... Boom!",Directing,FALSE
+2021,First-Time Feature Film,Michael Sarnoski,Pig,Directing,FALSE
+2021,First-Time Feature Film,Emma Seligman,Shiva Baby,Directing,FALSE
+2021,Feature Film,Jane Campion,The Power of the Dog,Directing,TRUE
+2021,Feature Film,Paul Thomas Anderson,Licorice Pizza,Directing,FALSE
+2021,Feature Film,Kenneth Branagh,Belfast,Directing,FALSE
+2021,Feature Film,Steven Spielberg,West Side Story,Directing,FALSE
+2021,Feature Film,Denis Villeneuve,Dune,Directing,FALSE
+2021,Documentaries,Stanley Nelson Jr.,Attica,Directing,TRUE
+2021,Documentaries,Jessica Kingdon,Ascension,Directing,FALSE
+2021,Documentaries,Raoul Peck,Exterminate All the Brutes,Directing,FALSE
+2021,Documentaries,"Ahmir ""Questlove"" Thompson","Summer of Soul (...Or, When the Revolution Could Not Be Televised)",Directing,FALSE
+2021,Documentaries,Elizabeth Chai Vasarhelyi,The Rescue,Directing,FALSE
+2021,Documentaries,Jimmy Chin,The Rescue,Directing,FALSE
+2020,First-Time Feature Film,Darius Marder,Sound of Metal,Directing,TRUE
+2020,First-Time Feature Film,Radha Blank,The 40-Year-Old Version,Directing,FALSE
+2020,First-Time Feature Film,Fernando Frías de la Parra,I'm No Longer Here,Directing,FALSE
+2020,First-Time Feature Film,Regina King,One Night in Miami...,Directing,FALSE
+2020,First-Time Feature Film,Florian Zeller,The Father,Directing,FALSE
+2020,Feature Film,Chloé Zhao,Nomadland,Directing,TRUE
+2020,Feature Film,Lee Isaac Chung,Minari,Directing,FALSE
+2020,Feature Film,Emerald Fennell,Promising Young Woman,Directing,FALSE
+2020,Feature Film,David Fincher,Mank,Directing,FALSE
+2020,Feature Film,Aaron Sorkin,The Trial of the Chicago 7,Directing,FALSE
+2020,Documentaries,Michael Dweck,The Truffle Hunters,Directing,TRUE
+2020,Documentaries,Gregory Kershaw,The Truffle Hunters,Directing,TRUE
+2020,Documentaries,Pippa Ehrlich,My Octopus Teacher,Directing,FALSE
+2020,Documentaries,James Reed,My Octopus Teacher,Directing,FALSE
+2020,Documentaries,David France,Welcome to Chechnya,Directing,FALSE
+2020,Documentaries,Amanda McBaine,Boys State,Directing,FALSE
+2020,Documentaries,Jesse Moss,Boys State,Directing,FALSE
+2020,Documentaries,Benjamin Ree,The Painter and the Thief,Directing,FALSE
+2019,First-Time Feature Film,Alma Har'el,Honey Boy,Directing,TRUE
+2019,First-Time Feature Film,Mati Diop,Atlantics,Directing,FALSE
+2019,First-Time Feature Film,Melina Matsoukas,Queen & Slim,Directing,FALSE
+2019,First-Time Feature Film,Tyler Nilson,The Peanut Butter Falcon,Directing,FALSE
+2019,First-Time Feature Film,Michael Schwartz,The Peanut Butter Falcon,Directing,FALSE
+2019,First-Time Feature Film,Joe Talbot,The Last Black Man in San Francisco,Directing,FALSE
+2019,Feature Film,Sam Mendes,1917,Directing,TRUE
+2019,Feature Film,Bong Joon-ho,Parasite,Directing,FALSE
+2019,Feature Film,Martin Scorsese,The Irishman,Directing,FALSE
+2019,Feature Film,Quentin Tarantino,Once Upon a Time in Hollywood,Directing,FALSE
+2019,Feature Film,Taika Waititi,Jojo Rabbit,Directing,FALSE
+2019,Documentaries,Steven Bognar,American Factory,Directing,TRUE
+2019,Documentaries,Julia Reichert,American Factory,Directing,TRUE
+2019,Documentaries,Feras Fayyad,The Cave,Directing,FALSE
+2019,Documentaries,Alex Holmes,Maiden,Directing,FALSE
+2019,Documentaries,Ljubomir Stefanov,Honeyland,Directing,FALSE
+2019,Documentaries,Tamara Kotevska,Honeyland,Directing,FALSE
+2019,Documentaries,Nanfu Wang,One Child Nation,Directing,FALSE
+2019,Documentaries,Jialing Zhang,One Child Nation,Directing,FALSE
+2018,First-Time Feature Film,Bo Burnham,Eighth Grade,Directing,TRUE
+2018,First-Time Feature Film,Bradley Cooper,A Star Is Born,Directing,FALSE
+2018,First-Time Feature Film,Carlos López Estrada,Blindspotting,Directing,FALSE
+2018,First-Time Feature Film,Matthew Heineman,A Private War,Directing,FALSE
+2018,First-Time Feature Film,Boots Riley,Sorry to Bother You,Directing,FALSE
+2018,Feature Film,Alfonso Cuarón,Roma,Directing,TRUE
+2018,Feature Film,Bradley Cooper,A Star Is Born,Directing,FALSE
+2018,Feature Film,Peter Farrelly,Green Book,Directing,FALSE
+2018,Feature Film,Spike Lee,BlacKkKlansman,Directing,FALSE
+2018,Feature Film,Adam McKay,Vice,Directing,FALSE
+2018,Documentaries,Tim Wardle,Three Identical Strangers,Directing,TRUE
+2018,Documentaries,Morgan Neville,Won't You Be My Neighbor?,Directing,FALSE
+2018,Documentaries,RaMell Ross,"Hale County This Morning, This Evening",Directing,FALSE
+2018,Documentaries,Elizabeth Chai Vasarhelyi,Free Solo,Directing,FALSE
+2018,Documentaries,Jimmy Chin,Free Solo,Directing,FALSE
+2018,Documentaries,Betsy West,RBG,Directing,FALSE
+2018,Documentaries,Julie Cohen,RBG,Directing,FALSE
+2017,First-Time Feature Film,Jordan Peele,Get Out,Directing,TRUE
+2017,First-Time Feature Film,Geremy Jasper,Patti Cake$,Directing,FALSE
+2017,First-Time Feature Film,William Oldroyd,Lady Macbeth,Directing,FALSE
+2017,First-Time Feature Film,Taylor Sheridan,Wind River,Directing,FALSE
+2017,First-Time Feature Film,Aaron Sorkin,Molly's Game,Directing,FALSE
+2017,Feature Film,Guillermo del Toro,The Shape of Water,Directing,TRUE
+2017,Feature Film,Greta Gerwig,Lady Bird,Directing,FALSE
+2017,Feature Film,Martin McDonagh,"Three Billboards Outside Ebbing, Missouri",Directing,FALSE
+2017,Feature Film,Christopher Nolan,Dunkirk,Directing,FALSE
+2017,Feature Film,Jordan Peele,Get Out,Directing,FALSE
+2017,Documentaries,Matthew Heineman,City of Ghosts,Directing,TRUE
+2017,Documentaries,Ken Burns,The Vietnam War,Directing,FALSE
+2017,Documentaries,Lynn Novick,The Vietnam War,Directing,FALSE
+2017,Documentaries,Bryan Fogel,Icarus,Directing,FALSE
+2017,Documentaries,Steve James,Abacus: Small Enough to Jail,Directing,FALSE
+2017,Documentaries,Errol Morris,Wormwood,Directing,FALSE
+2016,First-Time Feature Film,Garth Davis,Lion,Directing,TRUE
+2016,First-Time Feature Film,Kelly Fremon Craig,The Edge of Seventeen,Directing,FALSE
+2016,First-Time Feature Film,Tim Miller,Deadpool,Directing,FALSE
+2016,First-Time Feature Film,Nate Parker,The Birth of a Nation,Directing,FALSE
+2016,First-Time Feature Film,Dan Trachtenberg,10 Cloverfield Lane,Directing,FALSE
+2016,Feature Film,Damien Chazelle,La La Land,Directing,TRUE
+2016,Feature Film,Garth Davis,Lion,Directing,FALSE
+2016,Feature Film,Barry Jenkins,Moonlight,Directing,FALSE
+2016,Feature Film,Kenneth Lonergan,Manchester by the Sea,Directing,FALSE
+2016,Feature Film,Denis Villeneuve,Arrival,Directing,FALSE
+2016,Documentaries,Ezra Edelman,O.J.: Made in America,Directing,TRUE
+2016,Documentaries,Otto Bell,The Eagle Huntress,Directing,FALSE
+2016,Documentaries,Josh Kriegman,Weiner,Directing,FALSE
+2016,Documentaries,Elyse Steinberg,Weiner,Directing,FALSE
+2016,Documentaries,Raoul Peck,I Am Not Your Negro,Directing,FALSE
+2016,Documentaries,Roger Ross Williams,"Life, Animated",Directing,FALSE
+2015,First-Time Feature Film,Alex Garland,Ex Machina,Directing,TRUE
+2015,First-Time Feature Film,Fernando Coimbra,A Wolf at the Door,Directing,FALSE
+2015,First-Time Feature Film,Joel Edgerton,The Gift,Directing,FALSE
+2015,First-Time Feature Film,Marielle Heller,The Diary of a Teenage Girl,Directing,FALSE
+2015,First-Time Feature Film,László Nemes,Son of Saul,Directing,FALSE
+2015,Feature Film,Alejandro González Iñárritu,The Revenant,Directing,TRUE
+2015,Feature Film,Tom McCarthy,Spotlight,Directing,FALSE
+2015,Feature Film,Adam McKay,The Big Short,Directing,FALSE
+2015,Feature Film,George Miller,Mad Max: Fury Road,Directing,FALSE
+2015,Feature Film,Ridley Scott,The Martian,Directing,FALSE
+2015,Documentaries,Matthew Heineman,Cartel Land,Directing,TRUE
+2015,Documentaries,Jimmy Chin,Meru,Directing,FALSE
+2015,Documentaries,Elizabeth Chai Vasarhelyi,Meru,Directing,FALSE
+2015,Documentaries,Liz Garbus,"What Happened, Miss Simone?",Directing,FALSE
+2015,Documentaries,Alex Gibney,Going Clear: Scientology and the Prison of Belief,Directing,FALSE
+2015,Documentaries,Asif Kapadia,Amy,Directing,FALSE
+2014,First-Time Feature Film,,,Directing,TRUE
+2014,First-Time Feature Film,,,Directing,FALSE
+2014,First-Time Feature Film,,,Directing,FALSE
+2014,First-Time Feature Film,,,Directing,FALSE
+2014,First-Time Feature Film,,,Directing,FALSE
+2014,Feature Film,Alejandro González Iñárritu,Birdman or (The Unexpected Virtue of Ignorance),Directing,TRUE
+2014,Feature Film,Wes Anderson,The Grand Budapest Hotel,Directing,FALSE
+2014,Feature Film,Clint Eastwood,American Sniper,Directing,FALSE
+2014,Feature Film,Richard Linklater,Boyhood,Directing,FALSE
+2014,Feature Film,Morten Tyldum,The Imitation Game,Directing,FALSE
+2014,Documentaries,Laura Poitras,Citizenfour,Directing,TRUE
+2014,Documentaries,Dan Krauss,The Kill Team,Directing,FALSE
+2014,Documentaries,John Maloof,Finding Vivian Maier,Directing,FALSE
+2014,Documentaries,Charlie Siskel,Finding Vivian Maier,Directing,FALSE
+2014,Documentaries,Jesse Moss,The Overnighters,Directing,FALSE
+2014,Documentaries,Orlando von Einsiedel,Virunga,Directing,FALSE
+2013,First-Time Feature Film,,,Directing,TRUE
+2013,First-Time Feature Film,,,Directing,FALSE
+2013,First-Time Feature Film,,,Directing,FALSE
+2013,First-Time Feature Film,,,Directing,FALSE
+2013,First-Time Feature Film,,,Directing,FALSE
+2013,Feature Film,Alfonso Cuarón,Gravity,Directing,TRUE
+2013,Feature Film,Paul Greengrass,Captain Phillips,Directing,FALSE
+2013,Feature Film,Steve McQueen,12 Years a Slave,Directing,FALSE
+2013,Feature Film,David O. Russell,American Hustle,Directing,FALSE
+2013,Feature Film,Martin Scorsese,The Wolf of Wall Street,Directing,FALSE
+2013,Documentaries,Jehane Noujaim,The Square,Directing,TRUE
+2013,Documentaries,Zachary Heinzerling,Cutie and the Boxer,Directing,FALSE
+2013,Documentaries,Joshua Oppenheimer,The Act of Killing,Directing,FALSE
+2013,Documentaries,Sarah Polley,Stories We Tell,Directing,FALSE
+2013,Documentaries,Lucy Walker,The Crash Reel,Directing,FALSE
+2012,First-Time Feature Film,,,Directing,TRUE
+2012,First-Time Feature Film,,,Directing,FALSE
+2012,First-Time Feature Film,,,Directing,FALSE
+2012,First-Time Feature Film,,,Directing,FALSE
+2012,First-Time Feature Film,,,Directing,FALSE
+2012,Feature Film,Ben Affleck,Argo,Directing,TRUE
+2012,Feature Film,Kathryn Bigelow,Zero Dark Thirty,Directing,FALSE
+2012,Feature Film,Tom Hooper,Les Misérables,Directing,FALSE
+2012,Feature Film,Ang Lee,Life of Pi,Directing,FALSE
+2012,Feature Film,Steven Spielberg,Lincoln,Directing,FALSE
+2012,Documentaries,Malik Bendjelloul,Searching for Sugar Man,Directing,TRUE
+2012,Documentaries,Kirby Dick,The Invisible War,Directing,FALSE
+2012,Documentaries,David France,How to Survive a Plague,Directing,FALSE
+2012,Documentaries,Lauren Greenfield,The Queen of Versailles,Directing,FALSE
+2012,Documentaries,Alison Klayman,Ai Weiwei: Never Sorry,Directing,FALSE
+2011,First-Time Feature Film,,,Directing,TRUE
+2011,First-Time Feature Film,,,Directing,FALSE
+2011,First-Time Feature Film,,,Directing,FALSE
+2011,First-Time Feature Film,,,Directing,FALSE
+2011,First-Time Feature Film,,,Directing,FALSE
+2011,Feature Film,Michel Hazanavicius,The Artist,Directing,TRUE
+2011,Feature Film,Woody Allen,Midnight in Paris,Directing,FALSE
+2011,Feature Film,David Fincher,The Girl with the Dragon Tattoo,Directing,FALSE
+2011,Feature Film,Alexander Payne,The Descendants,Directing,FALSE
+2011,Feature Film,Martin Scorsese,Hugo,Directing,FALSE
+2011,Documentaries,James Marsh,Project Nim,Directing,TRUE
+2011,Documentaries,Joe Berlinger,Paradise Lost 3: Purgatory,Directing,FALSE
+2011,Documentaries,Bruce Sinofsky,Paradise Lost 3: Purgatory,Directing,FALSE
+2011,Documentaries,Steve James,The Interrupters,Directing,FALSE
+2011,Documentaries,Richard Press,Bill Cunningham New York,Directing,FALSE
+2011,Documentaries,Martin Scorsese,George Harrison: Living in the Material World,Directing,FALSE
+2010,First-Time Feature Film,,,Directing,TRUE
+2010,First-Time Feature Film,,,Directing,FALSE
+2010,First-Time Feature Film,,,Directing,FALSE
+2010,First-Time Feature Film,,,Directing,FALSE
+2010,First-Time Feature Film,,,Directing,FALSE
+2010,Feature Film,Tom Hooper,The King's Speech,Directing,TRUE
+2010,Feature Film,Darren Aronofsky,Black Swan,Directing,FALSE
+2010,Feature Film,David Fincher,The Social Network,Directing,FALSE
+2010,Feature Film,Christopher Nolan,Inception,Directing,FALSE
+2010,Feature Film,David O. Russell,The Fighter,Directing,FALSE
+2010,Documentaries,Charles Ferguson,Inside Job,Directing,TRUE
+2010,Documentaries,Lixin Fan,Last Train Home,Directing,FALSE
+2010,Documentaries,Alex Gibney,Client 9: The Rise and Fall of Eliot Spitzer,Directing,FALSE
+2010,Documentaries,Davis Guggenheim,"Waiting for ""Superman""",Directing,FALSE
+2010,Documentaries,Tim Hetherington,Restrepo,Directing,FALSE
+2010,Documentaries,Sebastian Junger,Restrepo,Directing,FALSE
+2009,First-Time Feature Film,,,Directing,TRUE
+2009,First-Time Feature Film,,,Directing,FALSE
+2009,First-Time Feature Film,,,Directing,FALSE
+2009,First-Time Feature Film,,,Directing,FALSE
+2009,First-Time Feature Film,,,Directing,FALSE
+2009,First-Time Feature Film,,,Directing,FALSE
+2009,Feature Film,Kathryn Bigelow,The Hurt Locker,Directing,TRUE
+2009,Feature Film,James Cameron,Avatar,Directing,FALSE
+2009,Feature Film,Lee Daniels,Precious,Directing,FALSE
+2009,Feature Film,Jason Reitman,Up in the Air,Directing,FALSE
+2009,Feature Film,Quentin Tarantino,Inglourious Basterds,Directing,FALSE
+2009,Feature Film,,,Directing,FALSE
+2009,Documentaries,Louie Psihoyos,The Cove,Directing,TRUE
+2009,Documentaries,Sacha Gervasi,Anvil! The Story of Anvil,Directing,FALSE
+2009,Documentaries,Mai Iskander,Garbage Dreams,Directing,FALSE
+2009,Documentaries,Robert Kenner,"Food, Inc.",Directing,FALSE
+2009,Documentaries,Geoffrey Smith,The English Surgeon,Directing,FALSE
+2009,Documentaries,Agnès Varda,The Beaches of Agnès,Directing,FALSE
+2008,First-Time Feature Film,,,Directing,TRUE
+2008,First-Time Feature Film,,,Directing,FALSE
+2008,First-Time Feature Film,,,Directing,FALSE
+2008,First-Time Feature Film,,,Directing,FALSE
+2008,First-Time Feature Film,,,Directing,FALSE
+2008,Feature Film,Danny Boyle,Slumdog Millionaire,Directing,TRUE
+2008,Feature Film,David Fincher,The Curious Case of Benjamin Button,Directing,FALSE
+2008,Feature Film,Ron Howard,Frost/Nixon,Directing,FALSE
+2008,Feature Film,Christopher Nolan,The Dark Knight,Directing,FALSE
+2008,Feature Film,Gus Van Sant,Milk,Directing,FALSE
+2008,Documentaries,Ari Folman,Waltz with Bashir,Directing,TRUE
+2008,Documentaries,Peter Gilbert,At the Death House Door,Directing,FALSE
+2008,Documentaries,Steve James,At the Death House Door,Directing,FALSE
+2008,Documentaries,Elizabeth Farnsworth,The Judge and the General,Directing,FALSE
+2008,Documentaries,Patricio Lanfranco,The Judge and the General,Directing,FALSE
+2008,Documentaries,James Marsh,Man on Wire,Directing,FALSE
+2008,Documentaries,Gonzalo Arijón,Stranded: I've Come from a Plane that Crashed in the Mountains,Directing,FALSE
+2007,First-Time Feature Film,,,Directing,TRUE
+2007,First-Time Feature Film,,,Directing,FALSE
+2007,First-Time Feature Film,,,Directing,FALSE
+2007,First-Time Feature Film,,,Directing,FALSE
+2007,First-Time Feature Film,,,Directing,FALSE
+2007,Feature Film,Ethan,No Country for Old Men,Directing,TRUE
+2007,Feature Film,Joel Coen,No Country for Old Men,Directing,TRUE
+2007,Feature Film,Paul Thomas Anderson,There Will Be Blood,Directing,FALSE
+2007,Feature Film,Tony Gilroy,Michael Clayton,Directing,FALSE
+2007,Feature Film,Sean Penn,Into the Wild,Directing,FALSE
+2007,Feature Film,Julian Schnabel,The Diving Bell and the Butterfly (Le scaphandre et le papillon),Directing,FALSE
+2007,Documentaries,Asger Leth,Ghosts of Cité Soleil,Directing,TRUE
+2007,Documentaries,Ken Burns,The War,Directing,FALSE
+2007,Documentaries,Lynn Novick,The War,Directing,FALSE
+2007,Documentaries,Alex Gibney,Taxi to the Dark Side,Directing,FALSE
+2007,Documentaries,Richard E. Robbins,Operation Homecoming: Writing the Wartime Experience,Directing,FALSE
+2007,Documentaries,Barbet Schroeder,Terror's Advocate,Directing,FALSE
+2006,First-Time Feature Film,,,Directing,TRUE
+2006,First-Time Feature Film,,,Directing,FALSE
+2006,First-Time Feature Film,,,Directing,FALSE
+2006,First-Time Feature Film,,,Directing,FALSE
+2006,First-Time Feature Film,,,Directing,FALSE
+2006,Feature Film,Martin Scorsese,The Departed,Directing,TRUE
+2006,Feature Film,Bill Condon,Dreamgirls,Directing,FALSE
+2006,Feature Film,Jonathan Dayton,Little Miss Sunshine,Directing,FALSE
+2006,Feature Film,Valerie Faris,Little Miss Sunshine,Directing,FALSE
+2006,Feature Film,Stephen Frears,The Queen,Directing,FALSE
+2006,Feature Film,Alejandro González Iñárritu,Babel,Directing,FALSE
+2006,Documentaries,Arūnas Matelis,Before Flying Back to Earth,Directing,TRUE
+2006,Documentaries,Amy J. Berg,Deliver Us from Evil,Directing,FALSE
+2006,Documentaries,Michael Glawogger,Workingman's Death,Directing,FALSE
+2006,Documentaries,James Longley,Iraq in Fragments,Directing,FALSE
+2006,Documentaries,Jean-Henri Meunier,"Ici Najac, A Vous La Terre",Directing,FALSE
+2005,First-Time Feature Film,,,Directing,TRUE
+2005,First-Time Feature Film,,,Directing,FALSE
+2005,First-Time Feature Film,,,Directing,FALSE
+2005,First-Time Feature Film,,,Directing,FALSE
+2005,First-Time Feature Film,,,Directing,FALSE
+2005,Feature Film,Ang Lee,Brokeback Mountain,Directing,TRUE
+2005,Feature Film,George Clooney,"Good Night, and Good Luck.",Directing,FALSE
+2005,Feature Film,Paul Haggis,Crash,Directing,FALSE
+2005,Feature Film,Bennett Miller,Capote,Directing,FALSE
+2005,Feature Film,Steven Spielberg,Munich,Directing,FALSE
+2005,Documentaries,Werner Herzog,Grizzly Man,Directing,TRUE
+2005,Documentaries,Kief Davidson,The Devil's Miner,Directing,FALSE
+2005,Documentaries,Richard Ladkani,The Devil's Miner,Directing,FALSE
+2005,Documentaries,Sean McAllister,The Liberace of Baghdad,Directing,FALSE
+2005,Documentaries,Rupert Murray,Unknown White Male,Directing,FALSE
+2005,Documentaries,Brent Renaud,Off to War: Welcome to Baghdad,Directing,FALSE
+2005,Documentaries,Craig Renaud,Off to War: Welcome to Baghdad,Directing,FALSE

@@ -1,0 +1,330 @@
+Year,Film,Nominee,Category,Won,Concordance
+2024,Conclave,Lisy Christi,Contemporary Film,TRUE,Costuming
+2024,Challengers,Jonathan Anderson,Contemporary Film,FALSE,Costuming
+2024,Emilia Pérez,Virginie Montel,Contemporary Film,FALSE,Costuming
+2024,The Fall Guy,Sarah Evelyn,Contemporary Film,FALSE,Costuming
+2024,The Substance,Emmanuelle Youchnovski,Contemporary Film,FALSE,Costuming
+2024,Nosferatu,Linda Muir,Period Film,TRUE,Costuming
+2024,The Book of Clarence,Antoinette Messam,Period Film,FALSE,Costuming
+2024,Gladiator II,Janty Yates,Period Film,FALSE,Costuming
+2024,Gladiator II,Dave Crossman,Period Film,FALSE,Costuming
+2024,Maria,Massimo Cantini Parrini,Period Film,FALSE,Costuming
+2024,Saturday Night,Danny Glicker,Period Film,FALSE,Costuming
+2024,Wicked,Paul Tazewell,Fantasy Film,TRUE,Costuming
+2024,Beetlejuice Beetlejuice,Colleen Atwood,Fantasy Film,FALSE,Costuming
+2024,Borderlands,Daniel Orlandi,Fantasy Film,FALSE,Costuming
+2024,Dune: Part Two,Jacqueline West,Fantasy Film,FALSE,Costuming
+2024,Furiosa: A Mad Max Saga,Jenny Beavan,Fantasy Film,FALSE,Costuming
+2023,American Fiction,Rudy Mance,Contemporary Film,FALSE,Costuming
+2023,May December,April Napier,Contemporary Film,FALSE,Costuming
+2023,Nyad,Kelli Jones,Contemporary Film,FALSE,Costuming
+2023,Renfield,Lisa Lovaas,Contemporary Film,FALSE,Costuming
+2023,Saltburn,Sophie Canale,Contemporary Film,TRUE,Costuming
+2023,Killers of the Flower Moon,Jacqueline West,Period Film,FALSE,Costuming
+2023,Maestro,Mark Bridges,Period Film,FALSE,Costuming
+2023,Napoleon,Janty Yates,Period Film,FALSE,Costuming
+2023,Napoleon,Dave Crossman,Period Film,FALSE,Costuming
+2023,Oppenheimer,Ellen Mirojnick,Period Film,FALSE,Costuming
+2023,Poor Things,Holly Waddington,Period Film,TRUE,Costuming
+2023,Barbie,Jacqueline Durran,Fantasy Film,TRUE,Costuming
+2023,Haunted Mansion,Jeffrey Kurland,Fantasy Film,FALSE,Costuming
+2023,The Hunger Games: The Ballad of Songbirds & Snakes,Trish Summerville,Fantasy Film,FALSE,Costuming
+2023,The Little Mermaid,Colleen Atwood,Fantasy Film,FALSE,Costuming
+2023,The Little Mermaid,Christine Cantella,Fantasy Film,FALSE,Costuming
+2023,Rebel Moon — Part One: A Child of Fire,Stephanie Porter,Fantasy Film,FALSE,Costuming
+2022,Glass Onion: A 'Knives Out' Mystery,Jenny Eagan,Contemporary Film,TRUE,Costuming
+2022,Nope,Alex Bovaird,Contemporary Film,FALSE,Costuming
+2022,Tár,Bina Daigeler,Contemporary Film,FALSE,Costuming
+2022,Top Gun: Maverick,Marlene Stewart,Contemporary Film,FALSE,Costuming
+2022,Women Talking,Quita Alfred,Contemporary Film,FALSE,Costuming
+2022,Babylon,Mary Zophres,Period Film,FALSE,Costuming
+2022,Don't Worry Darling,Arianne Phillips,Period Film,FALSE,Costuming
+2022,Elvis,Catherine Martin,Period Film,TRUE,Costuming
+2022,Mrs. Harris Goes to Paris,Jenny Beavan,Period Film,FALSE,Costuming
+2022,The Woman King,Gersha Phillips,Period Film,FALSE,Costuming
+2022,Avatar: The Way of Water,Deborah L. Scott,Fantasy Film,FALSE,Costuming
+2022,Black Panther: Wakanda Forever,Ruth E. Carter,Fantasy Film,FALSE,Costuming
+2022,Everything Everywhere All at Once,Shirley Kurata,Fantasy Film,TRUE,Costuming
+2022,Hocus Pocus 2,Salvador Perez,Fantasy Film,FALSE,Costuming
+2022,Thor: Love and Thunder,Mayes C. Rubeo,Fantasy Film,FALSE,Costuming
+2021,Coming 2 America,Ruth E. Carter,Contemporary Film,TRUE,Costuming
+2021,Don't Look Up,Susan Matheson,Contemporary Film,FALSE,Costuming
+2021,In the Heights,Mitchell Travers,Contemporary Film,FALSE,Costuming
+2021,No Time to Die,Suttirat Anne Larlarb,Contemporary Film,FALSE,Costuming
+2021,Zola,Derica Cole Washington,Contemporary Film,FALSE,Costuming
+2021,Cruella,Jenny Beavan,Period Film,TRUE,Costuming
+2021,Cyrano,Massimo Cantini Parrini,Period Film,FALSE,Costuming
+2021,Cyrano,Jacqueline Durran,Period Film,FALSE,Costuming
+2021,House of Gucci,Janty Yates,Period Film,FALSE,Costuming
+2021,Nightmare Alley,Luis Sequeira,Period Film,FALSE,Costuming
+2021,West Side Story,Paul Tazewell,Period Film,FALSE,Costuming
+2021,Dune,Jacqueline West,Fantasy Film,TRUE,Costuming
+2021,Dune,Robert Morgan,Fantasy Film,TRUE,Costuming
+2021,The Green Knight,Malgosia Turzanska,Fantasy Film,FALSE,Costuming
+2021,The Matrix Resurrections,Lindsay Pugh,Fantasy Film,FALSE,Costuming
+2021,Shang-Chi and the Legend of the Ten Rings,Kym Barrett,Fantasy Film,FALSE,Costuming
+2021,Spider-Man: No Way Home,Sanja M. Hays,Fantasy Film,FALSE,Costuming
+2021,The Suicide Squad,Judianna Makovsky,Fantasy Film,FALSE,Costuming
+2020,Promising Young Woman,Nancy Steiner,Contemporary Film,TRUE,Costuming
+2020,Barb and Star Go to Vista Del Mar,Trayce Gigi Field,Contemporary Film,FALSE,Costuming
+2020,Birds of Prey (and the Fantabulous Emancipation of One Harley Quinn),Erin Benach,Contemporary Film,FALSE,Costuming
+2020,Da 5 Bloods,Donna Berwick,Contemporary Film,FALSE,Costuming
+2020,The Prom,Lou Eyrich,Contemporary Film,FALSE,Costuming
+2020,Ma Rainey’s Black Bottom,Ann Roth,Period Film,TRUE,Costuming
+2020,Emma.,Alexandra Byrne,Period Film,FALSE,Costuming
+2020,Judas and the Black Messiah,Charlese Antoinette Jones,Period Film,FALSE,Costuming
+2020,Mank,Trish Summerville,Period Film,FALSE,Costuming
+2020,One Night in Miami...,Francine Jamison-Tanchuck,Period Film,FALSE,Costuming
+2020,Mulan,Bina Daigeler,Fantasy Film,TRUE,Costuming
+2020,Dolittle,Jenny Beavan,Fantasy Film,FALSE,Costuming
+2020,Jingle Jangle: A Christmas Journey,Michael Wilkinson,Fantasy Film,FALSE,Costuming
+2020,Pinocchio,Massimo Cantini Parrini,Fantasy Film,FALSE,Costuming
+2020,Wonder Woman 1984,Lindy Hemming,Fantasy Film,FALSE,Costuming
+2019,Knives Out,Jenny Eagan,Contemporary Film,TRUE,Costuming
+2019,A Beautiful Day in the Neighborhood,Arjun Bhasin,Contemporary Film,FALSE,Costuming
+2019,Hustlers,Mitchell Travers,Contemporary Film,FALSE,Costuming
+2019,The Laundromat,Ellen Mirojnick,Contemporary Film,FALSE,Costuming
+2019,Queen & Slim,Shiona Turini,Contemporary Film,FALSE,Costuming
+2019,Jojo Rabbit,Mayes C. Rubeo,Period Film,TRUE,Costuming
+2019,Dolemite Is My Name,Ruth E. Carter,Period Film,FALSE,Costuming
+2019,Downton Abbey,Anna Mary Scott Robbins,Period Film,FALSE,Costuming
+2019,Once Upon a Time in Hollywood,Arianne Phillips,Period Film,FALSE,Costuming
+2019,Rocketman,Julian Day,Period Film,FALSE,Costuming
+2019,Maleficent: Mistress of Evil,Ellen Mirojnick,Fantasy Film,TRUE,Costuming
+2019,Aladdin,Michael Wilkinson,Fantasy Film,FALSE,Costuming
+2019,Avengers: Endgame,Judianna Makovsky,Fantasy Film,FALSE,Costuming
+2019,Captain Marvel,Sanja M. Hays,Fantasy Film,FALSE,Costuming
+2019,Star Wars: The Rise of Skywalker,Michael Kaplan,Fantasy Film,FALSE,Costuming
+2018,Crazy Rich Asians,Mary E. Vogt,Contemporary Film,TRUE,Costuming
+2018,Mamma Mia! Here We Go Again,Michele Clapton,Contemporary Film,FALSE,Costuming
+2018,Ocean's 8,Sarah Edwards,Contemporary Film,FALSE,Costuming
+2018,Red Sparrow,Trish Summerville,Contemporary Film,FALSE,Costuming
+2018,A Star Is Born,Erin Benach,Contemporary Film,FALSE,Costuming
+2018,Widows,Jenny Eagan,Contemporary Film,FALSE,Costuming
+2018,The Favourite,Sandy Powell,Period Film,TRUE,Costuming
+2018,BlacKkKlansman,Marci Rodgers,Period Film,FALSE,Costuming
+2018,Bohemian Rhapsody,Julian Day,Period Film,FALSE,Costuming
+2018,Mary Poppins Returns,Sandy Powell,Period Film,FALSE,Costuming
+2018,Mary Queen of Scots,Alexandra Byrne,Period Film,FALSE,Costuming
+2018,Black Panther,Ruth E. Carter,Fantasy Film,TRUE,Costuming
+2018,Aquaman,Kym Barrett,Fantasy Film,FALSE,Costuming
+2018,Avengers: Infinity War,Judianna Makovsky,Fantasy Film,FALSE,Costuming
+2018,The Nutcracker and the Four Realms,Jenny Beavan,Fantasy Film,FALSE,Costuming
+2018,A Wrinkle in Time,Paco Delgado,Fantasy Film,FALSE,Costuming
+2017,"I, Tonya",Jennifer Johnson,Contemporary Film,TRUE,Costuming
+2017,Get Out,Nadine Haders,Contemporary Film,FALSE,Costuming
+2017,Kingsman: The Golden Circle,Arianne Phillips,Contemporary Film,FALSE,Costuming
+2017,Lady Bird,April Napier,Contemporary Film,FALSE,Costuming
+2017,"Three Billboards Outside Ebbing, Missouri",Melissa Toth,Contemporary Film,FALSE,Costuming
+2017,The Shape of Water,Luis Sequeira,Period Film,TRUE,Costuming
+2017,Dunkirk,Jeffrey Kurland,Period Film,FALSE,Costuming
+2017,The Greatest Showman,Ellen Mirojnick,Period Film,FALSE,Costuming
+2017,Murder on the Orient Express,Alexandra Byrne,Period Film,FALSE,Costuming
+2017,Phantom Thread,Mark Bridges,Period Film,FALSE,Costuming
+2017,Wonder Woman,Lindy Hemming,Fantasy Film,TRUE,Costuming
+2017,Beauty and the Beast,Jacqueline Durran,Fantasy Film,FALSE,Costuming
+2017,Blade Runner 2049,Renée April,Fantasy Film,FALSE,Costuming
+2017,Star Wars: The Last Jedi,Michael Kaplan,Fantasy Film,FALSE,Costuming
+2017,Thor: Ragnarok,Mayes C. Rubeo,Fantasy Film,FALSE,Costuming
+2016,La La Land,Mary Zophres,Contemporary Film,TRUE,Costuming
+2016,Absolutely Fabulous: The Movie,Rebecca Hale,Contemporary Film,FALSE,Costuming
+2016,Captain Fantastic,Courtney Hoffman,Contemporary Film,FALSE,Costuming
+2016,Lion,Cappi Ireland,Contemporary Film,FALSE,Costuming
+2016,Nocturnal Animals,Arianne Phillips,Contemporary Film,FALSE,Costuming
+2016,Hidden Figures,Renee Ehrlich Kalfus,Period Film,TRUE,Costuming
+2016,The Dressmaker,Marion Boyce,Period Film,FALSE,Costuming
+2016,The Dressmaker,Margot Wilson,Period Film,FALSE,Costuming
+2016,Florence Foster Jenkins,Consolata Boyle,Period Film,FALSE,Costuming
+2016,"Hail, Caesar!",Mary Zophres,Period Film,FALSE,Costuming
+2016,Jackie,Madeline Fontaine,Period Film,FALSE,Costuming
+2016,Doctor Strange,Alexandra Byrne,Fantasy Film,TRUE,Costuming
+2016,Fantastic Beasts and Where to Find Them,Colleen Atwood,Fantasy Film,FALSE,Costuming
+2016,Kubo and the Two Strings,Deborah Cook,Fantasy Film,FALSE,Costuming
+2016,Miss Peregrine's Home for Peculiar Children,Colleen Atwood,Fantasy Film,FALSE,Costuming
+2016,Rogue One: A Star Wars Story,David Crossman,Fantasy Film,FALSE,Costuming
+2016,Rogue One: A Star Wars Story,Glyn Dillon,Fantasy Film,FALSE,Costuming
+2015,Beasts of No Nation,Jenny Eagan,Contemporary Film,TRUE,Costuming
+2015,Joy,Michael Wilkinson,Contemporary Film,FALSE,Costuming
+2015,Kingsman: The Secret Service,Arianne Phillips,Contemporary Film,FALSE,Costuming
+2015,The Martian,Janty Yates,Contemporary Film,FALSE,Costuming
+2015,Youth,Carlo Poggioli,Contemporary Film,FALSE,Costuming
+2015,The Danish Girl,Paco Delgado,Period Film,TRUE,Costuming
+2015,Brooklyn,Odile Dicks-Mireaux,Period Film,FALSE,Costuming
+2015,Carol,Sandy Powell,Period Film,FALSE,Costuming
+2015,Crimson Peak,Kate Hawley,Period Film,FALSE,Costuming
+2015,Trumbo,Daniel Orlandi,Period Film,FALSE,Costuming
+2015,Mad Max: Fury Road,Jenny Beavan,Fantasy Film,TRUE,Costuming
+2015,Cinderella,Sandy Powell,Fantasy Film,FALSE,Costuming
+2015,Ex Machina,Sammy Sheldon,Fantasy Film,FALSE,Costuming
+2015,The Hunger Games: Mockingjay – Part 2,Kurt & Bart,Fantasy Film,FALSE,Costuming
+2015,Star Wars: The Force Awakens,Michael Kaplan,Fantasy Film,FALSE,Costuming
+2014,Birdman or (The Unexpected Virtue of Ignorance),Albert Wolsky,Contemporary Film,TRUE,Costuming
+2014,Boyhood,Kari Perkins,Contemporary Film,FALSE,Costuming
+2014,Gone Girl,Trish Summerville,Contemporary Film,FALSE,Costuming
+2014,Interstellar,Mary Zophres,Contemporary Film,FALSE,Costuming
+2014,Wild,Melissa Bruning,Contemporary Film,FALSE,Costuming
+2014,The Grand Budapest Hotel,Milena Canonero,Period Film,TRUE,Costuming
+2014,The Imitation Game,Sammy Sheldon Differ,Period Film,FALSE,Costuming
+2014,Inherent Vice,Mark Bridges,Period Film,FALSE,Costuming
+2014,Selma,Ruth E. Carter,Period Film,FALSE,Costuming
+2014,The Theory of Everything,Steven Noble,Period Film,FALSE,Costuming
+2014,Into the Woods,Colleen Atwood,Fantasy Film,TRUE,Costuming
+2014,Guardians of the Galaxy,Alexandra Byrne,Fantasy Film,FALSE,Costuming
+2014,The Hobbit: The Battle of the Five Armies,Bob Buck,Fantasy Film,FALSE,Costuming
+2014,The Hobbit: The Battle of the Five Armies,Ann Maskrey,Fantasy Film,FALSE,Costuming
+2014,The Hobbit: The Battle of the Five Armies,Richard Taylor,Fantasy Film,FALSE,Costuming
+2014,The Hunger Games: Mockingjay – Part 1,Kurt & Bart,Fantasy Film,FALSE,Costuming
+2014,Maleficent,Anna B. Sheppard,Fantasy Film,FALSE,Costuming
+2014,Maleficent,Jane Clive,Fantasy Film,FALSE,Costuming
+2013,Blue Jasmine,Suzy Benzinger,Contemporary Film,TRUE,Costuming
+2013,Her,Casey Storm,Contemporary Film,FALSE,Costuming
+2013,Nebraska,Wendy Chuck,Contemporary Film,FALSE,Costuming
+2013,Philomena,Consolata Boyle,Contemporary Film,FALSE,Costuming
+2013,The Secret Life of Walter Mitty,Sarah Edwards,Contemporary Film,FALSE,Costuming
+2013,12 Years a Slave,Patricia Norris,Period Film,TRUE,Costuming
+2013,American Hustle,Michael Wilkinson,Period Film,FALSE,Costuming
+2013,Dallas Buyers Club,Kurt & Bart,Period Film,FALSE,Costuming
+2013,The Great Gatsby,Catherine Martin,Period Film,FALSE,Costuming
+2013,Saving Mr. Banks,Daniel Orlandi,Period Film,FALSE,Costuming
+2013,The Hunger Games: Catching Fire,Trish Summerville,Fantasy Film,TRUE,Costuming
+2013,The Hobbit: The Desolation of Smaug,Bob Buck,Fantasy Film,FALSE,Costuming
+2013,The Hobbit: The Desolation of Smaug,Ann Maskrey,Fantasy Film,FALSE,Costuming
+2013,The Hobbit: The Desolation of Smaug,Richard Taylor,Fantasy Film,FALSE,Costuming
+2013,Oz the Great and Powerful,Gary Jones,Fantasy Film,FALSE,Costuming
+2013,Oz the Great and Powerful,Michael Kutsche,Fantasy Film,FALSE,Costuming
+2012,Skyfall,Jany Temime,Contemporary Film,TRUE,Costuming
+2012,Beasts of the Southern Wild,Stephani Lewis,Contemporary Film,FALSE,Costuming
+2012,The Best Exotic Marigold Hotel,Louise Stjernsward,Contemporary Film,FALSE,Costuming
+2012,Silver Linings Playbook,Mark Bridges,Contemporary Film,FALSE,Costuming
+2012,Zero Dark Thirty,George L. Little,Contemporary Film,FALSE,Costuming
+2012,Anna Karenina,Jacqueline Durran,Period Film,TRUE,Costuming
+2012,Argo,Jacqueline West,Period Film,FALSE,Costuming
+2012,Les Misérables,Paco Delgado,Period Film,FALSE,Costuming
+2012,Lincoln,Joanna Johnston,Period Film,FALSE,Costuming
+2012,Moonrise Kingdom,Kasia Walicka-Maimone,Period Film,FALSE,Costuming
+2012,Mirror Mirror,Eiko Ishioka,Fantasy Film,TRUE,Costuming
+2012,Cloud Atlas,Kym Barrett,Fantasy Film,FALSE,Costuming
+2012,Cloud Atlas,Pierre-Yves Gayraud,Fantasy Film,FALSE,Costuming
+2012,The Hunger Games,Judianna Makovsky,Fantasy Film,FALSE,Costuming
+2012,Snow White and the Huntsman,Colleen Atwood,Fantasy Film,FALSE,Costuming
+2012,The Hobbit: An Unexpected Journey,Bob Buck,Fantasy Film,FALSE,Costuming
+2012,The Hobbit: An Unexpected Journey,Ann Maskrey,Fantasy Film,FALSE,Costuming
+2012,The Hobbit: An Unexpected Journey,Richard Taylor,Fantasy Film,FALSE,Costuming
+2011,The Girl with the Dragon Tattoo,Trish Summerville,Contemporary Film,TRUE,Costuming
+2011,Bridesmaids,Leesa Evans,Contemporary Film,FALSE,Costuming
+2011,Bridesmaids,Christine Wada,Contemporary Film,FALSE,Costuming
+2011,The Descendants,Wendy Chuck,Contemporary Film,FALSE,Costuming
+2011,Drive,Erin Benach,Contemporary Film,FALSE,Costuming
+2011,Melancholia,Manon Rasmussen,Contemporary Film,FALSE,Costuming
+2011,W.E.,Arianne Phillips,Period Film,TRUE,Costuming
+2011,The Artist,Mark Bridges,Period Film,FALSE,Costuming
+2011,The Help,Sharen Davis,Period Film,FALSE,Costuming
+2011,Hugo,Sandy Powell,Period Film,FALSE,Costuming
+2011,Jane Eyre,Michael O'Connor,Period Film,FALSE,Costuming
+2011,Harry Potter and the Deathly Hallows – Part 2,Jany Temime,Fantasy Film,TRUE,Costuming
+2011,Pirates of the Caribbean: On Stranger Tides,Penny Rose,Fantasy Film,FALSE,Costuming
+2011,Red Riding Hood,Cindy Evans,Fantasy Film,FALSE,Costuming
+2011,Thor,Alexandra Byrne,Fantasy Film,FALSE,Costuming
+2011,X-Men: First Class,Sammy Sheldon,Fantasy Film,FALSE,Costuming
+2010,Black Swan,Amy Westcott,Contemporary Film,TRUE,Costuming
+2010,Burlesque,Michael Kaplan,Contemporary Film,FALSE,Costuming
+2010,Inception,Jeffrey Kurland,Contemporary Film,FALSE,Costuming
+2010,The Social Network,Jacqueline West,Contemporary Film,FALSE,Costuming
+2010,Wall Street: Money Never Sleeps,Ellen Mirojnick,Contemporary Film,FALSE,Costuming
+2010,The King's Speech,Jenny Beavan,Period Film,TRUE,Costuming
+2010,The Fighter,Mark Bridges,Period Film,FALSE,Costuming
+2010,True Grit,Mary Zophres,Period Film,FALSE,Costuming
+2010,Alice in Wonderland,Colleen Atwood,Fantasy Film,TRUE,Costuming
+2010,The Tempest,Sandy Powell,Fantasy Film,FALSE,Costuming
+2010,Tron: Legacy,Michael Wilkinson,Fantasy Film,FALSE,Costuming
+2010,Tron: Legacy,Christine Bieselin Clark,Fantasy Film,FALSE,Costuming
+2009,Crazy Heart,Doug Hall,Contemporary Film,TRUE,Costuming
+2009,(500) Days of Summer,Hope Hanafin,Contemporary Film,FALSE,Costuming
+2009,Brüno,Jason Alper,Contemporary Film,FALSE,Costuming
+2009,Precious,Marina Draghici,Contemporary Film,FALSE,Costuming
+2009,Up in the Air,Danny Glicker,Contemporary Film,FALSE,Costuming
+2009,The Young Victoria,Sandy Powell,Period Film,TRUE,Costuming
+2009,Coco Before Chanel,Catherine Leterrier,Period Film,FALSE,Costuming
+2009,Julie & Julia,Ann Roth,Period Film,FALSE,Costuming
+2009,Nine,Colleen Atwood,Period Film,FALSE,Costuming
+2009,Sherlock Holmes,Jenny Beavan,Period Film,FALSE,Costuming
+2009,The Imaginarium of Doctor Parnassus,Monique Prudhomme,Fantasy Film,TRUE,Costuming
+2009,Avatar,Mayes C. Rubeo,Fantasy Film,FALSE,Costuming
+2009,Avatar,Deborah Lynn Scott,Fantasy Film,FALSE,Costuming
+2009,Star Trek,Michael Kaplan,Fantasy Film,FALSE,Costuming
+2008,Slumdog Millionaire,Suttirat Anne Larlarb,Contemporary Film,TRUE,Costuming
+2008,Iron Man,Laura Jean Shannon,Contemporary Film,FALSE,Costuming
+2008,Iron Man,Rebecca Gregg,Contemporary Film,FALSE,Costuming
+2008,Mamma Mia!,Ann Roth,Contemporary Film,FALSE,Costuming
+2008,Sex and the City,Patricia Field,Contemporary Film,FALSE,Costuming
+2008,The Wrestler,Amy Westcott,Contemporary Film,FALSE,Costuming
+2008,The Duchess,Michael O'Connor,Period Film,TRUE,Costuming
+2008,Changeling,Deborah Hopper,Period Film,FALSE,Costuming
+2008,The Curious Case of Benjamin Button,Jacqueline West,Period Film,FALSE,Costuming
+2008,Milk,Danny Glicker,Period Film,FALSE,Costuming
+2008,Revolutionary Road,Albert Wolsky,Period Film,FALSE,Costuming
+2008,The Dark Knight,Lindy Hemming,Fantasy Film,TRUE,Costuming
+2008,The Chronicles of Narnia: Prince Caspian,Isis Mussenden,Fantasy Film,FALSE,Costuming
+2008,The Mummy: Tomb of the Dragon Emperor,Sanja Milkovic Hays,Fantasy Film,FALSE,Costuming
+2007,Blades of Glory,Julie Weiss,Contemporary Film,TRUE,Costuming
+2007,The Diving Bell and the Butterfly,Olivier Bériot,Contemporary Film,FALSE,Costuming
+2007,Into the Wild,Mary Claire Hannan,Contemporary Film,FALSE,Costuming
+2007,Juno,Monique Prudhomme,Contemporary Film,FALSE,Costuming
+2007,Ocean's Thirteen,Louise Frogley,Contemporary Film,FALSE,Costuming
+2007,Sweeney Todd: The Demon Barber of Fleet Street,Colleen Atwood,Period Film,TRUE,Costuming
+2007,3:10 to Yuma,Arianne Phillips,Period Film,FALSE,Costuming
+2007,Atonement,Jacqueline Durran,Period Film,FALSE,Costuming
+2007,Elizabeth: The Golden Age,Alexandra Byrne,Period Film,FALSE,Costuming
+2007,La Vie en Rose,Marit Allen,Period Film,FALSE,Costuming
+2007,The Golden Compass,Ruth Myers,Fantasy Film,TRUE,Costuming
+2007,300,Michael Wilkinson,Fantasy Film,FALSE,Costuming
+2007,Enchanted,Mona May,Fantasy Film,FALSE,Costuming
+2007,Harry Potter and the Order of the Phoenix,Jany Temime,Fantasy Film,FALSE,Costuming
+2007,Pirates of the Caribbean: At World's End,Penny Rose,Fantasy Film,FALSE,Costuming
+2006,The Queen,Consolata Boyle,Contemporary Film,TRUE,Costuming
+2006,Babel,Michael Wilkinson,Contemporary Film,FALSE,Costuming
+2006,Babel,Gabriela Diaque,Contemporary Film,FALSE,Costuming
+2006,Babel,Miwako Kobayashi,Contemporary Film,FALSE,Costuming
+2006,Casino Royale,Lindy Hemming,Contemporary Film,FALSE,Costuming
+2006,The Devil Wears Prada,Patricia Field,Contemporary Film,FALSE,Costuming
+2006,Little Miss Sunshine,Nancy Steiner,Contemporary Film,FALSE,Costuming
+2006,Curse of the Golden Flower,Chung Man Yee,Period Film,TRUE,Costuming
+2006,Dreamgirls,Sharen Davis,Period Film,FALSE,Costuming
+2006,The Illusionist,Ngila Dickson,Period Film,FALSE,Costuming
+2006,Marie Antoinette,Milena Canonero,Period Film,FALSE,Costuming
+2006,Pirates of the Caribbean: Dead Man's Chest,Penny Rose,Period Film,FALSE,Costuming
+2006,Pan's Labyrinth,Lala Huete,Fantasy Film,TRUE,Costuming
+2006,Eragon,Kym Barrett,Fantasy Film,FALSE,Costuming
+2006,The Fountain,Renée April,Fantasy Film,FALSE,Costuming
+2006,V for Vendetta,Sammy Sheldon,Fantasy Film,FALSE,Costuming
+2006,X-Men: The Last Stand,Penny Rose,Fantasy Film,FALSE,Costuming
+2005,Transamerica,Danny Glicker,Contemporary Film,TRUE,Costuming
+2005,Hustle & Flow,Paul A. Simmons Jr.,Contemporary Film,FALSE,Costuming
+2005,Mr. & Mrs. Smith,Michael Kaplan,Contemporary Film,FALSE,Costuming
+2005,Shopgirl,Nancy Steiner,Contemporary Film,FALSE,Costuming
+2005,Syriana,Louise Frogley,Contemporary Film,FALSE,Costuming
+2005,Memoirs of a Geisha,Colleen Atwood,Period Film,TRUE,Costuming
+2005,Capote,Kasia Walicka-Maimone,Period Film,FALSE,Costuming
+2005,"Good Night, and Good Luck.",Louise Frogley,Period Film,FALSE,Costuming
+2005,Rent,Aggie Guerard Rodgers,Period Film,FALSE,Costuming
+2005,Walk the Line,Arianne Phillips,Period Film,FALSE,Costuming
+2005,"The Chronicles of Narnia: The Lion, the Witch and the Wardrobe",Isis Mussenden,Fantasy Film,TRUE,Costuming
+2005,Batman Begins,Lindy Hemming,Fantasy Film,FALSE,Costuming
+2005,Charlie and the Chocolate Factory,Gabriella Pescucci,Fantasy Film,FALSE,Costuming
+2005,Star Wars: Episode III – Revenge of the Sith,Trisha Biggar,Fantasy Film,FALSE,Costuming
+2025,Bugonia,Jennifer Johnson,Contemporary Film,FALSE,Costuming
+2025,F1 the Movie,Julian Day,Contemporary Film,FALSE,Costuming
+2025,One Battle After Another,Colleen Atwood,Contemporary Film,FALSE,Costuming
+2025,Wake Up Dead Man: A Knives Out Mystery,Jenny Eagan,Contemporary Film,FALSE,Costuming
+2025,Weapons,Trish Summerville,Contemporary Film,FALSE,Costuming
+2025,Downton Abbey: The Grand Finale,Anna Mary Scott Robbins,Period Film,FALSE,Costuming
+2025,Frankenstein,Kate Hawley,Period Film,FALSE,Costuming
+2025,Hamnet,Malgosia Turzanska,Period Film,FALSE,Costuming
+2025,Hedda,Lindsay Pugh,Period Film,FALSE,Costuming
+2025,Sinners,Ruth E. Carter,Period Film,FALSE,Costuming
+2025,Avatar: Fire and Ash,Deborah Lynn Scott,Sci-Fi/Fantasy Film,FALSE,Costuming
+2025,How to Train Your Dragon,Lindsay Pugh,Sci-Fi/Fantasy Film,FALSE,Costuming
+2025,Thunderbolts*,Sanja Milkovic Hays,Sci-Fi/Fantasy Film,FALSE,Costuming
+2025,Tron: Ares,Christine Bieselin Clark,Sci-Fi/Fantasy Film,FALSE,Costuming
+2025,Tron: Ares,Alix Friedberg,Sci-Fi/Fantasy Film,FALSE,Costuming
+2025,Wicked: For Good,Paul Tazewell,Sci-Fi/Fantasy Film,FALSE,Costuming

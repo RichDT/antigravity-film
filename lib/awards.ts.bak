@@ -1,0 +1,659 @@
+import fs from "fs";
+import path from "path";
+
+export type AwardStatus = "won" | "nominated" | null;
+
+export interface OtherAwards {
+    oscar?: AwardStatus;
+    globe?: AwardStatus;
+    sag?: AwardStatus;
+    dga?: AwardStatus;
+    bafta?: AwardStatus;
+    pga?: AwardStatus;
+    wga?: AwardStatus;
+    ace?: AwardStatus;
+    adg?: AwardStatus;
+    asc?: AwardStatus;
+    cdg?: AwardStatus;
+    muah?: AwardStatus;
+    scl?: AwardStatus;
+    ves?: AwardStatus;
+}
+
+export interface NomineeContributor {
+    name: string;
+    role?: string;
+}
+
+export interface Nominee {
+    name: string;
+    film: string;
+    character?: string;
+    songTitle?: string;
+    adaptedSource?: string;
+    role?: string;
+    otherOtherAwards?: OtherAwards;
+    isWinner?: boolean;
+    contributors?: NomineeContributor[];
+}
+
+export function formatNamesList(names: string[]): string {
+    if (!names || names.length === 0) return "";
+
+    // Alphabetize names by last word
+    const sortedNames = [...names].sort((a, b) => {
+        const aWords = a.trim().split(/\s+/);
+        const bWords = b.trim().split(/\s+/);
+        const aLast = aWords[aWords.length - 1].toLowerCase();
+        const bLast = bWords[bWords.length - 1].toLowerCase();
+        return aLast.localeCompare(bLast);
+    });
+
+    if (sortedNames.length === 1) return sortedNames[0];
+    if (sortedNames.length === 2) return `${sortedNames[0]} and ${sortedNames[1]}`;
+    return `${sortedNames.slice(0, -1).join(', ')}, and ${sortedNames[sortedNames.length - 1]}`;
+}
+
+// YearData for Category page (timeline of best actors, etc.)
+export interface YearData {
+    year: number;
+    winner: Nominee | null;
+    nominees: Nominee[];
+}
+
+// Category structure for Year pages
+export interface Category {
+    name: string;
+    icon: string;
+    group: string;
+    winner: (Nominee & { isWinner: true }) | null;
+    nominees: Nominee[];
+}
+
+// Maps exact CSV string to the UI Group ID
+export const CATEGORY_GROUPS_MAPPING: Record<string, string> = {
+    "Live-Action Feature-Length Film": "film",
+    "International Feature-Length Film": "film",
+    "Animated Feature-Length Film": "film",
+    "Documentary Film": "film",
+
+    "Director": "directing",
+    "Directing": "directing",
+    "Film Editing": "directing",
+    "Editing": "directing",
+
+    "Actor in a Leading Role": "acting",
+    "Actress in a Leading Role": "acting",
+    "Actor in a Supporting Role": "acting",
+    "Actress in a Supporting Role": "acting",
+
+    "Screenplay (Original)": "writing",
+    "Screenplay (Adapted)": "writing",
+
+    "Cinematography": "visual",
+    "Art Direction": "visual",
+    "Costuming": "visual",
+    "Make-Up & Hairstyling": "visual",
+    "Effects": "visual",
+
+    "Original Score": "sound",
+    "Original Song": "sound",
+    "Sound Mixing": "sound",
+    "Sound Editing": "sound"
+};
+
+// Maps exact CSV string to the UI Icon ID
+export const CATEGORY_ICON_MAPPING: Record<string, string> = {
+    "Live-Action Feature-Length Film": "trophy",
+    "International Feature-Length Film": "globe",
+    "Foreign Film": "globe",
+    "Animated Feature-Length Film": "video",
+    "Documentary Film": "file",
+
+    "Director": "clapperboard",
+    "Directing": "clapperboard",
+    "Film Editing": "scissors",
+    "Editing": "scissors",
+
+    "Actor in a Leading Role": "user",
+    "Actress in a Leading Role": "user",
+    "Actor in a Supporting Role": "user",
+    "Actress in a Supporting Role": "user",
+
+    "Screenplay (Original)": "pen",
+    "Screenplay (Adapted)": "pen",
+
+    "Cinematography": "camera",
+    "Art Direction": "palette",
+    "Costuming": "scissors",
+    "Make-Up & Hairstyling": "sparkles",
+    "Effects": "sparkles",
+
+    "Original Score": "music",
+    "Original Song": "music",
+    "Sound Mixing": "volume",
+    "Sound Editing": "volume"
+};
+
+export const CATEGORY_DESCRIPTIONS: Record<string, string> = {
+    "Live-Action Feature-Length Film": "Outstanding motion picture of the year",
+    "International Feature-Length Film": "Outstanding international feature film",
+    "Animated Feature-Length Film": "Outstanding animated feature film",
+    "Documentary Film": "Outstanding documentary feature",
+    "Director": "Outstanding achievement in directing",
+    "Film Editing": "Outstanding achievement in film editing",
+    "Actor in a Leading Role": "Outstanding performance by a lead actor",
+    "Actress in a Leading Role": "Outstanding performance by a lead actress",
+    "Actor in a Supporting Role": "Outstanding performance by a supporting actor",
+    "Actress in a Supporting Role": "Outstanding performance by a supporting actress",
+    "Screenplay (Original)": "Outstanding original screenplay",
+    "Screenplay (Adapted)": "Outstanding adapted screenplay",
+    "Cinematography": "Outstanding achievement in cinematography",
+    "Art Direction": "Outstanding achievement in production design",
+    "Costuming": "Outstanding achievement in costuming",
+    "Make-Up & Hairstyling": "Outstanding achievement in makeup and hairstyling",
+    "Effects": "Outstanding achievement in visual effects",
+    "Original Score": "Outstanding original musical score",
+    "Original Song": "Outstanding original song",
+    "Sound Mixing": "Outstanding achievement in sound mixing",
+    "Sound Editing": "Outstanding achievement in sound editing"
+};
+
+// Simple utility to convert "Best Picture" to "best-picture"
+export function slugify(text: string) {
+    return text.toString().toLowerCase()
+        .replace(/\s+/g, '-')           // Replace spaces with -
+        .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
+        .replace(/\-\-+/g, '-')         // Replace multiple - with single -
+        .replace(/^-+/, '')             // Trim - from start of text
+        .replace(/-+$/, '');            // Trim - from end of text
+}
+
+// Shared cache
+let parsedCsvCache: any[] | null = null;
+let peopleMapCache: Map<string, string> | null = null;
+let otherAwardsCache: Map<string, OtherAwards> | null = null;
+
+function normalizeStr(str: string) {
+    return (str || "").toLowerCase().replace(/[^a-z0-9]/g, '');
+}
+
+function parseCsvLine(line: string) {
+    const values: string[] = [];
+    let state = 0; // 0: unquoted, 1: quoted
+    let currentValue = "";
+
+    for (let j = 0; j < line.length; j++) {
+        const char = line[j];
+        if (state === 0 && char === '"') {
+            state = 1;
+        } else if (state === 1 && char === '"') {
+            // Check for escaped quote ""
+            if (j + 1 < line.length && line[j + 1] === '"') {
+                currentValue += '"';
+                j++; // skip the escaped quote
+            } else {
+                state = 0;
+            }
+        } else if (state === 0 && char === ',') {
+            values.push(currentValue.trim());
+            currentValue = "";
+        } else {
+            currentValue += char;
+        }
+    }
+    values.push(currentValue.trim());
+    return values;
+}
+
+function parseCsvSync(fileName: string) {
+    const csvPath = path.join(process.cwd(), "data", fileName);
+    if (!fs.existsSync(csvPath)) return [];
+
+    const content = fs.readFileSync(csvPath, "utf-8");
+    const lines = content.split(/\r?\n/);
+    if (lines.length < 2) return [];
+
+    const headers = parseCsvLine(lines[0]);
+    const rows = [];
+    for (let i = 1; i < lines.length; i++) {
+        const line = lines[i].trim();
+        if (!line) continue;
+        const vals = parseCsvLine(line);
+        const obj: Record<string, string> = {};
+        for (let j = 0; j < headers.length; j++) {
+            obj[headers[j]] = vals[j];
+        }
+        rows.push(obj);
+    }
+    return rows;
+}
+
+function getOtherAwardsMap() {
+    if (otherAwardsCache) return otherAwardsCache;
+    const map = new Map<string, OtherAwards>();
+
+    const files = [
+        { file: "The SpyGlasses Full (2022 Update) - Oscars.csv", key: "oscar", yearCol: "Year", filmCol: "Film", nomCol: "Nominee", wonCol: "Win_Oscar" },
+        { file: "The SpyGlasses Full (2022 Update) - Globes.csv", key: "globe", yearCol: "Year", filmCol: "Film", nomCol: "Nominee", wonCol: "Win_Globe" },
+        { file: "The SpyGlasses Full (2022 Update) - BAFTA.csv", key: "bafta", yearCol: "Year", filmCol: "Film", nomCol: "Nominee", wonCol: "Won" },
+        { file: "The SpyGlasses Full (2022 Update) - SAG.csv", key: "sag", yearCol: "Year", filmCol: "Film", nomCol: "Nominee", wonCol: "Won" },
+        { file: "The SpyGlasses Full (2022 Update) - DGA.csv", key: "dga", yearCol: "Year", filmCol: "Film", nomCol: "Nominee", wonCol: "Won" },
+        { file: "The SpyGlasses Full (2022 Update) - PGA.csv", key: "pga", yearCol: "Year", filmCol: "Film", nomCol: "Nominee", wonCol: "Won" },
+        { file: "The SpyGlasses Full (2022 Update) - WGA.csv", key: "wga", yearCol: "Year", filmCol: "Film", nomCol: "Nominee", wonCol: "Won" },
+        { file: "The SpyGlasses Full (2022 Update) - ACE.csv", key: "ace", yearCol: "Year", filmCol: "Film", nomCol: "Nominee", wonCol: "Won" },
+        { file: "The SpyGlasses Full (2022 Update) - ADG.csv", key: "adg", yearCol: "Year", filmCol: "Film", nomCol: "Nominee", wonCol: "Won" },
+        { file: "The SpyGlasses Full (2022 Update) - ASC.csv", key: "asc", yearCol: "Year", filmCol: "Film", nomCol: "Nominee", wonCol: "Won" },
+        { file: "The SpyGlasses Full (2022 Update) - CDG.csv", key: "cdg", yearCol: "Year", filmCol: "Film", nomCol: "Nominee", wonCol: "Won" },
+        { file: "The SpyGlasses Full (2022 Update) - MUAH.csv", key: "muah", yearCol: "Year", filmCol: "Film", nomCol: "Nominee", wonCol: "Won" },
+        { file: "The SpyGlasses Full (2022 Update) - SCL.csv", key: "scl", yearCol: "Year", filmCol: "Film", nomCol: "Nominee", wonCol: "Won" },
+        { file: "The SpyGlasses Full (2022 Update) - VES.csv", key: "ves", yearCol: "Year", filmCol: "Film", nomCol: "Nominee", wonCol: "Won" }
+    ];
+
+    for (const def of files) {
+        const rows = parseCsvSync(def.file);
+        for (const r of rows) {
+            const y = parseInt(r[def.yearCol], 10);
+            if (isNaN(y)) continue;
+
+            const f = r[def.filmCol];
+            const n = r[def.nomCol];
+            const w = r[def.wonCol];
+
+            const isWon = w === "TRUE" || w === "true" || w === "1" || w === "Won";
+            const status: AwardStatus = isWon ? "won" : "nominated";
+
+            const normKey = `${y}_${normalizeStr(f)}_${normalizeStr(n)}`;
+            const filmOnlyKey = `${y}_${normalizeStr(f)}_`;
+
+            if (!map.has(normKey)) map.set(normKey, {});
+            map.get(normKey)![def.key as keyof OtherAwards] = status;
+
+            // Merge film-only fallback
+            if (!map.has(filmOnlyKey)) map.set(filmOnlyKey, {});
+            const exStat = map.get(filmOnlyKey)![def.key as keyof OtherAwards];
+            if (exStat !== "won") {
+                map.get(filmOnlyKey)![def.key as keyof OtherAwards] = status;
+            }
+        }
+    }
+
+    otherAwardsCache = map;
+    return map;
+}
+
+function getPeopleMap() {
+    if (peopleMapCache) return peopleMapCache;
+
+    const peoplePath = path.join(process.cwd(), "data", "The SpyGlasses Full (2022 Update) - People.csv");
+    const fileContent = fs.readFileSync(peoplePath, "utf-8");
+    const lines = fileContent.split(/\r?\n/);
+
+    const map = new Map<string, string>();
+    for (let i = 1; i < lines.length; i++) {
+        const line = lines[i].trim();
+        if (!line) continue;
+
+        // Split by comma, but group by quotes
+        const values: string[] = [];
+        let state = 0; // 0: unquoted, 1: quoted
+        let currentValue = "";
+
+        for (let j = 0; j < line.length; j++) {
+            const char = line[j];
+            if (state === 0 && char === '"') {
+                state = 1;
+            } else if (state === 1 && char === '"') {
+                state = 0;
+            } else if (state === 0 && char === ',') {
+                values.push(currentValue);
+                currentValue = "";
+            } else {
+                currentValue += char;
+            }
+        }
+        values.push(currentValue);
+
+        // p_id,Nominee_First,Nominee_Middle,Nominee_Last,Nominee,Nominee_Appendix
+        const p_id = values[0];
+        const nomineeName = values[4];
+        if (p_id && nomineeName) {
+            map.set(p_id, nomineeName);
+        }
+    }
+
+    peopleMapCache = map;
+    return map;
+}
+
+export function getRawAwardsData() {
+    if (parsedCsvCache) return parsedCsvCache;
+
+    const csvPath = path.join(process.cwd(), "data", "The SpyGlasses Full (2022 Update) - Nominees.csv");
+    const fileContent = fs.readFileSync(csvPath, "utf-8");
+
+    const lines = fileContent.split(/\r?\n/);
+    const rows: any[] = [];
+
+    // Custom CSV parser to handle quoted commas correctly
+    for (let i = 1; i < lines.length; i++) {
+        const line = lines[i].trim();
+        if (!line) continue;
+
+        const values = parseCsvLine(line);
+
+        // Year,Film,Category,Outcome,Role,Title,p_id,Nominated
+        const yearInt = parseInt(values[0], 10);
+        if (isNaN(yearInt)) continue;
+
+        const isNominated = values[7] === "TRUE";
+        const isWinner = values[3] === "Won";
+
+        // Filter out pseudo-entries that aren't actually nominated or won
+        if (!isNominated && !isWinner) continue;
+
+        const isAdapted = values[2] === "Screenplay (Adapted)";
+        if (isAdapted && yearInt === 2023) {
+            console.log(`DEBUG: Parsed 2023 Adapted Screenplay -> Film: ${values[1]}, Title: ${values[5]}`);
+        }
+
+        rows.push({
+            year: yearInt,
+            film: values[1],
+            category: values[2],
+            outcome: values[3],
+            role: values[4],
+            title: values[5],
+            p_id: values[6],
+            nominated: isNominated,
+        });
+    }
+
+    parsedCsvCache = rows;
+    return rows;
+}
+
+export function getAllCategories() {
+    const rows = getRawAwardsData();
+    const uniqueCats = new Set<string>();
+
+    rows.forEach(r => {
+        if (r.category) uniqueCats.add(r.category);
+    });
+
+    // Sort and build structural map
+    const result = Array.from(uniqueCats).sort().map(cat => ({
+        name: cat,
+        slug: slugify(cat),
+        icon: CATEGORY_ICON_MAPPING[cat] || "trophy",
+        group: CATEGORY_GROUPS_MAPPING[cat] || "film",
+        description: CATEGORY_DESCRIPTIONS[cat] || `Outstanding achievement in ${cat.toLowerCase()}`
+    }));
+
+    return result;
+}
+
+export function getCategoryBySlug(slug: string) {
+    const categories = getAllCategories();
+    return categories.find(c => c.slug === slug) || null;
+}
+
+export function getYearsForCategory(categoryName: string): YearData[] {
+    const rows = getRawAwardsData().filter(r => r.category === categoryName);
+    const peopleMap = getPeopleMap();
+
+    // Group by year
+    const yearMap = new Map<number, YearData>();
+
+    rows.forEach(r => {
+        if (!yearMap.has(r.year)) {
+            yearMap.set(r.year, {
+                year: r.year,
+                winner: null,
+                nominees: []
+            });
+        }
+
+        const yd = yearMap.get(r.year)!;
+
+        // Resolve person name
+        let personName = "";
+        if (r.p_id && peopleMap.has(r.p_id)) {
+            personName = peopleMap.get(r.p_id)!;
+        } else if (r.title) {
+            personName = r.title;
+        } else if (!r.role) {
+            personName = r.film; // For Best Picture, the entity is the film itself
+        } else {
+            personName = "Unknown Nominee";
+        }
+
+        const isActingCategory = categoryName.toLowerCase().includes("actor") || categoryName.toLowerCase().includes("actress");
+        const charName = isActingCategory && r.role ? r.role : undefined;
+        let jobRole = !isActingCategory && r.role ? r.role : undefined;
+        let songStr = categoryName === "Original Song" && r.title ? r.title : undefined;
+        let adaptedSourceStr = categoryName === "Screenplay (Adapted)" && r.title ? r.title : undefined;
+
+        // Fetch cross-guild badges
+        const otherAwardsMap = getOtherAwardsMap();
+        let badges: OtherAwards = {};
+        const filmOnlyKey = `${r.year}_${normalizeStr(r.film)}_`;
+
+        if (CATEGORY_GROUPS_MAPPING[categoryName] === "film" || !personName || personName === r.film) {
+            badges = otherAwardsMap.get(filmOnlyKey) || {};
+        } else {
+            const persons = personName.split(", ");
+            for (const p of persons) {
+                const k = `${r.year}_${normalizeStr(r.film)}_${normalizeStr(p)}`;
+                const b = otherAwardsMap.get(k) || otherAwardsMap.get(`${r.year}__${normalizeStr(p)}`);
+                if (b) {
+                    for (const key in b) {
+                        const castedKey = key as keyof OtherAwards;
+                        if (b[castedKey] === "won") {
+                            badges[castedKey] = "won";
+                        } else if (!badges[castedKey]) {
+                            badges[castedKey] = "nominated";
+                        }
+                    }
+                }
+            }
+        }
+
+        const nom: Nominee = {
+            name: personName,
+            film: r.film,
+            character: charName,
+            songTitle: songStr,
+            adaptedSource: adaptedSourceStr,
+            role: jobRole,
+            otherOtherAwards: Object.keys(badges).length > 0 ? badges : undefined
+        };
+
+        const roleKey = r.role || (CATEGORY_GROUPS_MAPPING[categoryName] === "film" ? "Producer" : undefined);
+
+        if (r.outcome === "Won") {
+            if (!isActingCategory && yd.winner && yd.winner.film === r.film) {
+                if (!yd.winner.contributors) yd.winner.contributors = [];
+                if (!yd.winner.contributors.some(c => c.name === personName && c.role === roleKey)) {
+                    yd.winner.contributors.push({ name: personName, role: roleKey });
+                }
+            } else {
+                nom.contributors = [{ name: personName, role: roleKey }];
+                yd.winner = nom;
+            }
+        } else {
+            if (!isActingCategory) {
+                const existingIndex = yd.nominees.findIndex(n => n.film === r.film);
+                if (existingIndex >= 0) {
+                    const existingNom = yd.nominees[existingIndex];
+                    if (!existingNom.contributors) existingNom.contributors = [];
+                    if (!existingNom.contributors.some(c => c.name === personName && c.role === roleKey)) {
+                        existingNom.contributors.push({ name: personName, role: roleKey });
+                    }
+                } else {
+                    nom.contributors = [{ name: personName, role: roleKey }];
+                    yd.nominees.push(nom);
+                }
+            } else {
+                yd.nominees.push(nom);
+            }
+        }
+    });
+
+    // Sort descending by year
+    return Array.from(yearMap.values()).sort((a, b) => b.year - a.year);
+}
+
+export function getCategoriesForYear(year: number): Category[] {
+    const rows = getRawAwardsData().filter(r => r.year === year);
+    const peopleMap = getPeopleMap();
+
+    // Group by category
+    const catMap = new Map<string, Category>();
+
+    rows.forEach(r => {
+        if (!catMap.has(r.category)) {
+            catMap.set(r.category, {
+                name: r.category,
+                icon: CATEGORY_ICON_MAPPING[r.category] || "trophy",
+                group: CATEGORY_GROUPS_MAPPING[r.category] || "film",
+                winner: null,
+                nominees: []
+            });
+        }
+
+        const cat = catMap.get(r.category)!;
+
+        // Resolve person name
+        let personName = "";
+        if (r.p_id && peopleMap.has(r.p_id)) {
+            personName = peopleMap.get(r.p_id)!;
+        } else if (r.title) {
+            personName = r.title;
+        } else if (!r.role) {
+            personName = r.film;
+        } else {
+            personName = "Unknown Nominee";
+        }
+
+        const isActingCategory = r.category.toLowerCase().includes("actor") || r.category.toLowerCase().includes("actress");
+        const charName = isActingCategory && r.role ? r.role : undefined;
+        let jobRole = !isActingCategory && r.role ? r.role : undefined;
+        let songStr = r.category === "Original Song" && r.title ? r.title : undefined;
+        let adaptedSourceStr = r.category === "Screenplay (Adapted)" && r.title ? r.title : undefined;
+
+        // Fetch cross-guild badges
+        const otherAwardsMap = getOtherAwardsMap();
+        let badges: OtherAwards = {};
+        const filmOnlyKey = `${r.year}_${normalizeStr(r.film)}_`;
+
+        if (CATEGORY_GROUPS_MAPPING[r.category] === "film" || !personName || personName === r.film) {
+            badges = otherAwardsMap.get(filmOnlyKey) || {};
+        } else {
+            const persons = personName.split(", ");
+            for (const p of persons) {
+                const k = `${r.year}_${normalizeStr(r.film)}_${normalizeStr(p)}`;
+                const b = otherAwardsMap.get(k) || otherAwardsMap.get(`${r.year}__${normalizeStr(p)}`);
+                if (b) {
+                    for (const key in b) {
+                        const castedKey = key as keyof OtherAwards;
+                        if (b[castedKey] === "won") {
+                            badges[castedKey] = "won";
+                        } else if (!badges[castedKey]) {
+                            badges[castedKey] = "nominated";
+                        }
+                    }
+                }
+            }
+        }
+
+        const nom: Nominee = {
+            name: personName,
+            film: r.film,
+            character: charName,
+            songTitle: songStr,
+            adaptedSource: adaptedSourceStr,
+            role: jobRole,
+            otherOtherAwards: Object.keys(badges).length > 0 ? badges : undefined
+        };
+
+        const roleKey = r.role || (CATEGORY_GROUPS_MAPPING[r.category] === "film" ? "Producer" : undefined);
+
+        if (r.outcome === "Won") {
+            if (!isActingCategory && cat.winner && cat.winner.film === r.film) {
+                if (!cat.winner.contributors) cat.winner.contributors = [];
+                if (!cat.winner.contributors.some(c => c.name === personName && c.role === roleKey)) {
+                    cat.winner.contributors.push({ name: personName, role: roleKey });
+                }
+            } else {
+                nom.contributors = [{ name: personName, role: roleKey }];
+                cat.winner = { ...nom, isWinner: true };
+            }
+        } else {
+            if (!isActingCategory) {
+                const existingIndex = cat.nominees.findIndex(n => n.film === r.film);
+                if (existingIndex >= 0) {
+                    const existingNom = cat.nominees[existingIndex];
+                    if (!existingNom.contributors) existingNom.contributors = [];
+                    if (!existingNom.contributors.some(c => c.name === personName && c.role === roleKey)) {
+                        existingNom.contributors.push({ name: personName, role: roleKey });
+                    }
+                } else {
+                    nom.contributors = [{ name: personName, role: roleKey }];
+                    cat.nominees.push(nom);
+                }
+            } else {
+                cat.nominees.push(nom);
+            }
+        }
+    });
+
+    return Array.from(catMap.values());
+}
+
+export interface HallOfFameEntry {
+    name: string;
+    wins: number;
+    nominations: number;
+}
+
+export function getTopNomineesForCategory(categoryName: string): HallOfFameEntry[] {
+    const rows = getRawAwardsData().filter(r => r.category === categoryName);
+    const peopleMap = getPeopleMap();
+
+    const statsMap = new Map<string, { wins: number, nominations: number }>();
+
+    rows.forEach(r => {
+        let personName = "";
+        if (r.p_id && peopleMap.has(r.p_id)) {
+            personName = peopleMap.get(r.p_id)!;
+        } else if (r.title) {
+            personName = r.title;
+        } else if (!r.role) {
+            personName = r.film;
+        } else {
+            return; // Skip unknown
+        }
+
+        if (!statsMap.has(personName)) {
+            statsMap.set(personName, { wins: 0, nominations: 0 });
+        }
+
+        const stats = statsMap.get(personName)!;
+        stats.nominations++;
+        if (r.outcome === "Won") {
+            stats.wins++;
+        }
+    });
+
+    // Return the sorted list, prioritizing Wins, then Nominations, then Name alphabetically.
+    return Array.from(statsMap.entries())
+        .map(([name, stats]) => ({ name, ...stats }))
+        .sort((a, b) => {
+            if (b.wins !== a.wins) return b.wins - a.wins;
+            if (b.nominations !== a.nominations) return b.nominations - a.nominations;
+            return a.name.localeCompare(b.name);
+        })
+        .slice(0, 15); // Top 15 All-Time
+}
+
