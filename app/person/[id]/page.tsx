@@ -14,7 +14,7 @@ import {
   CATEGORY_GROUPS_MAPPING,
   formatNamesList,
   personDisplayName,
-  getAllPersonIds,
+  getPersonIdsForStaticBuild,
   getExternalAwardsForYears,
   computeBadgesFromBatch,
   buildAwardContextsFromBatch,
@@ -35,7 +35,7 @@ export const revalidate = 3600;
 // Remove generateStaticParams (or add `export const dynamicParams = true` only) to
 // switch to on-demand ISR if build time becomes too long.
 export async function generateStaticParams() {
-  const ids = await getAllPersonIds();
+  const ids = await getPersonIdsForStaticBuild();
   return ids.map(id => ({ id: String(id) }));
 }
 

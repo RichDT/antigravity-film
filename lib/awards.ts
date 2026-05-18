@@ -1430,13 +1430,50 @@ export async function getTopFilmPerYear(): Promise<Array<{ year: number; title: 
     return res.rows;
 }
 
-export async function getAllFilmIds(): Promise<number[]> {
-    const res = await query(`SELECT film_id FROM films ORDER BY film_id`);
+export async function getFilmIdsForStaticBuild(): Promise<number[]> {
+    const res = await query(`
+        SELECT film_id FROM (
+            -- All films from 2005 onward (Rich Picks era)
+            SELECT DISTINCT film_id FROM films WHERE release_year >= 2005
+            UNION
+            -- Top 20 most-nominated films per year before 2005
+            SELECT film_id FROM (
+                SELECT f.film_id,
+                    ROW_NUMBER() OVER (PARTITION BY f.release_year ORDER BY COUNT(*) DESC) AS rn
+                FROM films f
+                JOIN nominations n USING (film_id)
+                WHERE f.release_year < 2005
+                GROUP BY f.film_id, f.release_year
+            ) ranked
+            WHERE rn <= 20
+        ) all_films
+        ORDER BY film_id
+    `);
     return res.rows.map((r: { film_id: number }) => r.film_id);
 }
 
-export async function getAllPersonIds(): Promise<number[]> {
-    const res = await query(`SELECT person_id FROM people ORDER BY person_id`);
+export async function getPersonIdsForStaticBuild(): Promise<number[]> {
+    const res = await query(`
+        SELECT person_id FROM (
+            -- All people linked to films from 2005 onward
+            SELECT DISTINCT np.person_id
+            FROM nomination_people np
+            JOIN nominations n USING (nomination_id)
+            JOIN ceremonies c USING (ceremony_id)
+            WHERE c.year >= 2005
+            UNION
+            -- People nominated at Oscar or BAFTA before 2005
+            SELECT DISTINCT np.person_id
+            FROM nomination_people np
+            JOIN nominations n USING (nomination_id)
+            JOIN ceremonies c USING (ceremony_id)
+            JOIN awards a USING (award_id)
+            JOIN organizations o USING (organization_id)
+            WHERE c.year < 2005
+              AND o.short_name IN ('Oscar', 'BAFTA')
+        ) all_people
+        ORDER BY person_id
+    `);
     return res.rows.map((r: { person_id: number }) => r.person_id);
 }
 
