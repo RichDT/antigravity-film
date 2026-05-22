@@ -335,6 +335,7 @@ export async function getExternalAwardsForYear(year: number): Promise<ExternalAw
                p.name as other_person_name,
                cat.name as other_category_name,
                ccm.canonical_category_id as other_canonical_id,
+               c.year,
                (SELECT title FROM songs cs
                 JOIN nomination_songs ns ON cs.song_id = ns.song_id
                 WHERE ns.nomination_id = n.nomination_id LIMIT 1) as other_song_title
@@ -359,27 +360,8 @@ export async function getExternalAwardsForYear(year: number): Promise<ExternalAw
  */
 export async function getExternalAwardsForYears(years: number[]): Promise<ExternalAwardRow[]> {
     if (years.length === 0) return [];
-    const res = await query(`
-        SELECT o.short_name, n.win, n.film_id, f.title as film_title, np.person_id,
-               p.name as other_person_name,
-               cat.name as other_category_name,
-               ccm.canonical_category_id as other_canonical_id,
-               c.year,
-               (SELECT title FROM songs cs
-                JOIN nomination_songs ns ON cs.song_id = ns.song_id
-                WHERE ns.nomination_id = n.nomination_id LIMIT 1) as other_song_title
-        FROM nominations n
-        JOIN films f USING (film_id)
-        JOIN ceremonies c USING (ceremony_id)
-        JOIN awards a ON c.award_id = a.award_id
-        JOIN categories cat ON n.category_id = cat.category_id
-        JOIN organizations o ON a.organization_id = o.organization_id
-        LEFT JOIN category_canonical_map ccm ON ccm.category_id = cat.category_id
-        LEFT JOIN nomination_people np USING (nomination_id)
-        LEFT JOIN people p ON np.person_id = p.person_id
-        WHERE c.year = ANY($1) AND o.short_name != 'Rich Picks'
-    `, [years]);
-    return res.rows as ExternalAwardRow[];
+    const results = await Promise.all(years.map(y => getExternalAwardsForYear(y)));
+    return results.flat();
 }
 
 /**
