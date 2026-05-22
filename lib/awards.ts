@@ -1,4 +1,4 @@
-import { query } from './db';
+import { queryCached as query } from './db';
 
 // TYPES
 export type AwardStatus = "won" | "nominated" | "won_slant" | "nominated_slant" | "considered" | "considered_slant" | null;

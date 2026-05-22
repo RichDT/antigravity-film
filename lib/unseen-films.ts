@@ -1,4 +1,4 @@
-import { query } from './db';
+import { queryCached as query } from './db';
 
 export interface UnseenFilm {
   film_id: number;

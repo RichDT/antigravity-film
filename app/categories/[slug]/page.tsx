@@ -43,7 +43,7 @@ import {
 } from "@/lib/awards";
 
 // ISR: Re-generate this page at most once per hour on production.
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 export async function generateStaticParams() {
   const categories = await getAllCategories();

@@ -38,7 +38,7 @@ import {
 import { LinkedNamesList, OtherAwardsRow } from "@/components/award-icons";
 import { UnseenFilmsTable } from "@/components/unseen-films-table";
 import { getUnseenFilmsForYear } from "@/lib/unseen-films";
-import { query } from "@/lib/db";
+import { queryCached as query } from "@/lib/db";
 import { filmsData as filmsRawData } from "@/lib/films-data";
 import {
   getCategoriesForYear,
@@ -55,7 +55,7 @@ import {
 } from "@/lib/awards";
 
 // ISR: Re-generate this page at most once per hour on production.
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 export async function generateStaticParams() {
   const years = await getYearsWithDBReviews();

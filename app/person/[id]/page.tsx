@@ -8,7 +8,7 @@ import {
   Film, FileVideoCamera, UserStar, BookOpen, Theater, Shirt, MirrorRound,
   Piano, MicVocal, Headphones, SlidersHorizontal
 } from "lucide-react";
-import { query } from "@/lib/db";
+import { queryCached as query } from "@/lib/db";
 import {
   CATEGORY_ICON_MAPPING,
   CATEGORY_GROUPS_MAPPING,
@@ -29,7 +29,7 @@ import { OtherAwardsRow } from "@/components/award-icons";
 import { BackButton } from "@/components/back-button";
 
 // ISR: Re-generate this page at most once per hour on production.
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 // NOTE: Pre-builds all person pages at deploy time for faster initial loads.
 // Remove generateStaticParams (or add `export const dynamicParams = true` only) to

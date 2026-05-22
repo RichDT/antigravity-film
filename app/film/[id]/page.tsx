@@ -2,7 +2,7 @@ import React from "react";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { Trophy, Star, Film, Clapperboard, Award, Music, Scissors, Sparkles, PenTool, Palette, Globe, FileText, Wand2, Brush, Camera, Volume2, FileVideoCamera, UserStar, BookOpen, Theater, Shirt, MirrorRound, Piano, MicVocal, Headphones, SlidersHorizontal } from "lucide-react";
-import { query } from "@/lib/db";
+import { queryCached as query } from "@/lib/db";
 import {
   CATEGORY_ICON_MAPPING,
   CATEGORY_GROUPS_MAPPING,
@@ -106,7 +106,7 @@ function formatCredits(
   ];
 }
 
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 // NOTE: Pre-builds all film pages at deploy time for faster initial loads.
 // Remove generateStaticParams (or add `export const dynamicParams = true` only) to

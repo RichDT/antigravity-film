@@ -13,3 +13,19 @@ export async function query(text: string, params?: any[]) {
     // console.log('executed query', { text, duration, rows: res.rowCount });
     return res;
 }
+
+import { unstable_cache } from 'next/cache';
+
+export const cachedQuery = unstable_cache(
+    async (text: string, paramsStr?: string) => {
+        const params = paramsStr ? JSON.parse(paramsStr) : undefined;
+        const res = await pool.query(text, params);
+        return { rows: res.rows, rowCount: res.rowCount };
+    },
+    ['cached-db-query'],
+    { revalidate: 86400 }
+);
+
+export async function queryCached(text: string, params?: any[]) {
+    return await cachedQuery(text, params ? JSON.stringify(params) : undefined);
+}
