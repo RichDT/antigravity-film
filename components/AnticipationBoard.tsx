@@ -363,14 +363,14 @@ export function AnticipationBoard({
                       <sec.icon className={`w-3 h-3 ${sec.key === 'previews' ? 'text-accent' : 'text-muted-foreground group-hover:text-foreground'}`} />
                     </span>
                   </span>
-                  <span className="font-serif text-sm font-semibold tracking-wide text-foreground group-hover:text-accent transition-colors">{sec.label}</span>
-                  <span className="inline-flex items-center justify-center min-w-[1.25rem] h-4 px-1 rounded-full bg-background/70 border border-border text-[10px] font-medium text-muted-foreground">
+                  <span className="font-serif text-sm font-semibold tracking-wide text-foreground group-hover:text-accent transition-colors whitespace-nowrap shrink-0">{sec.label}</span>
+                  <span className="inline-flex items-center justify-center min-w-[1.25rem] h-4 px-1 rounded-full bg-background/70 border border-border text-[10px] font-medium text-muted-foreground shrink-0">
                     {sections[sec.key].length}
                   </span>
-                  <span className="hidden sm:inline text-[10px] text-muted-foreground/60 italic truncate">{sec.hint}</span>
+                  <span className="min-w-0 flex-1 text-[10px] text-muted-foreground/60 italic truncate">{sec.hint}</span>
                   {open[sec.key]
-                    ? <ChevronUp className="ml-auto w-3.5 h-3.5 text-muted-foreground shrink-0" />
-                    : <ChevronDown className="ml-auto w-3.5 h-3.5 text-muted-foreground shrink-0" />}
+                    ? <ChevronUp className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
+                    : <ChevronDown className="w-3.5 h-3.5 text-muted-foreground shrink-0" />}
                 </button>
                 {open[sec.key] && (
                   <ul className="divide-y divide-border/40">

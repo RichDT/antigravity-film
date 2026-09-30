@@ -79,6 +79,11 @@ function GradeHex({ grade }: { grade: string }) {
     );
 }
 
+// Matches the year page: before nominations exist, a film's standing is its consideration count
+function formatConsiderationCount(n: number): string {
+    return n === 0 ? "No considerations yet" : `${n} ${n === 1 ? 'Consideration' : 'Considerations'}`;
+}
+
 function formatSubtitle(wins?: number, noms?: number): string {
     if (wins && noms) {
         return `${wins} ${wins === 1 ? 'Win' : 'Wins'} · ${noms} ${noms === 1 ? 'Nomination' : 'Nominations'}`;
@@ -244,7 +249,7 @@ function NavHex({
     );
 }
 
-export default function HomeClient({ rawFilmsData, dbStats, filmIdMap, dbFilmsData, topFilmsPerYear, anticipationFilms, anticipationYear }: { rawFilmsData: any[], dbStats: Record<number, Record<string, { wins: number, noms: number }>>, filmIdMap: Record<string, number>, dbFilmsData: Array<{ release_year: number; title: string; grade: string; film_id: number }>, topFilmsPerYear: Array<{ year: number; title: string }>, anticipationFilms: AnticipationFilm[], anticipationYear: number }) {
+export default function HomeClient({ rawFilmsData, dbStats, filmIdMap, dbFilmsData, topFilmsPerYear, anticipationFilms, anticipationYear, considerationCounts }: { rawFilmsData: any[], dbStats: Record<number, Record<string, { wins: number, noms: number }>>, filmIdMap: Record<string, number>, dbFilmsData: Array<{ release_year: number; title: string; grade: string; film_id: number }>, topFilmsPerYear: Array<{ year: number; title: string }>, anticipationFilms: AnticipationFilm[], anticipationYear: number, considerationCounts: Record<string, number> }) {
     const filmsData = rawFilmsData;
 
     const validYears = filmsData
@@ -381,7 +386,9 @@ export default function HomeClient({ rawFilmsData, dbStats, filmIdMap, dbFilmsDa
                             </span>
                         )}
                         <span className="text-[10px] text-muted-foreground truncate">
-                            {formatSubtitle(item.wins, item.noms)}
+                            {selectedYear === anticipationYear && !item.wins && !item.noms
+                                ? formatConsiderationCount(considerationCounts[item.film.toLowerCase()] ?? 0)
+                                : formatSubtitle(item.wins, item.noms)}
                         </span>
                     </div>
                 </div>

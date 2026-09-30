@@ -1385,6 +1385,14 @@ export async function getUpcomingAnticipatedYears(): Promise<number[]> {
     return res.rows.map((r: any) => r.year as number);
 }
 
+/** title (lowercase) → number of categories the film is under consideration in, for a year */
+export async function getConsiderationCounts(year: number): Promise<Record<string, number>> {
+    const res = await queryUncached(
+        `SELECT LOWER(f.title) AS title, COUNT(DISTINCT c.category_id)::int AS n
+         FROM considerations c JOIN films f USING (film_id) WHERE c.year = $1 GROUP BY LOWER(f.title)`, [year]);
+    return Object.fromEntries(res.rows.map((r: any) => [r.title, r.n]));
+}
+
 export async function getConsiderationYears(): Promise<number[]> {
     const res = await queryUncached(`SELECT DISTINCT year FROM considerations ORDER BY year DESC`);
     return res.rows.map((r: any) => r.year as number);
