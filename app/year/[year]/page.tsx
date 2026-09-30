@@ -54,6 +54,7 @@ import {
   getGradeValue,
   getYearsWithDBReviews,
   getConsiderationYears,
+  getUpcomingAnticipatedYears,
   getAnticipationBoardFilms,
   getConsiderationsGrouped,
   ConsiderationEntry,
@@ -648,7 +649,7 @@ export default async function YearPage(props: Props) {
     (filmsRawData as any[]).map((f: any) => parseInt(f.year, 10)).filter((y: number) => !isNaN(y) && y > 1900)
   ));
 
-  const [dbStats, filmIdMap, dbReviewsRes, dbYears, rpFilmNomRes, dbNomYearsRes, unseenFilms, considerationYears] = await Promise.all([
+  const [dbStats, filmIdMap, dbReviewsRes, dbYears, rpFilmNomRes, dbNomYearsRes, unseenFilms, considerationYears, upcomingYears] = await Promise.all([
     getAllRichPicksStats(),
     getFilmIdMap(),
     query(
@@ -673,13 +674,14 @@ export default async function YearPage(props: Props) {
     query(`SELECT DISTINCT year FROM ceremonies ORDER BY year`),
     year >= 2021 ? getUnseenFilmsForYear(year) : Promise.resolve([]),
     getConsiderationYears(),
+    getUpcomingAnticipatedYears(),
   ]);
   // Until Rich Picks nominations are announced, a recent year shows the Anticipation Board in place of Films Not Screened
   const showAnticipationBoard = year >= CURRENT_YEAR - 1 && rpFilmNomRes.rows.length === 0;
   const anticipationFilms = showAnticipationBoard ? await getAnticipationBoardFilms(year) : [];
 
   const dbNomYears = dbNomYearsRes.rows.map((r: any) => r.year as number);
-  const allYears = Array.from(new Set([...staticYears, ...dbYears, ...dbNomYears, ...considerationYears]))
+  const allYears = Array.from(new Set([...staticYears, ...dbYears, ...dbNomYears, ...considerationYears, ...upcomingYears]))
     .sort((a: number, b: number) => b - a);
 
   if (!allYears.includes(year)) {
@@ -694,7 +696,8 @@ export default async function YearPage(props: Props) {
 
   // Pre-season: year has considerations but no RP nominations yet
   const hasRPNominations = rpFilmNomRes.rows.length > 0;
-  const isPreSeason = considerationYears.includes(year) && !hasRPNominations && !isPreRPYear;
+  const isUpcomingYear = year > CURRENT_YEAR;
+  const isPreSeason = (considerationYears.includes(year) || isUpcomingYear) && !hasRPNominations && !isPreRPYear;
   const considerationsGrouped = isPreSeason ? await getConsiderationsGrouped(year) : {};
   const considerationCounts = new Map<string, number>();
   for (const entries of Object.values(considerationsGrouped)) {
@@ -804,7 +807,7 @@ export default async function YearPage(props: Props) {
             </span>
           </div>
           <p className="text-sm text-muted-foreground mt-1.5">
-            {isPreRPYear ? "Historical Award Archive" : isPreSeason ? "Awards Season in Progress" : "Rich Picks for Film Excellence"}
+            {isPreRPYear ? "Historical Award Archive" : isUpcomingYear ? "Anticipated Films" : isPreSeason ? "Awards Season in Progress" : "Rich Picks for Film Excellence"}
           </p>
 
           {isPreRPYear && (
@@ -821,8 +824,17 @@ export default async function YearPage(props: Props) {
             <div className="mt-4 flex items-start gap-3 bg-sky-500/10 border border-sky-500/30 rounded-lg px-4 py-3 text-sm">
               <Sparkles className="w-4 h-4 mt-0.5 flex-shrink-0 text-sky-400" />
               <span className="text-sky-200/90">
-                <span className="font-semibold text-sky-300">Under Consideration</span>
-                {" "}— Rich Picks nominations for {year} have not been announced yet. The categories below show films Rich is currently tracking as considerations.
+                {isUpcomingYear ? (
+                  <>
+                    <span className="font-semibold text-sky-300">Coming in {year}</span>
+                    {" "}— The {year} film year hasn&apos;t begun. The Anticipation Board tracks films already scheduled for {year}; considerations will appear here once Rich starts screening them.
+                  </>
+                ) : (
+                  <>
+                    <span className="font-semibold text-sky-300">Under Consideration</span>
+                    {" "}— Rich Picks nominations for {year} have not been announced yet. The categories below show films Rich is currently tracking as considerations.
+                  </>
+                )}
               </span>
             </div>
           )}

@@ -12,7 +12,9 @@ const API = 'https://en.wikipedia.org/w/api.php';
 const UA = 'RichPicks/1.0 (r.d.truncellito@gmail.com)';
 const DRY = process.argv.includes('--dry');
 const yearsArg = process.argv[process.argv.indexOf('--years') + 1];
-const YEARS = process.argv.includes('--years') ? yearsArg.split(',').map(Number) : [new Date().getFullYear(), new Date().getFullYear() + 1];
+// This year through three years out; films beyond next year are stored and surface when their year becomes next
+const THIS_YEAR = new Date().getFullYear();
+const YEARS = process.argv.includes('--years') ? yearsArg.split(',').map(Number) : [THIS_YEAR, THIS_YEAR + 1, THIS_YEAR + 2, THIS_YEAR + 3];
 
 const MATCH_ROLES: [string[], string][] = [
   [['director'], 'Director'], [['screenplay', 'writer', 'written_by'], 'Writer'], [['cinematography'], 'Cinematographer'],

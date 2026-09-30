@@ -1378,6 +1378,13 @@ export async function getPreRPCategoriesForYear(year: number): Promise<Category[
     return categories;
 }
 
+/** The next calendar year, if it has anticipated films. Years further out stay stored but get no page until they're next. */
+export async function getUpcomingAnticipatedYears(): Promise<number[]> {
+    const next = new Date().getFullYear() + 1;
+    const res = await queryUncached(`SELECT DISTINCT year FROM unseen_films WHERE year = $1`, [next]);
+    return res.rows.map((r: any) => r.year as number);
+}
+
 export async function getConsiderationYears(): Promise<number[]> {
     const res = await queryUncached(`SELECT DISTINCT year FROM considerations ORDER BY year DESC`);
     return res.rows.map((r: any) => r.year as number);
