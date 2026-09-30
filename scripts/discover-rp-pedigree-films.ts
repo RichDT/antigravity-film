@@ -1,6 +1,6 @@
 /**
- * Finds upcoming/new films (Wikipedia "Category:<year> films") directed, written, or shot by a past
- * Rich Picks nominee or winner, and adds unreviewed ones to the Anticipation Board (unseen_films, source 'rp_pedigree').
+ * Finds upcoming/new films (Wikipedia "Category:<year> films") directed, written, or shot by someone previously
+ * nominated for / winning Rich Picks in that same category (Directing / Screenplay / Cinematography), and adds unreviewed ones to the Anticipation Board (unseen_films, source 'rp_pedigree').
  *
  * Usage: npx tsx --env-file=.env.local scripts/discover-rp-pedigree-films.ts [--dry] [--years 2026,2027]
  */
@@ -70,19 +70,13 @@ async function run() {
   // Single-word names (e.g. "Sjón") are too ambiguous to match on name alone
   const rpCats = new Map<string, string[]>();
   for (const r of rp.rows as any[]) if (norm(r.name).includes(' ')) rpCats.set(norm(r.name), r.categories);
-  // Guard against same-name strangers: someone known to Rich Picks only for an unrelated craft
-  // (e.g. a sound editor) shouldn't match a same-named director/writer/cinematographer
-  // Craft categories whose nominees rarely move into directing/writing/shooting
-  const UNRELATED_CRAFT = /^(Sound Editing|Sound Mixing|Make-Up & Hairstyling|Costuming|Art Direction|Editing|Original Score)$/;
-  const CRAFT_FOR_ROLE: Record<string, RegExp> = { Director: /$^/, Writer: /$^/, Cinematographer: /^Cinematography$/ };
-  const review: string[] = [];
-  const isMatch = (name: string, role: string, film: string) => {
-    const cats = rpCats.get(norm(name));
-    if (!cats) return false;
-    if (!cats.every(c => UNRELATED_CRAFT.test(c) && !CRAFT_FOR_ROLE[role].test(c))) return true;
-    review.push(`${film}: ${name} credited as ${role}, but Rich Picks history is only ${cats.join(', ')}`);
-    return false;
+  // Only in-category history counts: a director must have been a Rich Picks Directing nominee/winner, etc.
+  const CATEGORY_FOR_ROLE: Record<string, RegExp> = {
+    Director: /^Directing$/,
+    Writer: /^Screenplay \((Original|Adapted)\)$/,
+    Cinematographer: /^Cinematography$/,
   };
+  const isMatch = (name: string, role: string) => (rpCats.get(norm(name)) ?? []).some(c => CATEGORY_FOR_ROLE[role].test(c));
 
   for (const year of YEARS) {
     const titles = await categoryMembers(`Category:${year} films`);
@@ -95,7 +89,7 @@ async function run() {
         const raw = fields.map(f => extractInfoboxField(wt, f)).find(Boolean) ?? '';
         crew.set(role, parseNames(raw).map(n => n.replace(/\s*\(.*\)$/, '')).filter(n => !/^jr\.?$/i.test(n)));
       }
-      const hits = MATCH_ROLES.flatMap(([, role]) => (crew.get(role) ?? []).filter(n => isMatch(n, role, page)).map(n => `${n} (${role})`));
+      const hits = MATCH_ROLES.flatMap(([, role]) => (crew.get(role) ?? []).filter(n => isMatch(n, role)).map(n => `${n} (${role})`));
       if (hits.length === 0) continue;
 
       const title = page.replace(/\s*\((?:\d{4} )?(?:[a-z]+ )?film\)$/i, '');
@@ -126,7 +120,6 @@ async function run() {
     }
     console.log(`${year}: ${added} film(s) ${DRY ? 'would be ' : ''}added`);
   }
-  if (review.length) console.log(`\nNeeds review (possible same-name mix-up, not added):\n  ${[...new Set(review)].join('\n  ')}`);
   await pool.end();
 }
 run().catch(e => { console.error(e); process.exit(1); });

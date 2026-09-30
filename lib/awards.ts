@@ -1521,15 +1521,13 @@ export async function getAnticipationBoardFilms(year: number): Promise<Anticipat
                  FROM (
                    SELECT json_build_object(
                      'person_id', h.person_id, 'name', h.name,
-                     'roles', (SELECT string_agg(DISTINCT fc2.crew_role, ', ') FROM film_crew fc2
-                               WHERE fc2.film_id = f.film_id AND fc2.person_id = h.person_id
-                                 AND fc2.crew_role IN ('Director', 'Writer', 'Cinematographer')),
+                     'roles', string_agg(DISTINCT h.crew_role, ', '),
                      'won', bool_or(h.win),
                      'history', json_agg(json_build_object('category', h.category, 'year', h.year, 'win', h.win, 'film', h.film)
                                          ORDER BY h.win DESC, h.year DESC)
                    ) AS ped
                    FROM (
-                     SELECT DISTINCT pe.person_id, pe.name, cat.name AS category, c.year, n.win, nf.title AS film
+                     SELECT DISTINCT pe.person_id, pe.name, fc.crew_role, cat.name AS category, c.year, n.win, nf.title AS film
                      FROM film_crew fc
                      JOIN people pe ON pe.person_id = fc.person_id
                      JOIN nomination_people np ON np.person_id = pe.person_id
@@ -1539,7 +1537,11 @@ export async function getAnticipationBoardFilms(year: number): Promise<Anticipat
                      JOIN organizations o ON o.organization_id = aw.organization_id AND o.short_name = 'Rich Picks'
                      JOIN categories cat ON cat.category_id = n.category_id
                      JOIN films nf ON nf.film_id = n.film_id
-                     WHERE fc.film_id = f.film_id AND fc.crew_role IN ('Director', 'Writer', 'Cinematographer')
+                     WHERE fc.film_id = f.film_id
+                       -- only in-category history counts: directors by Directing, writers by Screenplay, DPs by Cinematography
+                       AND ((fc.crew_role = 'Director' AND cat.name = 'Directing')
+                         OR (fc.crew_role = 'Writer' AND cat.name IN ('Screenplay (Original)', 'Screenplay (Adapted)'))
+                         OR (fc.crew_role = 'Cinematographer' AND cat.name = 'Cinematography'))
                    ) h
                    GROUP BY h.person_id, h.name
                  ) peds
