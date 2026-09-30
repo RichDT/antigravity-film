@@ -70,20 +70,41 @@ function formatDate(iso: string, withWeekday = false): string {
   });
 }
 
-// SF preview screenings first, then upcoming releases soonest-first, then films already out (most recent first), then undated
-function sortRank(f: AnticipationFilm, today: string): [number, string] {
-  if (f.previews.length > 0) return [0, f.previews[0].screening_date];
-  if (f.us_release_date && f.us_release_date > today) return [1, f.us_release_date];
-  if (f.us_release_date) return [2, String(99999999 - Number(f.us_release_date.replace(/-/g, '')))];
-  return [3, ''];
+type SectionKey = 'previews' | 'coming' | 'out' | 'streaming' | 'tba' | 'hidden';
+
+const SECTIONS: { key: SectionKey; label: string; hint: string; defaultOpen: boolean; adminOnly?: boolean }[] = [
+  { key: 'previews',  label: 'Preview screenings', hint: 'San Francisco early-access events', defaultOpen: true },
+  { key: 'coming',    label: 'Coming soon',        hint: 'Soonest first',                     defaultOpen: true },
+  { key: 'out',       label: 'Out now',            hint: 'Released, not yet streaming',       defaultOpen: true },
+  { key: 'streaming', label: 'Streaming now',      hint: 'Watch at home',                     defaultOpen: true },
+  { key: 'tba',       label: 'Date TBA',           hint: 'Trailer out, no release date yet',  defaultOpen: false },
+  { key: 'hidden',    label: 'Hidden',             hint: 'No release date or trailer yet — admin only', defaultOpen: false, adminOnly: true },
+];
+
+function isStreamingLive(f: AnticipationFilm, today: string): boolean {
+  return !!f.streaming_service && !!f.streaming_date && f.streaming_date <= today;
 }
 
-function sortBySoonest(films: AnticipationFilm[]): AnticipationFilm[] {
+function sectionOf(f: AnticipationFilm, today: string): SectionKey {
+  if (f.previews.length > 0) return 'previews';
+  if (isStreamingLive(f, today)) return 'streaming';
+  if (f.us_release_date && f.us_release_date > today) return 'coming';
+  if (f.us_release_date) return 'out';
+  return f.trailer_url ? 'tba' : 'hidden';
+}
+
+function sectionize(films: AnticipationFilm[]): Record<SectionKey, AnticipationFilm[]> {
   const today = todayInSF();
-  return [...films].sort((a, b) => {
-    const [ra, ka] = sortRank(a, today), [rb, kb] = sortRank(b, today);
-    return ra - rb || ka.localeCompare(kb) || a.title.localeCompare(b.title);
-  });
+  const out: Record<SectionKey, AnticipationFilm[]> = { previews: [], coming: [], out: [], streaming: [], tba: [], hidden: [] };
+  for (const f of films) out[sectionOf(f, today)].push(f);
+  const byTitle = (a: AnticipationFilm, b: AnticipationFilm) => a.title.localeCompare(b.title);
+  out.previews.sort((a, b) => a.previews[0].screening_date.localeCompare(b.previews[0].screening_date) || byTitle(a, b));
+  out.coming.sort((a, b) => a.us_release_date!.localeCompare(b.us_release_date!) || byTitle(a, b));
+  out.out.sort((a, b) => b.us_release_date!.localeCompare(a.us_release_date!) || byTitle(a, b));
+  out.streaming.sort((a, b) => b.streaming_date!.localeCompare(a.streaming_date!) || byTitle(a, b));
+  out.tba.sort(byTitle);
+  out.hidden.sort(byTitle);
+  return out;
 }
 
 function ReleaseLine({ film }: { film: AnticipationFilm }) {
@@ -269,7 +290,11 @@ export function AnticipationBoard({
   const router = useRouter();
   const [expanded, setExpanded] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
-  const films = useMemo(() => sortBySoonest(initialFilms), [initialFilms]);
+  const sections = useMemo(() => sectionize(initialFilms), [initialFilms]);
+  const visibleCount = initialFilms.length - sections.hidden.length;
+  const [open, setOpen] = useState<Record<SectionKey, boolean>>(
+    () => Object.fromEntries(SECTIONS.map(sec => [sec.key, sec.defaultOpen])) as Record<SectionKey, boolean>
+  );
   const [addingFor, setAddingFor] = useState<number | null>(null);
 
   useEffect(() => {
@@ -291,7 +316,7 @@ export function AnticipationBoard({
     router.refresh();
   }
 
-  if (films.length === 0 && !isAdmin) return null;
+  if (visibleCount === 0 && !isAdmin) return null;
 
   return (
     <div className="mt-5">
@@ -302,9 +327,9 @@ export function AnticipationBoard({
         <span className="flex items-center gap-2 text-sm font-medium text-muted-foreground group-hover:text-foreground transition-colors">
           <Eye className="w-3.5 h-3.5 shrink-0" />
           {year} Anticipation Board
-          {films.length > 0 && (
+          {visibleCount > 0 && (
             <span className="text-xs text-muted-foreground/70 font-normal">
-              ({films.length} {films.length === 1 ? 'film' : 'films'})
+              ({visibleCount} {visibleCount === 1 ? 'film' : 'films'})
             </span>
           )}
         </span>
@@ -316,95 +341,113 @@ export function AnticipationBoard({
       {expanded && (
         <div className="mt-2 rounded-lg border border-border bg-card overflow-hidden">
           <p className="px-3 pt-3 pb-1 text-[11px] text-muted-foreground/70 italic leading-snug">
-            Films anticipated for {year} awards consideration — not yet screened by Rich.
-            Soonest first; U.S. release dates, with San Francisco AMC preview screenings called out.
+            Films anticipated for {year} awards consideration — not yet screened by Rich. U.S. release dates.
+            {sections.hidden.length > 0 && ` ${sections.hidden.length} more ${sections.hidden.length === 1 ? 'film appears' : 'films appear'} once a release date or trailer is announced.`}
           </p>
 
-          {films.length === 0 ? (
+          {visibleCount === 0 && !isAdmin ? (
             <p className="px-3 py-4 text-xs text-muted-foreground italic">
               No anticipated films on record yet for {year}.
             </p>
           ) : (
-            <ul className="divide-y divide-border/40">
-              {films.map(film => (
-                <li key={film.film_id} className="px-3 py-2.5">
-                  <div className="flex items-baseline gap-2 flex-wrap">
-                    <Link
-                      href={`/film/${film.film_id}`}
-                      className="text-sm text-foreground/90 hover:text-accent transition-colors font-medium leading-snug"
-                    >
-                      {film.title}
-                    </Link>
-                    {film.trailer_url && (
-                      <a
-                        href={film.trailer_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-0.5 text-[10px] text-muted-foreground hover:text-accent transition-colors"
-                        title={`Watch the official trailer for ${film.title} on YouTube`}
-                      >
-                        <Play className="w-2 h-2 self-center" fill="currentColor" />
-                        Trailer
-                      </a>
-                    )}
-                    <div className="flex items-center gap-1 flex-wrap">
-                      <PedigreeBadge pedigree={film.pedigree} />
-                      {Object.entries(groupBySource(film.accolades)).map(([source, accs]) => (
-                        <FestivalBadge key={source} source={source} accolades={accs} />
-                      ))}
-                      {isAdmin && addingFor !== film.film_id && (
-                        <button
-                          onClick={() => setAddingFor(film.film_id)}
-                          className="inline-flex items-center gap-0.5 text-[10px] text-muted-foreground/50 hover:text-accent transition-colors px-1 py-0.5 rounded border border-dashed border-muted-foreground/30 hover:border-accent/50"
+            SECTIONS.filter(sec => sections[sec.key].length > 0 && (!sec.adminOnly || isAdmin)).map(sec => (
+              <section key={sec.key} className="border-t border-border/60 first-of-type:border-t-0">
+                <button
+                  onClick={() => setOpen(o => ({ ...o, [sec.key]: !o[sec.key] }))}
+                  className="w-full flex items-baseline gap-2 px-3 pt-3 pb-1.5 text-left group"
+                  aria-expanded={open[sec.key]}
+                >
+                  <span className="font-serif text-[13px] font-semibold text-foreground group-hover:text-accent transition-colors">{sec.label}</span>
+                  <span className="text-[10px] text-muted-foreground">{sections[sec.key].length}</span>
+                  <span className="text-[10px] text-muted-foreground/60 italic truncate">{sec.hint}</span>
+                  {open[sec.key]
+                    ? <ChevronUp className="ml-auto w-3 h-3 self-center text-muted-foreground shrink-0" />
+                    : <ChevronDown className="ml-auto w-3 h-3 self-center text-muted-foreground shrink-0" />}
+                </button>
+                {open[sec.key] && (
+                  <ul className="divide-y divide-border/40">
+                    {sections[sec.key].map(film => (
+                    <li key={film.film_id} className="px-3 py-2.5">
+                      <div className="flex items-baseline gap-2 flex-wrap">
+                        <Link
+                          href={`/film/${film.film_id}`}
+                          className="text-sm text-foreground/90 hover:text-accent transition-colors font-medium leading-snug"
                         >
-                          <Plus className="w-2.5 h-2.5" />
-                          accolade
-                        </button>
+                          {film.title}
+                        </Link>
+                        {film.trailer_url && (
+                          <a
+                            href={film.trailer_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-0.5 text-[10px] text-muted-foreground hover:text-accent transition-colors"
+                            title={`Watch the official trailer for ${film.title} on YouTube`}
+                          >
+                            <Play className="w-2 h-2 self-center" fill="currentColor" />
+                            Trailer
+                          </a>
+                        )}
+                        <div className="flex items-center gap-1 flex-wrap">
+                          <PedigreeBadge pedigree={film.pedigree} />
+                          {Object.entries(groupBySource(film.accolades)).map(([source, accs]) => (
+                            <FestivalBadge key={source} source={source} accolades={accs} />
+                          ))}
+                          {isAdmin && addingFor !== film.film_id && (
+                            <button
+                              onClick={() => setAddingFor(film.film_id)}
+                              className="inline-flex items-center gap-0.5 text-[10px] text-muted-foreground/50 hover:text-accent transition-colors px-1 py-0.5 rounded border border-dashed border-muted-foreground/30 hover:border-accent/50"
+                            >
+                              <Plus className="w-2.5 h-2.5" />
+                              accolade
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                      <ReleaseLine film={film} />
+                      {film.previews.map(p => (
+                        <a
+                          key={`${p.event_name}-${p.screening_date}`}
+                          href={p.ticket_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="mt-1.5 flex items-start gap-2 rounded-md border border-accent/40 bg-accent/10 px-2 py-1.5 hover:bg-accent/20 transition-colors group/preview"
+                        >
+                          <Ticket className="w-3.5 h-3.5 mt-0.5 shrink-0 text-accent" />
+                          <span className="text-[11px] leading-snug text-foreground">
+                            <span className="font-semibold text-accent">{p.event_name}</span>
+                            {' · '}{formatDate(p.screening_date, true)}{p.showtimes ? ` · ${p.showtimes}` : ''}
+                            <span className="block text-muted-foreground">{p.theatre}</span>
+                          </span>
+                          <span className="ml-auto self-center text-[10px] font-medium text-accent whitespace-nowrap group-hover/preview:underline">Get tickets →</span>
+                        </a>
+                      ))}
+                      {isAdmin && film.accolades.length > 0 && (
+                        <div className="mt-1 flex flex-wrap gap-x-3 gap-y-0.5">
+                          {film.accolades.map(acc => (
+                            <button
+                              key={acc.accolade_id}
+                              onClick={() => removeAccolade(acc.accolade_id)}
+                              className="inline-flex items-center gap-0.5 text-[10px] text-muted-foreground/60 hover:text-destructive transition-colors"
+                              title="Remove accolade"
+                            >
+                              <X className="w-2.5 h-2.5" />
+                              {FESTIVAL_CONFIG[acc.source]?.name ?? acc.source}: {acc.label}
+                            </button>
+                          ))}
+                        </div>
                       )}
-                    </div>
-                  </div>
-                  <ReleaseLine film={film} />
-                  {film.previews.map(p => (
-                    <a
-                      key={`${p.event_name}-${p.screening_date}`}
-                      href={p.ticket_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="mt-1.5 flex items-start gap-2 rounded-md border border-accent/40 bg-accent/10 px-2 py-1.5 hover:bg-accent/20 transition-colors group/preview"
-                    >
-                      <Ticket className="w-3.5 h-3.5 mt-0.5 shrink-0 text-accent" />
-                      <span className="text-[11px] leading-snug text-foreground">
-                        <span className="font-semibold text-accent">{p.event_name}</span>
-                        {' · '}{formatDate(p.screening_date, true)}{p.showtimes ? ` · ${p.showtimes}` : ''}
-                        <span className="block text-muted-foreground">{p.theatre}</span>
-                      </span>
-                      <span className="ml-auto self-center text-[10px] font-medium text-accent whitespace-nowrap group-hover/preview:underline">Get tickets →</span>
-                    </a>
-                  ))}
-                  {isAdmin && film.accolades.length > 0 && (
-                    <div className="mt-1 flex flex-wrap gap-x-3 gap-y-0.5">
-                      {film.accolades.map(acc => (
-                        <button
-                          key={acc.accolade_id}
-                          onClick={() => removeAccolade(acc.accolade_id)}
-                          className="inline-flex items-center gap-0.5 text-[10px] text-muted-foreground/60 hover:text-destructive transition-colors"
-                          title="Remove accolade"
-                        >
-                          <X className="w-2.5 h-2.5" />
-                          {FESTIVAL_CONFIG[acc.source]?.name ?? acc.source}: {acc.label}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                  {isAdmin && addingFor === film.film_id && (
-                    <AddAccoladeForm
-                      filmId={film.film_id}
-                      onDone={onAccoladeAdded}
-                    />
-                  )}
-                </li>
-              ))}
-            </ul>
+                      {isAdmin && addingFor === film.film_id && (
+                        <AddAccoladeForm
+                          filmId={film.film_id}
+                          onDone={onAccoladeAdded}
+                        />
+                      )}
+                    </li>
+                    ))}
+                  </ul>
+                )}
+              </section>
+            ))
           )}
           {isAdmin && <AddUnseenFilm year={year} />}
         </div>
