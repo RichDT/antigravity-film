@@ -28,3 +28,4 @@ sync_output.log
 .claude/
 .vite/
 _vite_backup/
+.vercel
