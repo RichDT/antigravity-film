@@ -73,12 +73,12 @@ function formatDate(iso: string, withWeekday = false): string {
 type SectionKey = 'previews' | 'coming' | 'out' | 'streaming' | 'tba' | 'hidden';
 
 const SECTIONS: { key: SectionKey; label: string; hint: string; icon: LucideIcon; adminOnly?: boolean }[] = [
-  { key: 'previews',  label: 'Preview screenings', hint: 'San Francisco early-access events', icon: Ticket },
+  { key: 'previews',  label: 'Preview screenings', hint: 'SF early access', icon: Ticket },
   { key: 'coming',    label: 'Coming soon',        hint: 'Soonest first',                     icon: CalendarDays },
-  { key: 'out',       label: 'Out now',            hint: 'Released, not yet streaming',       icon: Clapperboard },
+  { key: 'out',       label: 'Out now',            hint: 'Not streaming yet',       icon: Clapperboard },
   { key: 'streaming', label: 'Streaming now',      hint: 'Watch at home',                     icon: Tv },
-  { key: 'tba',       label: 'Date TBA',           hint: 'Trailer out, no release date yet',  icon: CircleHelp },
-  { key: 'hidden',    label: 'Hidden',             hint: 'No release date or trailer yet — admin only', icon: EyeOff, adminOnly: true },
+  { key: 'tba',       label: 'Date TBA',           hint: 'Trailer, no date',  icon: CircleHelp },
+  { key: 'hidden',    label: 'Hidden',             hint: 'Admin only', icon: EyeOff, adminOnly: true },
 ];
 
 function isStreamingLive(f: AnticipationFilm, today: string): boolean {
@@ -367,7 +367,7 @@ export function AnticipationBoard({
                   <span className="inline-flex items-center justify-center min-w-[1.25rem] h-4 px-1 rounded-full bg-background/70 border border-border text-[10px] font-medium text-muted-foreground shrink-0">
                     {sections[sec.key].length}
                   </span>
-                  <span className="min-w-0 flex-1 text-[10px] text-muted-foreground/60 italic truncate">{sec.hint}</span>
+                  <span className="flex-1 text-[10px] text-muted-foreground/60 italic whitespace-nowrap">{sec.hint}</span>
                   {open[sec.key]
                     ? <ChevronUp className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
                     : <ChevronDown className="w-3.5 h-3.5 text-muted-foreground shrink-0" />}

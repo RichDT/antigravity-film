@@ -432,11 +432,11 @@ export default function HomeClient({ rawFilmsData, dbStats, filmIdMap, dbFilmsDa
                             </div>
                         </div>
 
+                        <div className="flex items-center gap-2 mb-3">
+                            <Star className="w-4 h-4 text-accent" />
+                            <h2 className="font-serif text-lg font-semibold">Top 10 of {selectedYear}</h2>
+                        </div>
                         <div className="bg-card/90 border border-border rounded-lg p-4">
-                            <div className="flex items-center gap-2 mb-3">
-                                <Star className="w-4 h-4 text-accent" />
-                                <h2 className="font-serif text-lg font-semibold">Top 10 of {selectedYear}</h2>
-                            </div>
                             {top10List}
                             <Link
                                 href={`/year/${selectedYear}`}
@@ -635,11 +635,11 @@ export default function HomeClient({ rawFilmsData, dbStats, filmIdMap, dbFilmsDa
 
                 {/* Top 10 */}
                 <div className="px-6 pt-4 pb-10">
+                    <div className="flex items-center gap-2 mb-3">
+                        <Star className="w-4 h-4 text-accent" />
+                        <h2 className="font-serif text-base font-semibold">Top 10 of {selectedYear}</h2>
+                    </div>
                     <div className="bg-card/90 border border-border rounded-lg p-4">
-                        <div className="flex items-center gap-2 mb-3">
-                            <Star className="w-4 h-4 text-accent" />
-                            <h2 className="font-serif text-base font-semibold">Top 10 of {selectedYear}</h2>
-                        </div>
                         {top10List}
                         <Link
                             href={`/year/${selectedYear}`}
