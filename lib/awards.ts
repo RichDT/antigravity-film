@@ -1478,6 +1478,14 @@ export async function getConsiderationsGrouped(year: number): Promise<Record<str
     return grouped;
 }
 
+export interface RPPedigree {
+    person_id: number;
+    name: string;
+    roles: string;
+    won: boolean;
+    history: { category: string; year: number; win: boolean; film: string }[];
+}
+
 export interface AnticipationFilm {
     film_id: number;
     title: string;
@@ -1488,6 +1496,7 @@ export interface AnticipationFilm {
     streaming_date: string | null;
     streaming_service: string | null;
     streaming_url: string | null;
+    pedigree: RPPedigree[];
     accolades: { accolade_id: number; source: string; label: string }[];
     previews: { event_name: string; theatre: string; screening_date: string; showtimes: string | null; ticket_url: string }[];
 }
@@ -1507,6 +1516,34 @@ export async function getAnticipationBoardFilms(year: number): Promise<Anticipat
                  FROM sf_preview_screenings sp
                  WHERE sp.film_id = f.film_id AND sp.screening_date >= (now() AT TIME ZONE 'America/Los_Angeles')::date
                ), '[]'::json) AS previews,
+               COALESCE((
+                 SELECT json_agg(ped ORDER BY (ped->>'won')::boolean DESC, ped->>'name')
+                 FROM (
+                   SELECT json_build_object(
+                     'person_id', h.person_id, 'name', h.name,
+                     'roles', (SELECT string_agg(DISTINCT fc2.crew_role, ', ') FROM film_crew fc2
+                               WHERE fc2.film_id = f.film_id AND fc2.person_id = h.person_id
+                                 AND fc2.crew_role IN ('Director', 'Writer', 'Cinematographer')),
+                     'won', bool_or(h.win),
+                     'history', json_agg(json_build_object('category', h.category, 'year', h.year, 'win', h.win, 'film', h.film)
+                                         ORDER BY h.win DESC, h.year DESC)
+                   ) AS ped
+                   FROM (
+                     SELECT DISTINCT pe.person_id, pe.name, cat.name AS category, c.year, n.win, nf.title AS film
+                     FROM film_crew fc
+                     JOIN people pe ON pe.person_id = fc.person_id
+                     JOIN nomination_people np ON np.person_id = pe.person_id
+                     JOIN nominations n ON n.nomination_id = np.nomination_id
+                     JOIN ceremonies c ON c.ceremony_id = n.ceremony_id
+                     JOIN awards aw ON aw.award_id = c.award_id
+                     JOIN organizations o ON o.organization_id = aw.organization_id AND o.short_name = 'Rich Picks'
+                     JOIN categories cat ON cat.category_id = n.category_id
+                     JOIN films nf ON nf.film_id = n.film_id
+                     WHERE fc.film_id = f.film_id AND fc.crew_role IN ('Director', 'Writer', 'Cinematographer')
+                   ) h
+                   GROUP BY h.person_id, h.name
+                 ) peds
+               ), '[]'::json) AS pedigree,
                COALESCE(
                  json_agg(
                    json_build_object('accolade_id', a.accolade_id, 'source', a.source, 'label', a.label)

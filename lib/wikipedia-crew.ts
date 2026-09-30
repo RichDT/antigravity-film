@@ -60,8 +60,10 @@ export function extractInfoboxField(wikitext: string, field: string): string {
 
   let i = m.index + m[0].length
   let depth = 0
+  let linkDepth = 0
   let out = ''
 
+  // A "|" inside [[target|label]] belongs to the link, not the infobox — track link depth too
   while (i < wikitext.length) {
     const c = wikitext[i], d = wikitext[i + 1]
     if (c === '{' && d === '{') { depth++; out += '{{'; i += 2 }
@@ -69,7 +71,9 @@ export function extractInfoboxField(wikitext: string, field: string): string {
       if (depth === 0) break
       depth--; out += '}}'; i += 2
     }
-    else if (c === '|' && depth === 0) break
+    else if (c === '[' && d === '[') { linkDepth++; out += '[['; i += 2 }
+    else if (c === ']' && d === ']') { if (linkDepth > 0) linkDepth--; out += ']]'; i += 2 }
+    else if (c === '|' && depth === 0 && linkDepth === 0) break
     else { out += c; i++ }
   }
 

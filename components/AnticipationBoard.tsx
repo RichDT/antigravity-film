@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ChevronDown, ChevronUp, Plus, X, Loader2, Eye, Ticket, Award, TreePalm, Sailboat, PawPrint, Sun, Leaf, MountainSnow, Building2, Landmark, Guitar, Crown, Shell, Waves, Cat, Play, type LucideIcon } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
-import type { AnticipationFilm } from '@/lib/awards';
+import type { AnticipationFilm, RPPedigree } from '@/lib/awards';
 import { AddUnseenFilm } from '@/components/add-unseen-film';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
@@ -128,6 +128,46 @@ function ReleaseLine({ film }: { film: AnticipationFilm }) {
         <span className="font-medium text-foreground/80">Streaming on {watchLabel}</span>
       ))}
     </p>
+  );
+}
+
+function PedigreeBadge({ pedigree }: { pedigree: RPPedigree[] }) {
+  if (pedigree.length === 0) return null;
+  const anyWin = pedigree.some(p => p.won);
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <button
+          className={`inline-flex items-center justify-center text-[8px] font-bold rounded px-1 h-3.5 cursor-pointer transition-all hover:scale-110 hover:shadow-sm ${
+            anyWin ? 'bg-accent text-accent-foreground shadow-sm' : 'bg-secondary text-secondary-foreground border border-border'
+          }`}
+          title={`Made by past Rich Picks ${anyWin ? 'winners' : 'nominees'}: ${pedigree.map(p => p.name).join(', ')}`}
+        >
+          RICH
+        </button>
+      </PopoverTrigger>
+      <PopoverContent side="top" className="w-auto max-w-[300px] px-3 py-2 text-xs">
+        <p className="font-semibold text-foreground">Rich Picks alumni</p>
+        <ul className="mt-1 space-y-1.5">
+          {pedigree.map(p => {
+            const wins = p.history.filter(h => h.win);
+            const noms = p.history.filter(h => !h.win);
+            return (
+              <li key={p.person_id}>
+                <Link href={`/person/${p.person_id}`} className="font-medium text-foreground hover:text-accent">{p.name}</Link>
+                <span className="text-muted-foreground"> · {p.roles.replace('Writer', 'writer').replace('Director', 'director').replace('Cinematographer', 'cinematographer')}</span>
+                {wins.length > 0 && (
+                  <p className="text-accent">Won: {wins.map(h => `${h.category} ${h.year}`).join('; ')}</p>
+                )}
+                {noms.length > 0 && (
+                  <p className="text-muted-foreground">Nominated: {noms.map(h => `${h.category} ${h.year}`).join('; ')}</p>
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      </PopoverContent>
+    </Popover>
   );
 }
 
@@ -308,6 +348,7 @@ export function AnticipationBoard({
                       </a>
                     )}
                     <div className="flex items-center gap-1 flex-wrap">
+                      <PedigreeBadge pedigree={film.pedigree} />
                       {Object.entries(groupBySource(film.accolades)).map(([source, accs]) => (
                         <FestivalBadge key={source} source={source} accolades={accs} />
                       ))}
