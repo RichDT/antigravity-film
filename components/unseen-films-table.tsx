@@ -13,9 +13,9 @@ export function UnseenFilmsTable({ films, year }: { films: UnseenFilm[]; year: n
 
   useEffect(() => {
     const supabase = createClient();
-    supabase.auth.getSession().then(({ data }) => {
-      setIsAdmin(!!data.session?.user);
-    });
+    supabase.auth.getSession().then(({ data }) => setIsAdmin(!!data.session?.user));
+    const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => setIsAdmin(!!session?.user));
+    return () => sub.subscription.unsubscribe();
   }, []);
 
   const unseenCount = films.filter(f => f.status === 'unseen').length;

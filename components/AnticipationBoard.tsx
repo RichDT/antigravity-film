@@ -301,6 +301,8 @@ export function AnticipationBoard({
   useEffect(() => {
     const supabase = createClient();
     supabase.auth.getSession().then(({ data }) => setIsAdmin(!!data.session?.user));
+    const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => setIsAdmin(!!session?.user));
+    return () => sub.subscription.unsubscribe();
   }, []);
 
   async function removeAccolade(accoladeId: number) {
