@@ -3,7 +3,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ChevronDown, ChevronUp, Plus, X, Loader2, Eye, Ticket, Award, TreePalm, Sailboat, PawPrint, Sun, Leaf, MountainSnow, Building2, Landmark, Guitar, Crown, Shell, Waves, Cat, Play, type LucideIcon } from 'lucide-react';
+import { ChevronDown, ChevronUp, Plus, X, Loader2, Eye, Ticket, CalendarDays, Clapperboard, Tv, CircleHelp, EyeOff, Award, TreePalm, Sailboat, PawPrint, Sun, Leaf, MountainSnow, Building2, Landmark, Guitar, Crown, Shell, Waves, Cat, Play, type LucideIcon } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import type { AnticipationFilm, RPPedigree } from '@/lib/awards';
 import { AddUnseenFilm } from '@/components/add-unseen-film';
@@ -72,13 +72,13 @@ function formatDate(iso: string, withWeekday = false): string {
 
 type SectionKey = 'previews' | 'coming' | 'out' | 'streaming' | 'tba' | 'hidden';
 
-const SECTIONS: { key: SectionKey; label: string; hint: string; defaultOpen: boolean; adminOnly?: boolean }[] = [
-  { key: 'previews',  label: 'Preview screenings', hint: 'San Francisco early-access events', defaultOpen: true },
-  { key: 'coming',    label: 'Coming soon',        hint: 'Soonest first',                     defaultOpen: true },
-  { key: 'out',       label: 'Out now',            hint: 'Released, not yet streaming',       defaultOpen: true },
-  { key: 'streaming', label: 'Streaming now',      hint: 'Watch at home',                     defaultOpen: true },
-  { key: 'tba',       label: 'Date TBA',           hint: 'Trailer out, no release date yet',  defaultOpen: false },
-  { key: 'hidden',    label: 'Hidden',             hint: 'No release date or trailer yet — admin only', defaultOpen: false, adminOnly: true },
+const SECTIONS: { key: SectionKey; label: string; hint: string; icon: LucideIcon; adminOnly?: boolean }[] = [
+  { key: 'previews',  label: 'Preview screenings', hint: 'San Francisco early-access events', icon: Ticket },
+  { key: 'coming',    label: 'Coming soon',        hint: 'Soonest first',                     icon: CalendarDays },
+  { key: 'out',       label: 'Out now',            hint: 'Released, not yet streaming',       icon: Clapperboard },
+  { key: 'streaming', label: 'Streaming now',      hint: 'Watch at home',                     icon: Tv },
+  { key: 'tba',       label: 'Date TBA',           hint: 'Trailer out, no release date yet',  icon: CircleHelp },
+  { key: 'hidden',    label: 'Hidden',             hint: 'No release date or trailer yet — admin only', icon: EyeOff, adminOnly: true },
 ];
 
 function isStreamingLive(f: AnticipationFilm, today: string): boolean {
@@ -292,8 +292,9 @@ export function AnticipationBoard({
   const [isAdmin, setIsAdmin] = useState(false);
   const sections = useMemo(() => sectionize(initialFilms), [initialFilms]);
   const visibleCount = initialFilms.length - sections.hidden.length;
+  const firstVisible = SECTIONS.find(sec => !sec.adminOnly && sections[sec.key].length > 0)?.key;
   const [open, setOpen] = useState<Record<SectionKey, boolean>>(
-    () => Object.fromEntries(SECTIONS.map(sec => [sec.key, sec.defaultOpen])) as Record<SectionKey, boolean>
+    () => Object.fromEntries(SECTIONS.map(sec => [sec.key, sec.key === firstVisible])) as Record<SectionKey, boolean>
   );
   const [addingFor, setAddingFor] = useState<number | null>(null);
 
@@ -351,18 +352,25 @@ export function AnticipationBoard({
             </p>
           ) : (
             SECTIONS.filter(sec => sections[sec.key].length > 0 && (!sec.adminOnly || isAdmin)).map(sec => (
-              <section key={sec.key} className="border-t border-border/60 first-of-type:border-t-0">
+              <section key={sec.key} className="border-t border-border">
                 <button
                   onClick={() => setOpen(o => ({ ...o, [sec.key]: !o[sec.key] }))}
-                  className="w-full flex items-baseline gap-2 px-3 pt-3 pb-1.5 text-left group"
+                  className={`w-full flex items-center gap-2 px-3 py-2 text-left group transition-colors bg-secondary/40 hover:bg-secondary/70 ${open[sec.key] ? 'border-b border-border/60' : ''}`}
                   aria-expanded={open[sec.key]}
                 >
-                  <span className="font-serif text-[13px] font-semibold text-foreground group-hover:text-accent transition-colors">{sec.label}</span>
-                  <span className="text-[10px] text-muted-foreground">{sections[sec.key].length}</span>
-                  <span className="text-[10px] text-muted-foreground/60 italic truncate">{sec.hint}</span>
+                  <span className={`w-6 h-7 clip-hexagon flex items-center justify-center shrink-0 ${sec.key === 'previews' ? 'bg-accent/40' : 'bg-border/60'}`}>
+                    <span className={`clip-hexagon flex items-center justify-center ${sec.key === 'previews' ? 'bg-accent/20' : 'bg-muted/70'}`} style={{ width: 'calc(100% - 3px)', height: 'calc(100% - 3px)' }}>
+                      <sec.icon className={`w-3 h-3 ${sec.key === 'previews' ? 'text-accent' : 'text-muted-foreground group-hover:text-foreground'}`} />
+                    </span>
+                  </span>
+                  <span className="font-serif text-sm font-semibold tracking-wide text-foreground group-hover:text-accent transition-colors">{sec.label}</span>
+                  <span className="inline-flex items-center justify-center min-w-[1.25rem] h-4 px-1 rounded-full bg-background/70 border border-border text-[10px] font-medium text-muted-foreground">
+                    {sections[sec.key].length}
+                  </span>
+                  <span className="hidden sm:inline text-[10px] text-muted-foreground/60 italic truncate">{sec.hint}</span>
                   {open[sec.key]
-                    ? <ChevronUp className="ml-auto w-3 h-3 self-center text-muted-foreground shrink-0" />
-                    : <ChevronDown className="ml-auto w-3 h-3 self-center text-muted-foreground shrink-0" />}
+                    ? <ChevronUp className="ml-auto w-3.5 h-3.5 text-muted-foreground shrink-0" />
+                    : <ChevronDown className="ml-auto w-3.5 h-3.5 text-muted-foreground shrink-0" />}
                 </button>
                 {open[sec.key] && (
                   <ul className="divide-y divide-border/40">

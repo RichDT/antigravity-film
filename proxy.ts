@@ -32,6 +32,11 @@ export async function proxy(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
+  // Admin API routes write to the database — refuse them outright without a signed-in admin
+  if (!user && request.nextUrl.pathname.startsWith('/api/admin')) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
   // If accessing admin routes without auth, redirect to login
   if (
     !user &&
@@ -47,5 +52,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/admin/:path*'],
+  matcher: ['/admin/:path*', '/api/admin/:path*'],
 }
