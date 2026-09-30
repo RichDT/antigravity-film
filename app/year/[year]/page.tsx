@@ -37,6 +37,7 @@ import {
 } from "lucide-react";
 import { LinkedNamesList, OtherAwardsRow } from "@/components/award-icons";
 import { UnseenFilmsTable } from "@/components/unseen-films-table";
+import { AnticipationBoard } from "@/components/AnticipationBoard";
 import { getUnseenFilmsForYear } from "@/lib/unseen-films";
 import { queryCached as query } from "@/lib/db";
 import { filmsData as filmsRawData } from "@/lib/films-data";
@@ -52,6 +53,12 @@ import {
   getFilmIdMap,
   getGradeValue,
   getYearsWithDBReviews,
+  getConsiderationYears,
+  getAnticipationBoardFilms,
+  getConsiderationsGrouped,
+  ConsiderationEntry,
+  CATEGORY_ICON_MAPPING,
+  CATEGORY_GROUPS_MAPPING,
 } from "@/lib/awards";
 
 // ISR: Re-generate this page at most once per hour on production.
@@ -63,6 +70,7 @@ export async function generateStaticParams() {
 }
 
 const RP_START_YEAR = 2005;
+const CURRENT_YEAR = new Date().getFullYear();
 
 type Props = {
   params: Promise<{ year: string }>;
@@ -114,6 +122,10 @@ function formatSubtitle(wins?: number, noms?: number): string {
   if (wins) return `${wins} ${wins === 1 ? 'Win' : 'Wins'}`;
   if (noms) return `${noms} ${noms === 1 ? 'Nomination' : 'Nominations'}`;
   return "No award data";
+}
+
+function formatConsiderationCount(n: number): string {
+  return n === 0 ? "No considerations yet" : `${n} ${n === 1 ? 'Consideration' : 'Considerations'}`;
 }
 
 function GradeHex({ grade }: { grade: string }) {
@@ -495,6 +507,133 @@ function CategoryCard({ category, index }: { category: Category; index: number }
   );
 }
 
+// ─── ConsiderationsGrid — shown for pre-season years ─────────────────────────
+
+function ConsiderationCard({
+  catName,
+  entries,
+  index,
+}: {
+  catName: string;
+  entries: ConsiderationEntry[];
+  index: number;
+}) {
+  const Icon = getCategoryIcon(CATEGORY_ICON_MAPPING[catName] || 'trophy');
+  const catSlug = `/categories/${catName.toLowerCase().replace(/[\s\W]+/g, "-").replace(/^-+|-+$/g, "")}`;
+  const group = CATEGORY_GROUPS_MAPPING[catName] || 'film';
+  const category: Category = { name: catName, icon: CATEGORY_ICON_MAPPING[catName] || 'trophy', group, winner: null, nominees: [] };
+  const isActing = isActingCategory(catName);
+
+  // Shape considerations like nominations so NomineeRow renders them identically
+  const byFilm = new Map<number, { title: string; names: string[]; characters: Record<string, string>; producers: string[] }>();
+  for (const e of entries) {
+    if (!byFilm.has(e.film_id)) byFilm.set(e.film_id, { title: e.title, names: [], characters: {}, producers: e.producers ?? [] });
+    const f = byFilm.get(e.film_id)!;
+    if (e.detail) for (const n of e.detail.split(', ')) {
+      if (!f.names.includes(n)) f.names.push(n);
+      if (e.character) f.characters[n] = e.character;
+    }
+  }
+
+  const personIds = entries[0]?.personIds ?? {};
+  const person = (name: string) => ({ name, id: personIds[name.toLowerCase()] });
+  const rows: { key: string; nominee: Nominee; rowCategory: Category }[] = [];
+  for (const [filmId, { title, names, characters, producers }] of byFilm) {
+    if (isActing) {
+      for (const name of names) {
+        rows.push({
+          key: `${filmId}-${name}`,
+          rowCategory: category,
+          nominee: { name, id: personIds[name.toLowerCase()], film: title, film_id: filmId, performances: [{ film: title, character: characters[name], film_id: filmId, nomination_id: 0 }] },
+        });
+      }
+    } else if (group === 'film') {
+      rows.push({
+        key: String(filmId),
+        rowCategory: category,
+        nominee: { name: title, film: title, film_id: filmId, contributors: producers.length > 0 ? producers.map(name => ({ ...person(name), role: 'Producer' })) : undefined },
+      });
+    } else if (names.length === 0) {
+      // No confirmed names yet: render film-only, like a film-category row
+      rows.push({ key: String(filmId), rowCategory: { ...category, group: 'film' }, nominee: { name: title, film: title, film_id: filmId } });
+    } else {
+      rows.push({
+        key: String(filmId),
+        rowCategory: category,
+        nominee: { name: names.join(', '), film: title, film_id: filmId, contributors: names.map(person) },
+      });
+    }
+  }
+
+  return (
+    <div
+      className="bg-card border border-sky-500/25 rounded-lg overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500 fill-mode-both hover:border-sky-400/50 transition-colors"
+      style={{ animationDelay: `${index * 50}ms` }}
+    >
+      <Link href={catSlug} className="p-3 border-b border-sky-500/20 bg-sky-500/5 flex items-center gap-2.5 hover:bg-sky-500/10 transition-colors block">
+        <div className="w-8 h-9 clip-hexagon bg-sky-500/20 flex items-center justify-center flex-shrink-0 shadow-[0_0_10px_rgba(56,189,248,0.12)]">
+          <Icon className="w-4 h-4 text-sky-400" />
+        </div>
+        <h3 className="font-serif text-sm font-semibold">{catName}</h3>
+      </Link>
+
+      <div className="p-3 space-y-0.5">
+        {rows.map(r => (
+          <NomineeRow key={r.key} nominee={r.nominee} isWinner={false} isActing={isActing} category={r.rowCategory} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ConsiderationsGrid({
+  grouped,
+  year,
+  filmIdMap,
+}: {
+  grouped: Record<string, ConsiderationEntry[]>;
+  year: number;
+  filmIdMap: Record<string, number>;
+}) {
+  if (Object.keys(grouped).length === 0) {
+    return (
+      <div className="py-20 text-center text-muted-foreground italic border border-border/50 rounded-lg bg-card/20">
+        No considerations have been recorded for {year} yet.
+      </div>
+    );
+  }
+
+  // Build groups in CATEGORY_GROUPS order, same as the nominations view
+  const groupedBySection = CATEGORY_GROUPS.map(group => ({
+    ...group,
+    categories: Object.keys(grouped).filter(
+      cat => (CATEGORY_GROUPS_MAPPING[cat] || 'film') === group.id
+    ),
+  })).filter(g => g.categories.length > 0);
+
+  let cardIndex = 0;
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {groupedBySection.map((section, sectionIdx) => (
+        <React.Fragment key={section.id}>
+          <GroupHeader group={section} index={sectionIdx} />
+          {section.categories.map(catName => {
+            const idx = cardIndex++;
+            return (
+              <ConsiderationCard
+                key={catName}
+                catName={catName}
+                entries={grouped[catName]}
+                index={idx}
+              />
+            );
+          })}
+        </React.Fragment>
+      ))}
+    </div>
+  );
+}
+
 export default async function YearPage(props: Props) {
   const params = await props.params;
   const year = parseInt(params.year, 10);
@@ -509,7 +648,7 @@ export default async function YearPage(props: Props) {
     (filmsRawData as any[]).map((f: any) => parseInt(f.year, 10)).filter((y: number) => !isNaN(y) && y > 1900)
   ));
 
-  const [dbStats, filmIdMap, dbReviewsRes, dbYears, rpFilmNomRes, dbNomYearsRes, unseenFilms] = await Promise.all([
+  const [dbStats, filmIdMap, dbReviewsRes, dbYears, rpFilmNomRes, dbNomYearsRes, unseenFilms, considerationYears] = await Promise.all([
     getAllRichPicksStats(),
     getFilmIdMap(),
     query(
@@ -533,10 +672,14 @@ export default async function YearPage(props: Props) {
     ),
     query(`SELECT DISTINCT year FROM ceremonies ORDER BY year`),
     year >= 2021 ? getUnseenFilmsForYear(year) : Promise.resolve([]),
+    getConsiderationYears(),
   ]);
+  // Until Rich Picks nominations are announced, a recent year shows the Anticipation Board in place of Films Not Screened
+  const showAnticipationBoard = year >= CURRENT_YEAR - 1 && rpFilmNomRes.rows.length === 0;
+  const anticipationFilms = showAnticipationBoard ? await getAnticipationBoardFilms(year) : [];
 
   const dbNomYears = dbNomYearsRes.rows.map((r: any) => r.year as number);
-  const allYears = Array.from(new Set([...staticYears, ...dbYears, ...dbNomYears]))
+  const allYears = Array.from(new Set([...staticYears, ...dbYears, ...dbNomYears, ...considerationYears]))
     .sort((a: number, b: number) => b - a);
 
   if (!allYears.includes(year)) {
@@ -548,6 +691,17 @@ export default async function YearPage(props: Props) {
   const nextYear = currentIndex > 0 ? allYears[currentIndex - 1] : null;
 
   const isDBOnlyYear = !staticYears.includes(year);
+
+  // Pre-season: year has considerations but no RP nominations yet
+  const hasRPNominations = rpFilmNomRes.rows.length > 0;
+  const isPreSeason = considerationYears.includes(year) && !hasRPNominations && !isPreRPYear;
+  const considerationsGrouped = isPreSeason ? await getConsiderationsGrouped(year) : {};
+  const considerationCounts = new Map<string, number>();
+  for (const entries of Object.values(considerationsGrouped)) {
+    for (const title of new Set(entries.map(e => e.title.toLowerCase()))) {
+      considerationCounts.set(title, (considerationCounts.get(title) ?? 0) + 1);
+    }
+  }
 
   // Build a map of title → DB grade for the year
   const dbGradeMap = new Map<string, string>();
@@ -650,7 +804,7 @@ export default async function YearPage(props: Props) {
             </span>
           </div>
           <p className="text-sm text-muted-foreground mt-1.5">
-            {isPreRPYear ? "Historical Award Archive" : "Rich Picks for Film Excellence"}
+            {isPreRPYear ? "Historical Award Archive" : isPreSeason ? "Awards Season in Progress" : "Rich Picks for Film Excellence"}
           </p>
 
           {isPreRPYear && (
@@ -659,6 +813,16 @@ export default async function YearPage(props: Props) {
               <span className="text-amber-200/90">
                 <span className="font-semibold text-amber-300">Before Rich Picks</span>
                 {" "}— Award selections for {year} were not recorded. The categories below show nominees and winners from other award organizations.
+              </span>
+            </div>
+          )}
+
+          {isPreSeason && (
+            <div className="mt-4 flex items-start gap-3 bg-sky-500/10 border border-sky-500/30 rounded-lg px-4 py-3 text-sm">
+              <Sparkles className="w-4 h-4 mt-0.5 flex-shrink-0 text-sky-400" />
+              <span className="text-sky-200/90">
+                <span className="font-semibold text-sky-300">Under Consideration</span>
+                {" "}— Rich Picks nominations for {year} have not been announced yet. The categories below show films Rich is currently tracking as considerations.
               </span>
             </div>
           )}
@@ -673,6 +837,12 @@ export default async function YearPage(props: Props) {
               <Circle className="w-2 h-2 text-muted-foreground/50" fill="currentColor" />
               <span className="font-medium text-foreground">Nominee</span>
             </span>
+            {isPreSeason && (
+              <span className="flex items-center gap-1.5 px-2 border-l border-border/50">
+                <Sparkles className="w-3 h-3 text-sky-400" />
+                <span className="font-medium text-foreground">Consideration</span>
+              </span>
+            )}
           </div>
         </div>
       </div>
@@ -702,7 +872,7 @@ export default async function YearPage(props: Props) {
                         <span className="text-sm font-medium text-foreground leading-tight truncate px-1">{item.film}</span>
                       )}
                       <span className="text-[10px] text-muted-foreground truncate px-1 mt-0.5">
-                        {formatSubtitle(item.wins, item.noms)}
+                        {isPreSeason ? formatConsiderationCount(considerationCounts.get(item.film.toLowerCase()) ?? 0) : formatSubtitle(item.wins, item.noms)}
                       </span>
                     </div>
                   </div>
@@ -712,32 +882,38 @@ export default async function YearPage(props: Props) {
                 <div className="py-12 text-center text-sm text-muted-foreground italic">No top 10 rankings recorded for {year}.</div>
               )}
             </div>
-            {year >= 2021 && (
+            {showAnticipationBoard ? (
+              <AnticipationBoard year={year} films={anticipationFilms} />
+            ) : year >= 2021 && (
               <UnseenFilmsTable films={unseenFilms} year={year} />
             )}
           </div>
 
-          {/* Right: Categories Grid grouped up */}
+          {/* Right: Categories Grid / Considerations */}
           <div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {categoriesByGroup.length === 0 ? (
-                <div className="col-span-full py-20 text-center text-muted-foreground italic border border-border/50 rounded-lg bg-card/20">
-                  {isPreRPYear ? `No award data has been recorded for ${year} yet.` : "No specific award categories have been recorded for an entire year yet!"}
-                </div>
-              ) : (
-                categoriesByGroup.map((group, groupIndex) => {
-                  const groupData = CATEGORY_GROUPS.find(g => g.id === group.id);
-                  return (
-                    <React.Fragment key={group.id}>
-                      {groupData && <GroupHeader group={groupData} index={groupIndex} />}
-                      {group.categories.map((category, i) => (
-                        <CategoryCard key={category.name} category={category} index={(groupIndex * 10) + i} />
-                      ))}
-                    </React.Fragment>
-                  );
-                })
-              )}
-            </div>
+            {isPreSeason ? (
+              <ConsiderationsGrid grouped={considerationsGrouped} year={year} filmIdMap={filmIdMap} />
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {categoriesByGroup.length === 0 ? (
+                  <div className="col-span-full py-20 text-center text-muted-foreground italic border border-border/50 rounded-lg bg-card/20">
+                    {isPreRPYear ? `No award data has been recorded for ${year} yet.` : "No specific award categories have been recorded for an entire year yet!"}
+                  </div>
+                ) : (
+                  categoriesByGroup.map((group, groupIndex) => {
+                    const groupData = CATEGORY_GROUPS.find(g => g.id === group.id);
+                    return (
+                      <React.Fragment key={group.id}>
+                        {groupData && <GroupHeader group={groupData} index={groupIndex} />}
+                        {group.categories.map((category, i) => (
+                          <CategoryCard key={category.name} category={category} index={(groupIndex * 10) + i} />
+                        ))}
+                      </React.Fragment>
+                    );
+                  })
+                )}
+              </div>
+            )}
           </div>
 
         </div>

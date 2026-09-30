@@ -1,7 +1,7 @@
 const WIKI_API = 'https://en.wikipedia.org/w/api.php'
 const UA = 'RichPicks/1.0 (r.d.truncellito@gmail.com)'
 
-async function fetchWikitext(pageTitle: string): Promise<string | null> {
+export async function fetchWikitext(pageTitle: string): Promise<string | null> {
   const params = new URLSearchParams({
     action: 'query',
     titles: pageTitle,
@@ -25,7 +25,7 @@ async function fetchWikitext(pageTitle: string): Promise<string | null> {
   }
 }
 
-async function findFilmWikitext(title: string, year: number): Promise<string | null> {
+export async function findFilmWikitext(title: string, year: number): Promise<string | null> {
   const [wt1, wt2] = await Promise.all([
     fetchWikitext(`${title} (${year} film)`),
     fetchWikitext(`${title} (film)`),
@@ -53,7 +53,7 @@ async function findFilmWikitext(title: string, year: number): Promise<string | n
   return null
 }
 
-function extractInfoboxField(wikitext: string, field: string): string {
+export function extractInfoboxField(wikitext: string, field: string): string {
   const re = new RegExp(`\\|\\s*${field}\\s*=\\s*`, 'i')
   const m = re.exec(wikitext)
   if (!m) return ''
@@ -76,7 +76,7 @@ function extractInfoboxField(wikitext: string, field: string): string {
   return out.trim()
 }
 
-function parseNames(raw: string): string[] {
+export function parseNames(raw: string): string[] {
   // Strip refs, comments, file links, bold/italic markers
   raw = raw
     .replace(/<ref\b[^>]*>[\s\S]*?<\/ref>/gi, '')
@@ -88,16 +88,19 @@ function parseNames(raw: string): string[] {
   // Separator templates → comma
   raw = raw.replace(/\{\{(?:·|•|middot)\s*\}\}/gi, ',')
 
+  // Resolve interlanguage links {{ill|Name|lang|...}} → Name
+  raw = raw.replace(/\{\{(?:ill|illm|interlanguage link)\|([^|}]+)[^}]*\}\}/gi, '$1')
+
+  // Resolve wikilinks [[target|display]] → display, [[target]] → target (before list flattening splits on "|")
+  raw = raw
+    .replace(/\[\[[^\]|]+\|([^\]]+)\]\]/g, '$1')
+    .replace(/\[\[([^\]]+)\]\]/g, '$1')
+
   // Flatten list templates: extract inner content, replace pipe separators with newline
   raw = raw.replace(
     /\{\{(?:plainlist|unbulleted list|ubl|flatlist)\s*\|([^}]*)\}\}/gi,
     (_, inner) => inner.replace(/\|/g, '\n')
   )
-
-  // Resolve wikilinks [[target|display]] → display, [[target]] → target
-  raw = raw
-    .replace(/\[\[[^\]|]+\|([^\]]+)\]\]/g, '$1')
-    .replace(/\[\[([^\]]+)\]\]/g, '$1')
 
   // Drop remaining templates
   raw = raw.replace(/\{\{[^{}]*\}\}/g, ' ')
@@ -118,12 +121,18 @@ function parseNames(raw: string): string[] {
 export interface WikiCrew {
   directors: string[]
   writers: string[]
+  editors: string[]
+  cinematographers: string[]
+  composers: string[]
+  costumeDesigners: string[]
+  producers: string[]
 }
 
 export async function fetchWikipediaCrew(title: string, year: number): Promise<WikiCrew> {
+  const empty: WikiCrew = { directors: [], writers: [], editors: [], cinematographers: [], composers: [], costumeDesigners: [], producers: [] }
   try {
     const wikitext = await findFilmWikitext(title, year)
-    if (!wikitext) return { directors: [], writers: [] }
+    if (!wikitext) return empty
 
     const directors = parseNames(extractInfoboxField(wikitext, 'director'))
 
@@ -133,9 +142,65 @@ export async function fetchWikipediaCrew(title: string, year: number): Promise<W
       extractInfoboxField(wikitext, 'written_by')
     const writers = parseNames(screenplayRaw)
 
-    return { directors, writers }
+    const editingRaw =
+      extractInfoboxField(wikitext, 'editing') ||
+      extractInfoboxField(wikitext, 'editor')
+    const editors = parseNames(editingRaw)
+
+    const cinematographyRaw =
+      extractInfoboxField(wikitext, 'cinematography') ||
+      extractInfoboxField(wikitext, 'director_of_photography')
+    const cinematographers = parseNames(cinematographyRaw)
+
+    const musicRaw =
+      extractInfoboxField(wikitext, 'music') ||
+      extractInfoboxField(wikitext, 'composer')
+    const composers = parseNames(musicRaw)
+
+    const costumeRaw =
+      extractInfoboxField(wikitext, 'costume_design') ||
+      extractInfoboxField(wikitext, 'costumes')
+    const costumeDesigners = parseNames(costumeRaw)
+
+    const producers = parseNames(extractInfoboxField(wikitext, 'producer') || extractInfoboxField(wikitext, 'producers'))
+
+    return { directors, writers, editors, cinematographers, composers, costumeDesigners, producers }
   } catch (err) {
     console.error('[wikipedia-crew] failed:', err)
-    return { directors: [], writers: [] }
+    return empty
   }
+}
+
+/** Finds the character an actor plays, from "* Actor as Character" lines in the Cast section. */
+export function findCharacter(wikitext: string, actor: string): string | null {
+  const flat = (t: string) => t
+    .replace(/<ref\b[^>]*>[\s\S]*?<\/ref>/gi, '').replace(/<ref\b[^>]*\/>/gi, '')
+    .replace(/\[\[[^\]|]+\|([^\]]+)\]\]/g, '$1').replace(/\[\[([^\]]+)\]\]/g, '$1')
+    .replace(/\{\{[^{}]*\}\}/g, '').replace(/'{2,}/g, '')
+  for (const line of wikitext.split('\n')) {
+    if (!line.trim().startsWith('*')) continue
+    const text = flat(line).replace(/^\*+\s*/, '')
+    const m = text.match(/^(.+?)\s+as\s+(.+?)(?:,\s|\s[—–-]\s|:\s|(?<!\b(?:Mr|Mrs|Ms|Dr|St|[A-Z]))\.\s|$)/)
+    if (m && m[1].trim().toLowerCase() === actor.toLowerCase()) return m[2].trim().replace(/[.,;]$/, '')
+  }
+  return null
+}
+
+/** Cast list from the article's Cast section: "* Actor as Character" lines, in billing order. */
+export function parseCast(wikitext: string): { name: string; character: string | null }[] {
+  const section = wikitext.match(/==\s*Cast\s*==([\s\S]*?)(?:\n==[^=]|$)/i)?.[1] ?? ''
+  const flat = (t: string) => t
+    .replace(/<ref\b[^>]*>[\s\S]*?<\/ref>/gi, '').replace(/<ref\b[^>]*\/>/gi, '')
+    .replace(/\[\[[^\]|]+\|([^\]]+)\]\]/g, '$1').replace(/\[\[([^\]]+)\]\]/g, '$1')
+    .replace(/\{\{(?:ill|illm|interlanguage link)\|([^|}]+)[^}]*\}\}/gi, '$1').replace(/\{\{[^{}]*\}\}/g, '').replace(/'{2,}/g, '').replace(/<[^>]+>/g, '')
+  const out: { name: string; character: string | null }[] = []
+  for (const line of section.split('\n')) {
+    if (!/^\*[^*]/.test(line.trim())) continue
+    const text = flat(line).replace(/^\*+\s*/, '').trim()
+    const m = text.match(/^(.+?)\s+as\s+(.+?)(?:,\s|\s[—–-]\s|:\s|(?<!\b(?:Mr|Mrs|Ms|Dr|St|[A-Z]))\.\s|$)/)
+    const name = (m ? m[1] : text.split(/[,:(]/)[0]).replace(/\s*\([^)]*\)\s*$/, '').trim()
+    if (name.length < 2 || name.length > 60 || !/[a-zA-Z]/.test(name)) continue
+    out.push({ name, character: m ? m[2].trim().replace(/[.,;]$/, '') : null })
+  }
+  return out
 }

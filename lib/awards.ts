@@ -1,4 +1,4 @@
-import { queryCached as query } from './db';
+import { queryCached as query, query as queryUncached } from './db';
 
 // TYPES
 export type AwardStatus = "won" | "nominated" | "won_slant" | "nominated_slant" | "considered" | "considered_slant" | null;
@@ -1376,6 +1376,156 @@ export async function getPreRPCategoriesForYear(year: number): Promise<Category[
     }
 
     return categories;
+}
+
+export async function getConsiderationYears(): Promise<number[]> {
+    const res = await queryUncached(`SELECT DISTINCT year FROM considerations ORDER BY year DESC`);
+    return res.rows.map((r: any) => r.year as number);
+}
+
+export interface ConsiderationEntry {
+    consideration_id: number;
+    film_id: number;
+    title: string;
+    category_name: string;
+    category_id: number;
+    detail: string | null;
+    character: string | null;
+    missing_info: string | null;
+    producers?: string[];
+    personIds?: Record<string, number>;
+}
+
+export async function getConsiderationsGrouped(year: number): Promise<Record<string, ConsiderationEntry[]>> {
+    const res = await queryUncached(
+        `SELECT c.consideration_id, c.film_id, f.title, cat.name AS category_name, c.category_id, c.detail, c.character, c.missing_info
+         FROM considerations c
+         JOIN films f USING (film_id)
+         JOIN categories cat USING (category_id)
+         WHERE c.year = $1
+         ORDER BY cat.name, f.title`,
+        [year]
+    );
+
+    const CREW_ROLE_MAP: Record<string, string> = {
+        'Directing': 'Director', 'Editing': 'Editor', 'Cinematography': 'Cinematographer',
+        'Original Score': 'Composer', 'Screenplay (Original)': 'Writer', 'Screenplay (Adapted)': 'Writer',
+        'Costuming': 'Costume Designer', 'Make-Up & Hairstyling': 'Make-Up Artist',
+    };
+
+    const rows = res.rows as ConsiderationEntry[];
+    const nullCrewRows = rows.filter(r => r.detail === null && CREW_ROLE_MAP[r.category_name]);
+    if (nullCrewRows.length > 0) {
+        const filmIds = [...new Set(nullCrewRows.map(r => r.film_id))];
+        const crewRes = await queryUncached(
+            `SELECT fc.film_id, fc.crew_role, p.name
+             FROM film_crew fc JOIN people p ON fc.person_id = p.person_id
+             WHERE fc.film_id = ANY($1)`,
+            [filmIds]
+        );
+        const crewMap = new Map<string, string[]>();
+        for (const cr of crewRes.rows as any[]) {
+            const k = `${cr.film_id}|${cr.crew_role}`;
+            if (!crewMap.has(k)) crewMap.set(k, []);
+            crewMap.get(k)!.push(cr.name);
+        }
+        for (const row of rows) {
+            if (row.detail === null && CREW_ROLE_MAP[row.category_name]) {
+                const crewRole = CREW_ROLE_MAP[row.category_name];
+                const names = crewMap.get(`${row.film_id}|${crewRole}`);
+                if (names && names.length > 0) row.detail = names.join(', ');
+            }
+        }
+    }
+
+    const filmCatIds = [...new Set(rows.filter(r => CATEGORY_GROUPS_MAPPING[r.category_name] === 'film').map(r => r.film_id))];
+    if (filmCatIds.length > 0) {
+        const prodRes = await queryUncached(
+            `SELECT fc.film_id, p.name FROM film_crew fc JOIN people p ON fc.person_id = p.person_id
+             WHERE fc.film_id = ANY($1) AND fc.crew_role = 'Producer' ORDER BY fc.film_crew_id`,
+            [filmCatIds]
+        );
+        const prodMap = new Map<number, string[]>();
+        for (const pr of prodRes.rows as any[]) {
+            if (!prodMap.has(pr.film_id)) prodMap.set(pr.film_id, []);
+            prodMap.get(pr.film_id)!.push(pr.name);
+        }
+        for (const row of rows) {
+            if (CATEGORY_GROUPS_MAPPING[row.category_name] === 'film') row.producers = prodMap.get(row.film_id) ?? [];
+        }
+    }
+
+    const allNames = new Set<string>();
+    for (const row of rows) {
+        row.detail?.split(', ').forEach(n => allNames.add(n.toLowerCase()));
+        row.producers?.forEach(n => allNames.add(n.toLowerCase()));
+    }
+    const personIds: Record<string, number> = {};
+    if (allNames.size > 0) {
+        const pRes = await queryUncached(
+            `SELECT DISTINCT ON (LOWER(name)) person_id, LOWER(name) AS lname FROM people WHERE LOWER(name) = ANY($1) ORDER BY LOWER(name), person_id`,
+            [[...allNames]]
+        );
+        for (const p of pRes.rows as any[]) personIds[p.lname] = p.person_id;
+    }
+    for (const row of rows) row.personIds = personIds;
+
+    const grouped: Record<string, ConsiderationEntry[]> = {};
+    for (const row of rows) {
+        if (!grouped[row.category_name]) grouped[row.category_name] = [];
+        grouped[row.category_name].push(row);
+    }
+    return grouped;
+}
+
+export interface AnticipationFilm {
+    film_id: number;
+    title: string;
+    release_year: number;
+    trailer_url: string | null;
+    us_release_date: string | null;
+    release_venue: string | null;
+    streaming_date: string | null;
+    streaming_service: string | null;
+    accolades: { accolade_id: number; source: string; label: string }[];
+    previews: { event_name: string; theatre: string; screening_date: string; showtimes: string | null; ticket_url: string }[];
+}
+
+export async function getAnticipationBoardFilms(year: number): Promise<AnticipationFilm[]> {
+    let res;
+    try {
+        res = await queryUncached(
+            `SELECT
+               f.film_id, f.title, f.release_year, f.trailer_url,
+               to_char(f.us_release_date, 'YYYY-MM-DD') AS us_release_date, f.release_venue,
+               to_char(f.streaming_date, 'YYYY-MM-DD') AS streaming_date, f.streaming_service,
+               COALESCE((
+                 SELECT json_agg(json_build_object('event_name', sp.event_name, 'theatre', sp.theatre,
+                   'screening_date', to_char(sp.screening_date, 'YYYY-MM-DD'), 'showtimes', sp.showtimes, 'ticket_url', sp.ticket_url)
+                   ORDER BY sp.screening_date)
+                 FROM sf_preview_screenings sp
+                 WHERE sp.film_id = f.film_id AND sp.screening_date >= (now() AT TIME ZONE 'America/Los_Angeles')::date
+               ), '[]'::json) AS previews,
+               COALESCE(
+                 json_agg(
+                   json_build_object('accolade_id', a.accolade_id, 'source', a.source, 'label', a.label)
+                   ORDER BY a.created_at
+                 ) FILTER (WHERE a.accolade_id IS NOT NULL),
+                 '[]'::json
+               ) AS accolades
+             FROM unseen_films uf
+             JOIN films f USING (film_id)
+             LEFT JOIN film_accolades a USING (film_id)
+             WHERE uf.year = $1
+             GROUP BY f.film_id, f.title, f.release_year, f.trailer_url, f.us_release_date, f.release_venue, f.streaming_date, f.streaming_service
+             ORDER BY COUNT(a.accolade_id) DESC, f.title ASC`,
+            [year]
+        );
+    } catch (err: any) {
+        if (err.code === '42P01') return [];
+        throw err;
+    }
+    return res.rows as AnticipationFilm[];
 }
 
 export async function getYearsWithDBReviews(): Promise<number[]> {

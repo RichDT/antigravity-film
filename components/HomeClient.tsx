@@ -12,6 +12,8 @@ import {
     Award,
     ChevronRight,
 } from "lucide-react";
+import { AnticipationBoard } from "@/components/AnticipationBoard";
+import type { AnticipationFilm } from "@/lib/awards";
 
 const gradeValues: Record<string, number> = {
     "A+": 15, "A": 14, "A-": 13,
@@ -242,7 +244,7 @@ function NavHex({
     );
 }
 
-export default function HomeClient({ rawFilmsData, dbStats, filmIdMap, dbFilmsData, topFilmsPerYear }: { rawFilmsData: any[], dbStats: Record<number, Record<string, { wins: number, noms: number }>>, filmIdMap: Record<string, number>, dbFilmsData: Array<{ release_year: number; title: string; grade: string; film_id: number }>, topFilmsPerYear: Array<{ year: number; title: string }> }) {
+export default function HomeClient({ rawFilmsData, dbStats, filmIdMap, dbFilmsData, topFilmsPerYear, anticipationFilms, anticipationYear }: { rawFilmsData: any[], dbStats: Record<number, Record<string, { wins: number, noms: number }>>, filmIdMap: Record<string, number>, dbFilmsData: Array<{ release_year: number; title: string; grade: string; film_id: number }>, topFilmsPerYear: Array<{ year: number; title: string }>, anticipationFilms: AnticipationFilm[], anticipationYear: number }) {
     const filmsData = rawFilmsData;
 
     const validYears = filmsData
@@ -437,6 +439,8 @@ export default function HomeClient({ rawFilmsData, dbStats, filmIdMap, dbFilmsDa
                                 <ChevronRight className="w-3 h-3" />
                             </Link>
                         </div>
+
+                        <AnticipationBoard year={anticipationYear} films={anticipationFilms} />
                     </motion.div>
                 </div>
 
@@ -638,6 +642,8 @@ export default function HomeClient({ rawFilmsData, dbStats, filmIdMap, dbFilmsDa
                             <ChevronRight className="w-3 h-3" />
                         </Link>
                     </div>
+
+                    <AnticipationBoard year={anticipationYear} films={anticipationFilms} />
                 </div>
 
             </div>

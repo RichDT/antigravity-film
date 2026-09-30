@@ -288,10 +288,10 @@ export default async function FilmPage(props: Props) {
       canonicalName = ALL_RP_CATEGORIES.find(rpCat => rpCat === r.category_name) || r.category_name;
     }
     
-    const isActing = canonicalName.toLowerCase().includes('actor') || 
-                     canonicalName.toLowerCase().includes('actress') || 
+    const isActing = canonicalName.toLowerCase().includes('actor') ||
+                     canonicalName.toLowerCase().includes('actress') ||
                      canonicalName.toLowerCase().includes('performance');
-    
+
     const personIdsKey = isActing ? [r.person_id].filter(Boolean).sort().join(',') : "";
     const entryKey = `${canonicalName}-${r.year}-${personIdsKey}-${r.song_title || ''}`;
 
