@@ -90,18 +90,45 @@ function ReleaseLine({ film }: { film: AnticipationFilm }) {
   const today = todayInSF();
   const venue = film.release_venue ?? 'Release';
   const inTheaters = venue === 'Theaters';
-  let text: string;
-  if (!film.us_release_date) {
+  const service = film.streaming_service;
+  const streamingLive = !!service && !!film.streaming_date && film.streaming_date <= today;
+  const directToStreaming = !!service && service === film.release_venue;
+
+  let text: string | null;
+  if (streamingLive && directToStreaming) {
+    text = null;
+  } else if (!film.us_release_date) {
     text = `Date TBA${film.release_venue ? ` · ${venue}` : ''}`;
   } else if (film.us_release_date <= today) {
     text = `Released ${formatDate(film.us_release_date)} · ${inTheaters ? 'Theaters' : venue}`;
   } else {
     text = `${formatDate(film.us_release_date)} · ${inTheaters ? 'In theaters' : `On ${venue}`}`;
   }
-  const streaming = film.streaming_service && film.streaming_service !== film.release_venue
-    ? ` → ${film.streaming_service} ${film.streaming_date ? formatDate(film.streaming_date) : '(date TBA)'}`
+
+  const upcomingStreaming = service && !streamingLive && !directToStreaming
+    ? ` → ${service} ${film.streaming_date ? formatDate(film.streaming_date) : '(date TBA)'}`
     : '';
-  return <p className="mt-0.5 text-[11px] text-muted-foreground">{text}{streaming}</p>;
+
+  const watchLabel = `${service} · since ${film.streaming_date ? formatDate(film.streaming_date) : ''}`;
+  return (
+    <p className="mt-0.5 text-[11px] text-muted-foreground flex flex-wrap items-baseline gap-x-2">
+      {text && <span>{text}{upcomingStreaming}</span>}
+      {streamingLive && (film.streaming_url ? (
+        <a
+          href={film.streaming_url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-baseline gap-1 font-medium text-accent hover:underline"
+          title={`Watch ${film.title} on ${service}`}
+        >
+          <Play className="w-2 h-2 self-center" fill="currentColor" />
+          Watch on {watchLabel}
+        </a>
+      ) : (
+        <span className="font-medium text-foreground/80">Streaming on {watchLabel}</span>
+      ))}
+    </p>
+  );
 }
 
 function groupBySource(accolades: Accolade[]): Record<string, Accolade[]> {
