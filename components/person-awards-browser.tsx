@@ -98,13 +98,13 @@ export function PersonAwardsBrowser({ groupedNoms }: Props) {
                       <div className="flex items-start justify-between gap-4 mb-3">
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-1">
-                            <Link href={`/year/${nom.year}`} className="text-[10px] font-bold tracking-widest uppercase text-accent/80 hover:underline">
+                            <Link href={`/year/${nom.year}`} className="touch-target text-[10px] font-bold tracking-widest uppercase text-accent/80 hover:underline">
                               {nom.year}
                             </Link>
                           </div>
                           <h4 className={`font-serif text-lg leading-tight transition-colors ${isWon ? 'text-accent font-bold' : 'text-foreground font-medium'}`}>
                             {nom.hasRichPick ? (
-                              <Link href={`/categories/${slugify(nom.category_name)}`} className="hover:underline">
+                              <Link href={`/categories/${slugify(nom.category_name)}`} className="touch-target hover:underline">
                                 {nom.category_name}
                               </Link>
                             ) : nom.category_name}
@@ -131,7 +131,7 @@ export function PersonAwardsBrowser({ groupedNoms }: Props) {
                         )}
                         
                         <div className="text-[13px] leading-snug">
-                          <Link href={`/film/${nom.film_id}`} className="text-foreground/90 font-medium hover:text-accent transition-colors block">
+                          <Link href={`/film/${nom.film_id}`} className="touch-target text-foreground/90 font-medium hover:text-accent transition-colors block">
                             {nom.film_title}
                           </Link>
                           {nom.character_role && (

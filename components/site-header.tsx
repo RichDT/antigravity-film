@@ -36,7 +36,7 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-xl">
-      <div className="container flex h-16 items-center justify-between px-4">
+      <div className="container flex h-16 items-center justify-between px-4 max-sm:px-3">
         {/* Logo */}
         <Link 
           href="/" 
@@ -49,7 +49,7 @@ export function SiteHeader() {
         </Link>
 
         {/* Navigation */}
-        <nav className="flex items-center gap-1">
+        <nav className="flex items-center gap-1 max-sm:gap-0">
           {navItems.map(({ href, label, icon: Icon }) => {
             const isActive = href === "/" 
               ? pathname === "/" 
@@ -61,7 +61,7 @@ export function SiteHeader() {
                   variant={isActive ? "secondary" : "ghost"}
                   size="sm"
                   className={cn(
-                    "gap-2 transition-all",
+                    "gap-2 transition-all max-sm:h-11 max-sm:min-w-11",
                     isActive && "text-primary"
                   )}
                 >
@@ -74,13 +74,13 @@ export function SiteHeader() {
         </nav>
 
           {/* Admin */}
-          <div className="ml-2 pl-2 border-l border-border/40 flex items-center gap-1">
+          <div className="ml-2 pl-2 max-sm:ml-1 max-sm:pl-1 border-l border-border/40 flex items-center gap-1 max-sm:gap-0">
             <Link href={isAdmin ? "/admin/add-review" : "/admin/login"}>
               <Button
                 variant={pathname.startsWith('/admin') ? 'secondary' : 'ghost'}
                 size="sm"
                 className={cn(
-                  "gap-2 transition-all",
+                  "gap-2 transition-all max-sm:h-11 max-sm:min-w-11",
                   isAdmin ? "text-accent hover:text-accent" : "text-muted-foreground/60 hover:text-foreground",
                   pathname.startsWith('/admin') && "text-primary"
                 )}
@@ -95,7 +95,7 @@ export function SiteHeader() {
                 variant="ghost"
                 size="sm"
                 onClick={handleSignOut}
-                className="gap-1.5 text-muted-foreground/70 hover:text-foreground"
+                className="gap-1.5 text-muted-foreground/70 hover:text-foreground max-sm:h-11 max-sm:min-w-11"
                 title="Log out of admin"
               >
                 <LogOut className="h-3.5 w-3.5" />

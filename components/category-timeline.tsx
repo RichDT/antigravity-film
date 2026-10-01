@@ -75,7 +75,7 @@ function NomineeRow({
         const displayRole = (names.length > 1 && !role.includes('&') && !role.endsWith('s')) ? `${role}s` : role;
         return (
           <div key={role} className="text-xs text-muted-foreground leading-snug mt-0.5 group-hover:text-foreground/70 transition-colors">
-            <span className="font-medium mr-1">{displayRole}:</span> <LinkedNamesList people={names} className="hover:text-accent hover:underline transition-colors" />
+            <span className="font-medium mr-1">{displayRole}:</span> <LinkedNamesList people={names} className="touch-target hover:text-accent hover:underline transition-colors" />
           </div>
         );
       });
@@ -97,7 +97,7 @@ function NomineeRow({
         const displayRole = (names.length > 1 && !role.includes('&') && !role.endsWith('s')) ? `${role}s` : role;
         return (
           <div key={role} className="text-xs text-muted-foreground leading-snug mt-0.5">
-            <span className="font-medium mr-1">{displayRole}:</span> <LinkedNamesList people={names} className="hover:text-accent hover:underline transition-colors" />
+            <span className="font-medium mr-1">{displayRole}:</span> <LinkedNamesList people={names} className="touch-target hover:text-accent hover:underline transition-colors" />
           </div>
         );
       });
@@ -113,7 +113,7 @@ function NomineeRow({
     );
   } else if (categoryName === "Screenplay (Original)" || categoryName === "Screenplay (Adapted)") {
     const namesArray = nominee.contributors || [{ id: nominee.id, name: nominee.name, lastName: nominee.lastName, isInverted: nominee.isInverted }];
-    highlightText = <LinkedNamesList people={namesArray} className="hover:text-accent hover:underline transition-colors" />;
+    highlightText = <LinkedNamesList people={namesArray} className="touch-target hover:text-accent hover:underline transition-colors" />;
 
     let writers: React.ReactNode = null;
     if (categoryName === "Screenplay (Original)" && nominee.contributors && nominee.contributors.length > 0) {
@@ -128,7 +128,7 @@ function NomineeRow({
         writers = Array.from(originalRolesMap.entries()).map(([role, names]) => {
           return (
             <div key={role} className="text-xs text-muted-foreground leading-snug mt-0.5 group-hover:text-foreground/70 transition-colors">
-              <span className="font-medium mr-1">{role}:</span> <LinkedNamesList people={names} className="hover:text-accent hover:underline transition-colors" />
+              <span className="font-medium mr-1">{role}:</span> <LinkedNamesList people={names} className="touch-target hover:text-accent hover:underline transition-colors" />
             </div>
           );
         });
@@ -150,7 +150,7 @@ function NomineeRow({
     );
   } else if (categoryName === "Production Design" || categoryName === "Art Direction") {
     const namesArray = nominee.contributors || [{ id: nominee.id, name: nominee.name, lastName: nominee.lastName, isInverted: nominee.isInverted }];
-    highlightText = <LinkedNamesList people={namesArray} className="hover:text-accent hover:underline transition-colors" />;
+    highlightText = <LinkedNamesList people={namesArray} className="touch-target hover:text-accent hover:underline transition-colors" />;
 
     let designers: React.ReactNode = null;
     if (nominee.contributors && nominee.contributors.length > 0) {
@@ -166,12 +166,12 @@ function NomineeRow({
         <>
           {pd.length > 0 && (
             <div className="text-xs text-muted-foreground leading-snug mt-0.5 group-hover:text-foreground/70 transition-colors">
-              <span className="font-medium mr-1">Production design:</span> <LinkedNamesList people={pd} className="hover:text-accent hover:underline transition-colors" />
+              <span className="font-medium mr-1">Production design:</span> <LinkedNamesList people={pd} className="touch-target hover:text-accent hover:underline transition-colors" />
             </div>
           )}
           {sd.length > 0 && (
             <div className="text-xs text-muted-foreground leading-snug mt-0.5 group-hover:text-foreground/70 transition-colors">
-              <span className="font-medium mr-1">Set decoration:</span> <LinkedNamesList people={sd} className="hover:text-accent hover:underline transition-colors" />
+              <span className="font-medium mr-1">Set decoration:</span> <LinkedNamesList people={sd} className="touch-target hover:text-accent hover:underline transition-colors" />
             </div>
           )}
         </>
@@ -188,7 +188,7 @@ function NomineeRow({
     );
   } else {
     const namesArray = nominee.contributors || [{ id: nominee.id, name: nominee.name, lastName: nominee.lastName, isInverted: nominee.isInverted }];
-    highlightText = <LinkedNamesList people={namesArray} className="hover:text-accent hover:underline transition-colors" />;
+    highlightText = <LinkedNamesList people={namesArray} className="touch-target hover:text-accent hover:underline transition-colors" />;
 
     if (isActing && nominee.performances && nominee.performances.length > 1) {
       secondaryContent = (
@@ -252,7 +252,7 @@ function NomineeRow({
         <div className="flex items-center flex-wrap gap-x-2">
           <span className={`text-sm ${isWinner && hasRichPick ? "font-semibold text-foreground drop-shadow-sm whitespace-nowrap" : "text-foreground/90 whitespace-nowrap"}`}>
             {typeof highlightText === 'string' && !isActing && nominee.film ? (
-              <Link href={nominee.film_id ? `/film/${nominee.film_id}` : `/search?q=${encodeURIComponent(nominee.film)}`} className="hover:text-accent hover:underline transition-colors">{highlightText}</Link>
+              <Link href={nominee.film_id ? `/film/${nominee.film_id}` : `/search?q=${encodeURIComponent(nominee.film)}`} className="touch-target hover:text-accent hover:underline transition-colors">{highlightText}</Link>
             ) : highlightText}
           </span>
           <OtherAwardsRow
@@ -297,7 +297,7 @@ function YearBlock({
       <div className="flex items-center gap-3 mb-2">
         <Link
           href={`/year/${yearData.year}`}
-          className="font-serif text-lg font-semibold text-muted-foreground hover:text-accent transition-colors"
+          className="touch-target font-serif text-lg font-semibold text-muted-foreground hover:text-accent transition-colors"
         >
           {yearData.year}
         </Link>

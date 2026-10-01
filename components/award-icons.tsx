@@ -6,7 +6,7 @@ import { Trophy, Circle } from "lucide-react";
 import { AwardStatus, OtherAwards, AwardPopoverContext, AwardPopoverSection } from "@/lib/awards";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
-export function LinkedNamesList({ people, className = "hover:text-accent hover:underline transition-colors" }: { people: { id?: number; name: string }[], className?: string }) {
+export function LinkedNamesList({ people, className = "touch-target hover:text-accent hover:underline transition-colors" }: { people: { id?: number; name: string }[], className?: string }) {
   if (!people || people.length === 0) return null;
 
   return (
@@ -50,7 +50,7 @@ export function AwardIcon({ award, status }: { award: string; status: AwardStatu
     annie: "Annie", grammy: "Grammy", spirit: "Spirit"
   };
 
-  const baseSize = isRich ? "text-[10px] px-1.5 h-4" : "text-[8px] px-1 h-3.5";
+  const baseSize = (isRich ? "text-[10px] px-1.5 h-4" : "text-[8px] px-1 h-3.5") + " max-sm:h-6 max-sm:px-1.5 max-sm:min-w-[2.25rem] touch-target";
 
   let className = "";
   if (isWon) {
@@ -257,7 +257,7 @@ function AwardBadgeWithPopover({
     <Popover open={open} onOpenChange={handleOpenChange}>
       <PopoverTrigger asChild>
         <span
-          className={`inline-flex items-center justify-center text-[8px] font-bold rounded px-1 h-3.5 cursor-pointer transition-all hover:scale-110 hover:shadow-sm ${badgeClass}`}
+          className={`inline-flex items-center justify-center text-[8px] font-bold rounded px-1 h-3.5 max-sm:h-6 max-sm:px-1.5 max-sm:min-w-[2.25rem] touch-target cursor-pointer transition-all hover:scale-110 hover:shadow-sm ${badgeClass}`}
           style={badgeStyle}
           onMouseEnter={handleBadgeMouseEnter}
           onMouseLeave={handleBadgeMouseLeave}
@@ -490,7 +490,7 @@ export function RichPicksHexBadge({
     <Popover open={open} onOpenChange={handleOpenChange}>
       <PopoverTrigger asChild>
         <button
-          className="cursor-pointer hover:scale-110 transition-transform focus:outline-none"
+          className="touch-target cursor-pointer hover:scale-110 transition-transform focus:outline-none"
           onMouseEnter={handleBadgeMouseEnter}
           onMouseLeave={handleBadgeMouseLeave}
         >
@@ -624,7 +624,7 @@ export function OtherAwardsRow({
   if (!hasAnyAward) return null;
 
   return (
-    <span className="inline-flex items-center gap-1 align-middle -translate-y-[1px]">
+    <span className="inline-flex flex-wrap items-center gap-1 max-sm:gap-1.5 align-middle -translate-y-[1px]">
       {allowedKeys.map(key => {
         const status = awards[key as keyof OtherAwards] || null;
         if (!status) return null;

@@ -28,7 +28,7 @@ export function UnseenFilmsTable({ films, year }: { films: UnseenFilm[]; year: n
     <div className="mt-5">
       <button
         onClick={() => setExpanded(v => !v)}
-        className="w-full flex items-center justify-between gap-2 py-2 px-3 rounded-lg bg-card border border-border hover:border-border/80 hover:bg-card/80 transition-colors group"
+        className="w-full flex items-center justify-between gap-2 py-2 max-sm:py-3 px-3 rounded-lg bg-card border border-border hover:border-border/80 hover:bg-card/80 transition-colors group"
       >
         <span className="flex items-center gap-2 text-sm font-medium text-muted-foreground group-hover:text-foreground transition-colors">
           <EyeOff className="w-3.5 h-3.5 shrink-0" />

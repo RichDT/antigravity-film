@@ -39,7 +39,7 @@ function FestivalBadge({ source, accolades }: { source: string; accolades: Accol
     <Popover>
       <PopoverTrigger asChild>
         <button
-          className={`inline-flex items-center gap-1 text-[8px] font-bold rounded px-1 h-3.5 cursor-pointer transition-all hover:scale-110 hover:shadow-sm ${
+          className={`inline-flex items-center gap-1 text-[8px] font-bold rounded px-1 h-3.5 max-sm:h-6 max-sm:px-1.5 max-sm:min-w-[2.25rem] touch-target cursor-pointer transition-all hover:scale-110 hover:shadow-sm ${
             isTop ? 'bg-accent text-accent-foreground shadow-sm' : 'bg-secondary text-secondary-foreground border border-border'
           }`}
           title={`${config.name}: ${accolades.map(a => a.label).join('; ')}`}
@@ -139,7 +139,7 @@ function ReleaseLine({ film }: { film: AnticipationFilm }) {
           href={film.streaming_url}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-baseline gap-1 font-medium text-accent hover:underline"
+          className="touch-target inline-flex items-baseline gap-1 font-medium text-accent hover:underline"
           title={`Watch ${film.title} on ${service}`}
         >
           <Play className="w-2 h-2 self-center" fill="currentColor" />
@@ -159,7 +159,7 @@ function PedigreeBadge({ pedigree }: { pedigree: RPPedigree[] }) {
     <Popover>
       <PopoverTrigger asChild>
         <button
-          className={`inline-flex items-center justify-center text-[8px] font-bold rounded px-1 h-3.5 cursor-pointer transition-all hover:scale-110 hover:shadow-sm ${
+          className={`inline-flex items-center justify-center text-[8px] font-bold rounded px-1 h-3.5 max-sm:h-6 max-sm:px-1.5 max-sm:min-w-[2.25rem] touch-target cursor-pointer transition-all hover:scale-110 hover:shadow-sm ${
             anyWin ? 'bg-accent text-accent-foreground shadow-sm' : 'bg-secondary text-secondary-foreground border border-border'
           }`}
           title={`Made by past Rich Picks ${anyWin ? 'winners' : 'nominees'}: ${pedigree.map(p => p.name).join(', ')}`}
@@ -325,7 +325,7 @@ export function AnticipationBoard({
     <div className="mt-5">
       <button
         onClick={() => setExpanded(v => !v)}
-        className="w-full flex items-center justify-between gap-2 py-2 px-3 rounded-lg bg-card border border-border hover:border-border/80 hover:bg-card/80 transition-colors group"
+        className="w-full flex items-center justify-between gap-2 py-2 max-sm:py-3 px-3 rounded-lg bg-card border border-border hover:border-border/80 hover:bg-card/80 transition-colors group"
       >
         <span className="flex items-center gap-2 text-sm font-medium text-muted-foreground group-hover:text-foreground transition-colors">
           <Eye className="w-3.5 h-3.5 shrink-0" />
@@ -381,7 +381,7 @@ export function AnticipationBoard({
                       <div className="flex items-baseline gap-2 flex-wrap">
                         <Link
                           href={`/film/${film.film_id}`}
-                          className="text-sm text-foreground/90 hover:text-accent transition-colors font-medium leading-snug"
+                          className="touch-target text-sm text-foreground/90 hover:text-accent transition-colors font-medium leading-snug"
                         >
                           {film.title}
                         </Link>
@@ -392,7 +392,7 @@ export function AnticipationBoard({
                             rel="noopener noreferrer"
                             // Phones: a bordered pill with an invisible margin, so the tap area is ~44px tall.
                             // From sm up: the original compact inline link aligned to the title.
-                            className="relative inline-flex items-center gap-1 h-7 px-2.5 rounded-full border border-border bg-background/40 text-xs text-muted-foreground hover:text-accent hover:border-accent/50 active:bg-secondary transition-colors after:absolute after:-inset-2 after:content-[''] sm:h-auto sm:px-0 sm:gap-0.5 sm:rounded-none sm:border-0 sm:bg-transparent sm:text-[10px] sm:after:hidden"
+                            className="relative inline-flex items-center gap-1 h-7 px-2.5 rounded-full border border-border bg-background/40 text-xs text-muted-foreground hover:text-accent hover:border-accent/50 active:bg-secondary transition-colors touch-target sm:h-auto sm:px-0 sm:gap-0.5 sm:rounded-none sm:border-0 sm:bg-transparent sm:text-[10px]"
                             title={`Watch the official trailer for ${film.title} on YouTube`}
                             aria-label={`Watch the official trailer for ${film.title}`}
                           >
@@ -400,7 +400,7 @@ export function AnticipationBoard({
                             Trailer
                           </a>
                         )}
-                        <div className="flex items-center gap-1 flex-wrap">
+                        <div className="flex items-center gap-1 max-sm:gap-1.5 flex-wrap">
                           <PedigreeBadge pedigree={film.pedigree} />
                           {Object.entries(groupBySource(film.accolades)).map(([source, accs]) => (
                             <FestivalBadge key={source} source={source} accolades={accs} />

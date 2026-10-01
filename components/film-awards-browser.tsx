@@ -84,12 +84,12 @@ export function FilmAwardsBrowser({ groupedNoms }: Props) {
                       <div className="flex items-start justify-between gap-4 mb-3">
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-1">
-                            <Link href={`/year/${nom.year}`} className="text-[10px] font-bold tracking-widest uppercase text-accent/80 hover:underline">
+                            <Link href={`/year/${nom.year}`} className="touch-target text-[10px] font-bold tracking-widest uppercase text-accent/80 hover:underline">
                               {nom.year}
                             </Link>
                           </div>
                           <h4 className={`font-serif text-lg leading-tight transition-colors ${isWon ? 'text-accent font-bold' : 'text-foreground font-medium'}`}>
-                            <Link href={`/categories/${slugify(nom.category_name)}`} className="hover:underline">
+                            <Link href={`/categories/${slugify(nom.category_name)}`} className="touch-target hover:underline">
                               {nom.category_name}
                             </Link>
                           </h4>

@@ -130,21 +130,21 @@ function formatConsiderationCount(n: number): string {
 }
 
 function GradeHex({ grade }: { grade: string }) {
-  if (!grade) return <div className="w-5 h-6 clip-hexagon flex items-center justify-center flex-shrink-0 text-[10px] font-bold bg-muted text-muted-foreground">-</div>;
+  if (!grade) return <div className="w-5 h-6 max-sm:w-7 max-sm:h-8 clip-hexagon flex items-center justify-center flex-shrink-0 text-[10px] font-bold bg-muted text-muted-foreground">-</div>;
 
   if (grade.includes("//")) {
     const parts = grade.split("//");
     return (
-      <div className={`w-5 h-6 clip-hexagon flex flex-col items-center justify-center flex-shrink-0 font-bold leading-none ${getGradeColor(parts[0])}`}>
+      <div className={`w-5 h-6 max-sm:w-7 max-sm:h-8 clip-hexagon flex flex-col items-center justify-center flex-shrink-0 font-bold leading-none ${getGradeColor(parts[0])}`}>
         <span className="text-[6.5px] leading-none -translate-y-[0.5px]">{parts[0]}</span>
-        <div className="w-3.5 h-[1px] bg-white/80 my-[0.5px]"></div>
+        <div className="w-3.5 max-sm:w-4 h-[1px] bg-white/80 my-[0.5px]"></div>
         <span className="text-[6.5px] leading-none translate-y-[0.5px]">{parts[1]}</span>
       </div>
     );
   }
 
   return (
-    <div className={`w-5 h-6 clip-hexagon flex items-center justify-center flex-shrink-0 text-[9px] font-bold ${getGradeColor(grade)}`}>
+    <div className={`w-5 h-6 max-sm:w-7 max-sm:h-8 clip-hexagon flex items-center justify-center flex-shrink-0 text-[9px] font-bold ${getGradeColor(grade)}`}>
       {grade}
     </div>
   );
@@ -240,7 +240,7 @@ function NomineeRow({ nominee, isWinner, isActing, category }: { nominee: Nomine
         const displayRole = (names.length > 1 && !role.includes('&') && !role.endsWith('s') && role !== 'Cast') ? `${role}s` : role;
         return (
           <div key={role} className="text-[11px] text-muted-foreground leading-snug mt-0.5 group-hover:text-foreground/70 transition-colors">
-            <span className="font-medium mr-1">{displayRole}:</span> <LinkedNamesList people={names} className="hover:text-accent hover:underline transition-colors" />
+            <span className="font-medium mr-1">{displayRole}:</span> <LinkedNamesList people={names} className="touch-target hover:text-accent hover:underline transition-colors" />
           </div>
         );
       });
@@ -262,7 +262,7 @@ function NomineeRow({ nominee, isWinner, isActing, category }: { nominee: Nomine
         const displayRole = (names.length > 1 && !role.includes('&') && !role.endsWith('s') && role !== 'Cast') ? `${role}s` : role;
         return (
           <div key={role} className="text-[11px] text-muted-foreground leading-snug mt-0.5">
-            <span className="font-medium mr-1">{displayRole}:</span> <LinkedNamesList people={names} className="hover:text-accent hover:underline transition-colors" />
+            <span className="font-medium mr-1">{displayRole}:</span> <LinkedNamesList people={names} className="touch-target hover:text-accent hover:underline transition-colors" />
           </div>
         );
       });
@@ -274,7 +274,7 @@ function NomineeRow({ nominee, isWinner, isActing, category }: { nominee: Nomine
     secondaryContent = songCreators || null;
   } else if (category.name === "Screenplay (Original)" || category.name === "Screenplay (Adapted)") {
     const namesArray = nominee.contributors || [{ id: nominee.id, name: nominee.name, lastName: nominee.lastName, isInverted: nominee.isInverted }];
-    highlightText = <LinkedNamesList people={namesArray} className="hover:text-accent hover:underline transition-colors" />;
+    highlightText = <LinkedNamesList people={namesArray} className="touch-target hover:text-accent hover:underline transition-colors" />;
 
     let writers: React.ReactNode = null;
     if (category.name === "Screenplay (Original)" && nominee.contributors && nominee.contributors.length > 0) {
@@ -289,7 +289,7 @@ function NomineeRow({ nominee, isWinner, isActing, category }: { nominee: Nomine
         writers = Array.from(originalRolesMap.entries()).map(([role, names]) => {
           return (
             <div key={role} className="text-[11px] text-muted-foreground leading-snug mt-0.5">
-              <span className="font-medium mr-1">{role}:</span> <LinkedNamesList people={names} className="hover:text-accent hover:underline transition-colors" />
+              <span className="font-medium mr-1">{role}:</span> <LinkedNamesList people={names} className="touch-target hover:text-accent hover:underline transition-colors" />
             </div>
           );
         });
@@ -312,7 +312,7 @@ function NomineeRow({ nominee, isWinner, isActing, category }: { nominee: Nomine
     );
   } else if (category.name === "Production Design" || category.name === "Art Direction") {
     const namesArray = nominee.contributors || [{ id: nominee.id, name: nominee.name, lastName: nominee.lastName, isInverted: nominee.isInverted }];
-    highlightText = <LinkedNamesList people={namesArray} className="hover:text-accent hover:underline transition-colors" />;
+    highlightText = <LinkedNamesList people={namesArray} className="touch-target hover:text-accent hover:underline transition-colors" />;
 
     let designers: React.ReactNode = null;
     if (nominee.contributors && nominee.contributors.length > 0) {
@@ -328,12 +328,12 @@ function NomineeRow({ nominee, isWinner, isActing, category }: { nominee: Nomine
         <>
           {pd.length > 0 && (
             <div className="text-[11px] text-muted-foreground leading-snug mt-0.5">
-              <span className="font-medium mr-1">Production design:</span> <LinkedNamesList people={pd} className="hover:text-accent hover:underline transition-colors" />
+              <span className="font-medium mr-1">Production design:</span> <LinkedNamesList people={pd} className="touch-target hover:text-accent hover:underline transition-colors" />
             </div>
           )}
           {sd.length > 0 && (
             <div className="text-[11px] text-muted-foreground leading-snug mt-0.5">
-              <span className="font-medium mr-1">Set decoration:</span> <LinkedNamesList people={sd} className="hover:text-accent hover:underline transition-colors" />
+              <span className="font-medium mr-1">Set decoration:</span> <LinkedNamesList people={sd} className="touch-target hover:text-accent hover:underline transition-colors" />
             </div>
           )}
         </>
@@ -364,7 +364,7 @@ function NomineeRow({ nominee, isWinner, isActing, category }: { nominee: Nomine
         headlineNames = allContributors.slice(0, 4);
       }
     }
-    highlightText = <LinkedNamesList people={headlineNames} className="hover:text-accent hover:underline transition-colors" />;
+    highlightText = <LinkedNamesList people={headlineNames} className="touch-target hover:text-accent hover:underline transition-colors" />;
 
     // Helper: fix acronym capitalization in role names (e.g. "Adr" → "ADR")
     const fixRoleCapitalization = (role: string): string => {
@@ -388,7 +388,7 @@ function NomineeRow({ nominee, isWinner, isActing, category }: { nominee: Nomine
           const displayRole = (names.length > 1 && !role.includes('&') && !role.endsWith('s') && role !== 'Cast') ? `${role}s` : role;
           return (
             <div key={role} className="text-[11px] text-muted-foreground leading-snug mt-0.5 group-hover:text-foreground/70 transition-colors">
-              <span className="font-medium mr-1">{displayRole}:</span> <LinkedNamesList people={names} className="hover:text-accent hover:underline transition-colors" />
+              <span className="font-medium mr-1">{displayRole}:</span> <LinkedNamesList people={names} className="touch-target hover:text-accent hover:underline transition-colors" />
             </div>
           );
         });
@@ -402,7 +402,7 @@ function NomineeRow({ nominee, isWinner, isActing, category }: { nominee: Nomine
     );
   } else {
     const namesArray = nominee.contributors || [{ id: nominee.id, name: nominee.name, lastName: nominee.lastName, isInverted: nominee.isInverted }];
-    highlightText = <LinkedNamesList people={namesArray} className="hover:text-accent hover:underline transition-colors" />;
+    highlightText = <LinkedNamesList people={namesArray} className="touch-target hover:text-accent hover:underline transition-colors" />;
 
     if (!isActing) {
       // Film title comes from the sub-headline block — show only subordinate role info here
@@ -432,7 +432,7 @@ function NomineeRow({ nominee, isWinner, isActing, category }: { nominee: Nomine
             {/* Film title — non-italic, linked, matching other category styling */}
             <Link
               href={`/film/${perf.film_id}`}
-              className="text-[13px] font-semibold text-foreground/90 hover:text-accent transition-colors"
+              className="touch-target text-[13px] font-semibold text-foreground/90 hover:text-accent transition-colors"
             >
               {perf.film}
             </Link>
@@ -453,14 +453,14 @@ function NomineeRow({ nominee, isWinner, isActing, category }: { nominee: Nomine
       <div className="flex-1 min-w-0 flex flex-col justify-center">
         <div className={`font-serif text-[17px] md:text-lg mb-0.5 leading-tight ${isWinner ? 'text-accent font-bold' : 'text-foreground font-semibold group-hover:text-primary transition-colors'}`}>
           {typeof highlightText === 'string' && !isActing && nominee.film ? (
-            <Link href={nominee.film_id ? `/film/${nominee.film_id}` : `/search?q=${encodeURIComponent(nominee.film)}`} className="hover:text-accent hover:underline transition-colors">{highlightText}</Link>
+            <Link href={nominee.film_id ? `/film/${nominee.film_id}` : `/search?q=${encodeURIComponent(nominee.film)}`} className="touch-target hover:text-accent hover:underline transition-colors">{highlightText}</Link>
           ) : highlightText}
         </div>
 
         {/* For non-acting, non-film-group: show the film title below the person's name */}
         {nominee.film && !isActing && !isActingCategory(category.name) && category.group !== "film" && (
           <div className="text-[13px] md:text-sm text-foreground/80 font-medium mb-1 group-hover:text-foreground transition-colors">
-            <Link href={nominee.film_id ? `/film/${nominee.film_id}` : `/search?q=${encodeURIComponent(nominee.film)}`} className="hover:text-accent hover:underline transition-colors">{nominee.film}</Link>
+            <Link href={nominee.film_id ? `/film/${nominee.film_id}` : `/search?q=${encodeURIComponent(nominee.film)}`} className="touch-target hover:text-accent hover:underline transition-colors">{nominee.film}</Link>
           </div>
         )}
 
@@ -788,12 +788,12 @@ export default async function YearPage(props: Props) {
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-between mb-3 text-muted-foreground hover:text-foreground">
             {prevYear ? (
-              <Link href={`/year/${prevYear}`} className="flex items-center gap-1 text-sm transition-colors hover:text-accent group">
+              <Link href={`/year/${prevYear}`} className="touch-target flex items-center gap-1 text-sm transition-colors hover:text-accent group">
                 <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> {prevYear}
               </Link>
             ) : <div />}
             {nextYear ? (
-              <Link href={`/year/${nextYear}`} className="flex items-center gap-1 text-sm transition-colors hover:text-accent group">
+              <Link href={`/year/${nextYear}`} className="touch-target flex items-center gap-1 text-sm transition-colors hover:text-accent group">
                 {nextYear} <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Link>
             ) : <div />}
@@ -877,7 +877,7 @@ export default async function YearPage(props: Props) {
                   <div className="flex-1 min-w-0">
                     <div className="flex flex-col">
                       {item.filmId ? (
-                        <Link href={`/film/${item.filmId}`} className="text-sm font-medium text-foreground leading-tight truncate px-1 hover:text-accent transition-colors">
+                        <Link href={`/film/${item.filmId}`} className="text-sm font-medium text-foreground leading-tight truncate px-1 max-sm:py-[13px] max-sm:-my-[13px] hover:text-accent transition-colors">
                           {item.film}
                         </Link>
                       ) : (

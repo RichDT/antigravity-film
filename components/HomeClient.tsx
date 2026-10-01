@@ -377,7 +377,7 @@ export default function HomeClient({ rawFilmsData, dbStats, filmIdMap, dbFilmsDa
                     <GradeHex grade={item.grade} />
                     <div className="flex-1 min-w-0 flex items-baseline gap-2 flex-wrap">
                         {item.filmId ? (
-                            <Link href={`/film/${item.filmId}`} className="font-medium text-sm text-foreground hover:text-accent transition-colors">
+                            <Link href={`/film/${item.filmId}`} className="touch-target font-medium text-sm text-foreground hover:text-accent transition-colors">
                                 {item.film}
                             </Link>
                         ) : (
@@ -440,7 +440,7 @@ export default function HomeClient({ rawFilmsData, dbStats, filmIdMap, dbFilmsDa
                             {top10List}
                             <Link
                                 href={`/year/${selectedYear}`}
-                                className="inline-flex items-center gap-1 mt-3 text-xs text-accent hover:underline"
+                                className="touch-target inline-flex items-center gap-1 mt-3 text-xs text-accent hover:underline"
                             >
                                 View full year
                                 <ChevronRight className="w-3 h-3" />
@@ -591,21 +591,21 @@ export default function HomeClient({ rawFilmsData, dbStats, filmIdMap, dbFilmsDa
                         <div className="flex gap-2">
                             <Link
                                 href="/categories"
-                                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-card border border-border text-xs text-muted-foreground hover:text-foreground hover:border-foreground/40 transition-colors"
+                                className="touch-target flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-card border border-border text-xs text-muted-foreground hover:text-foreground hover:border-foreground/40 transition-colors"
                             >
                                 <Award className="w-3.5 h-3.5" />
                                 Awards
                             </Link>
                             <Link
                                 href="/search"
-                                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-card border border-border text-xs text-muted-foreground hover:text-foreground hover:border-foreground/40 transition-colors"
+                                className="touch-target flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-card border border-border text-xs text-muted-foreground hover:text-foreground hover:border-foreground/40 transition-colors"
                             >
                                 <Search className="w-3.5 h-3.5" />
                                 Search
                             </Link>
                             <Link
                                 href="/years"
-                                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-card border border-border text-xs text-muted-foreground hover:text-foreground hover:border-foreground/40 transition-colors"
+                                className="touch-target flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-card border border-border text-xs text-muted-foreground hover:text-foreground hover:border-foreground/40 transition-colors"
                             >
                                 <Calendar className="w-3.5 h-3.5" />
                                 All Years
@@ -643,7 +643,7 @@ export default function HomeClient({ rawFilmsData, dbStats, filmIdMap, dbFilmsDa
                         {top10List}
                         <Link
                             href={`/year/${selectedYear}`}
-                            className="inline-flex items-center gap-1 mt-3 text-xs text-accent hover:underline"
+                            className="touch-target inline-flex items-center gap-1 mt-3 text-xs text-accent hover:underline"
                         >
                             View full year
                             <ChevronRight className="w-3 h-3" />

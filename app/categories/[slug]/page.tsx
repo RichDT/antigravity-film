@@ -187,7 +187,7 @@ export default async function CategoryDetailPage(props: Props) {
           <div className="mt-8 pt-8 border-t border-border/50">
             <div className="flex items-center justify-between text-sm text-muted-foreground">
               <span>{years.length} years of recorded history</span>
-              <Link href="/categories" className="hover:text-foreground transition-colors flex items-center gap-1">
+              <Link href="/categories" className="touch-target hover:text-foreground transition-colors flex items-center gap-1">
                 <ChevronLeft className="w-4 h-4" /> Back to taxonomy
               </Link>
             </div>

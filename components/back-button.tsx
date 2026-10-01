@@ -15,7 +15,7 @@ export function BackButton({ className, iconClassName, label, title }: BackButto
   return (
     <button
       onClick={() => router.back()}
-      className={className}
+      className={`relative touch-target-lg ${className ?? ""}`}
       title={title}
       aria-label={label ?? "Go back"}
     >

@@ -471,7 +471,7 @@ export default async function PersonPage(props: Props) {
                     href={person.wikipedia_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-1 text-sm text-primary/60 hover:text-primary transition-colors"
+                    className="touch-target flex items-center gap-1 text-sm text-primary/60 hover:text-primary transition-colors"
                   >
                     <ExternalLink className="w-3.5 h-3.5 shrink-0" />
                     Wikipedia

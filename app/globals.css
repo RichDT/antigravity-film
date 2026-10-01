@@ -213,3 +213,34 @@ html {
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+
+/* ── Phones: minimum touch targets and legible text ───────────────────────────
+   Apple recommends 44pt targets, Google 48dp and 12px minimum text. These apply
+   below Tailwind's `sm` breakpoint only, so tablet/desktop layouts are unchanged. */
+@utility touch-target {
+  position: relative;
+  @media (max-width: 639.98px) {
+    /* Centered tap area at least 44×44, never smaller than the element itself */
+    &::after {
+      content: ''; position: absolute; left: 50%; top: 50%;
+      width: max(100%, 44px); height: max(100%, 44px);
+      transform: translate(-50%, -50%);
+    }
+  }
+}
+/* For icon buttons; the element must already be positioned (relative/absolute) */
+@utility touch-target-lg {
+  @media (max-width: 639.98px) {
+    &::after {
+      content: ''; position: absolute; left: 50%; top: 50%;
+      width: max(100%, 48px); height: max(100%, 48px);
+      transform: translate(-50%, -50%);
+    }
+  }
+}
+@media (max-width: 639.98px) {
+  .text-\[10px\], .text-\[11px\] { font-size: 12px; }
+  .text-\[9px\] { font-size: 11px; }
+  .text-\[8px\] { font-size: 10px; }
+  .text-\[6\.5px\] { font-size: 8px; }
+}

@@ -165,7 +165,7 @@ export default function FeedbackPage() {
       {/* Hero */}
       <div className="pt-12 pb-8 px-6 md:px-10 border-b border-border">
         <div className="max-w-3xl mx-auto">
-          <Link href="/" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors mb-4">
+          <Link href="/" className="touch-target inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors mb-4">
             <ChevronLeft className="w-4 h-4" /> Back to Home
           </Link>
           <div className="flex items-center gap-4">
