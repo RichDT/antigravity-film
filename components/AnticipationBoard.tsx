@@ -390,10 +390,13 @@ export function AnticipationBoard({
                             href={film.trailer_url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center gap-0.5 text-[10px] text-muted-foreground hover:text-accent transition-colors"
+                            // Phones: a bordered pill with an invisible margin, so the tap area is ~44px tall.
+                            // From sm up: the original compact inline link aligned to the title.
+                            className="relative inline-flex items-center gap-1 h-7 px-2.5 rounded-full border border-border bg-background/40 text-xs text-muted-foreground hover:text-accent hover:border-accent/50 active:bg-secondary transition-colors after:absolute after:-inset-2 after:content-[''] sm:h-auto sm:px-0 sm:gap-0.5 sm:rounded-none sm:border-0 sm:bg-transparent sm:text-[10px] sm:after:hidden"
                             title={`Watch the official trailer for ${film.title} on YouTube`}
+                            aria-label={`Watch the official trailer for ${film.title}`}
                           >
-                            <Play className="w-2 h-2 self-center" fill="currentColor" />
+                            <Play className="w-2.5 h-2.5 sm:w-2 sm:h-2 self-center" fill="currentColor" />
                             Trailer
                           </a>
                         )}
