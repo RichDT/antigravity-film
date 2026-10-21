@@ -4,7 +4,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ChevronDown, ChevronUp, Plus, X, Loader2, Eye, Ticket, CalendarDays, Clapperboard, Tv, CircleHelp, EyeOff, Award, TreePalm, Sailboat, PawPrint, Sun, Leaf, MountainSnow, Building2, Landmark, Guitar, Crown, Shell, Waves, Cat, Play, type LucideIcon } from 'lucide-react';
-import { createClient } from '@/lib/supabase/client';
+import { useAuthStatus } from '@/lib/use-auth-status';
 import type { AnticipationFilm, RPPedigree } from '@/lib/awards';
 import { AddUnseenFilm } from '@/components/add-unseen-film';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -289,7 +289,7 @@ export function AnticipationBoard({
 }) {
   const router = useRouter();
   const [expanded, setExpanded] = useState(true);
-  const [isAdmin, setIsAdmin] = useState(false);
+  const { isAdmin } = useAuthStatus();
   const sections = useMemo(() => sectionize(initialFilms), [initialFilms]);
   const visibleCount = initialFilms.length - sections.hidden.length;
   const firstVisible = SECTIONS.find(sec => !sec.adminOnly && sections[sec.key].length > 0)?.key;
@@ -298,12 +298,6 @@ export function AnticipationBoard({
   );
   const [addingFor, setAddingFor] = useState<number | null>(null);
 
-  useEffect(() => {
-    const supabase = createClient();
-    supabase.auth.getSession().then(({ data }) => setIsAdmin(!!data.session?.user));
-    const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => setIsAdmin(!!session?.user));
-    return () => sub.subscription.unsubscribe();
-  }, []);
 
   async function removeAccolade(accoladeId: number) {
     await fetch('/api/admin/accolades', {

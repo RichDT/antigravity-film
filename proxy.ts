@@ -32,14 +32,21 @@ export async function proxy(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  // Admin API routes write to the database — refuse them outright without a signed-in admin
-  if (!user && request.nextUrl.pathname.startsWith('/api/admin')) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  // Being signed in isn't enough: only the admin role may use admin pages and APIs (members can't)
+  let isAdmin = false
+  if (user) {
+    const { data } = await supabase.from('user_roles').select('role').eq('user_id', user.id).maybeSingle()
+    isAdmin = data?.role === 'admin'
   }
 
-  // If accessing admin routes without auth, redirect to login
+  // Admin API routes write to the database — refuse them outright without the admin role
+  if (!isAdmin && request.nextUrl.pathname.startsWith('/api/admin')) {
+    return NextResponse.json({ error: user ? 'Forbidden' : 'Unauthorized' }, { status: user ? 403 : 401 })
+  }
+
+  // Admin pages without the admin role go to the login page
   if (
-    !user &&
+    !isAdmin &&
     request.nextUrl.pathname.startsWith('/admin') &&
     !request.nextUrl.pathname.startsWith('/admin/login')
   ) {

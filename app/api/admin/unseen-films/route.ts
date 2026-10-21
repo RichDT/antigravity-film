@@ -1,13 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
 import { query } from '@/lib/db';
-import { createClient } from '@/lib/supabase/server';
+import { getAdminUser } from '@/lib/auth';
 import { enrichAnticipatedFilm } from '@/lib/enrich-film';
 
 export async function POST(request: NextRequest) {
-  const supabase = await createClient();
-  const { data: auth } = await supabase.auth.getUser();
-  if (!auth.user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  if (!(await getAdminUser())) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   try {
     const { filmTitle, year } = await request.json();

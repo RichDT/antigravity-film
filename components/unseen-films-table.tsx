@@ -3,20 +3,14 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { EyeOff, ChevronDown, ChevronUp } from 'lucide-react';
-import { createClient } from '@/lib/supabase/client';
+import { useAuthStatus } from '@/lib/use-auth-status';
 import type { UnseenFilm } from '@/lib/unseen-films';
 import { AddUnseenFilm } from '@/components/add-unseen-film';
 
 export function UnseenFilmsTable({ films, year }: { films: UnseenFilm[]; year: number }) {
   const [expanded, setExpanded] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
+  const { isAdmin } = useAuthStatus();
 
-  useEffect(() => {
-    const supabase = createClient();
-    supabase.auth.getSession().then(({ data }) => setIsAdmin(!!data.session?.user));
-    const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => setIsAdmin(!!session?.user));
-    return () => sub.subscription.unsubscribe();
-  }, []);
 
   const unseenCount = films.filter(f => f.status === 'unseen').length;
   const lateCount = films.filter(f => f.status === 'reviewed_late').length;

@@ -27,6 +27,16 @@ export default function AdminLoginPage() {
       return
     }
 
+    // Any account can sign in, but only the admin role may enter the admin tools
+    const { data: { user } } = await supabase.auth.getUser()
+    const { data: role } = await supabase.from('user_roles').select('role').eq('user_id', user!.id).maybeSingle()
+    if (role?.role !== 'admin') {
+      await supabase.auth.signOut()
+      setError("This account doesn't have admin access.")
+      setLoading(false)
+      return
+    }
+
     router.push('/admin/add-review')
     router.refresh()
   }

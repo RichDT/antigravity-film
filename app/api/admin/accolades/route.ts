@@ -1,12 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
-import { createClient } from '@/lib/supabase/server';
+import { getAdminUser } from '@/lib/auth';
 import { query } from '@/lib/db';
 
 async function requireAdmin() {
-  const supabase = await createClient();
-  const { data } = await supabase.auth.getUser();
-  return !!data.user;
+  return !!(await getAdminUser());
 }
 
 export async function POST(request: NextRequest) {

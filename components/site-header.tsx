@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Search, Film, Award, Calendar, Lock, LockOpen, LogOut, HelpCircle, MessageSquare } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { useAuthStatus } from "@/lib/use-auth-status";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
@@ -19,18 +19,10 @@ const navItems = [
 export function SiteHeader() {
   const pathname = usePathname();
   const router = useRouter();
-  const [isAdmin, setIsAdmin] = useState(false);
-
-  useEffect(() => {
-    const supabase = createClient();
-    supabase.auth.getSession().then(({ data }) => setIsAdmin(!!data.session?.user));
-    const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => setIsAdmin(!!session?.user));
-    return () => sub.subscription.unsubscribe();
-  }, []);
+  const { signedIn, isAdmin } = useAuthStatus();
 
   async function handleSignOut() {
     await createClient().auth.signOut();
-    setIsAdmin(false);
     router.refresh();
   }
 
@@ -90,13 +82,13 @@ export function SiteHeader() {
                 <span className="hidden sm:inline text-xs">{isAdmin ? "Admin" : "Admin. Log-in"}</span>
               </Button>
             </Link>
-            {isAdmin && (
+            {signedIn && (
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={handleSignOut}
                 className="gap-1.5 text-muted-foreground/70 hover:text-foreground max-sm:h-11 max-sm:min-w-11"
-                title="Log out of admin"
+                title="Log out"
               >
                 <LogOut className="h-3.5 w-3.5" />
                 <span className="hidden sm:inline text-xs">Log out</span>

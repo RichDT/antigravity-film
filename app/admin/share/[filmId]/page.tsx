@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation'
+import { getAdminUser } from '@/lib/auth'
 import { notFound } from 'next/navigation'
-import { createClient } from '@/lib/supabase/server'
 import { query } from '@/lib/db'
 import { getGradeValue } from '@/lib/awards'
 import { fetchWikipediaCrew } from '@/lib/wikipedia-crew'
@@ -9,8 +9,7 @@ import AdminShareCard from '@/components/AdminShareCard'
 type Props = { params: Promise<{ filmId: string }> }
 
 export default async function AdminSharePage({ params }: Props) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getAdminUser()
   if (!user) redirect('/admin/login')
 
   const { filmId } = await params

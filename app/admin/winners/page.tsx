@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation'
-import { createClient } from '@/lib/supabase/server'
+import { getAdminUser } from '@/lib/auth'
 import WinnersBallotForm from '@/components/WinnersBallotForm'
 
 export const metadata = {
@@ -7,8 +7,7 @@ export const metadata = {
 }
 
 export default async function AdminWinnersPage() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getAdminUser()
 
   if (!user) {
     redirect('/admin/login')
