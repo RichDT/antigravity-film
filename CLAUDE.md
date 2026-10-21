@@ -13,6 +13,16 @@ npx tsc --noEmit # TypeScript check (demo/, v0_designs/, scripts/ are excluded f
 
 There is no test framework. Verification is done by running `npm run build` and checking the route output table.
 
+## Deploys and review (local previews only)
+
+Only `main` deploys to Vercel. Every other branch is blocked by `git.deploymentEnabled` in `vercel.json`, and preview deployments are switched off in the Vercel project settings (`previewDeploymentsDisabled`). Pushing a branch never creates a Vercel preview. Merging to `main` is the decision to go live.
+
+- **Review happens locally.** Run `npm run dev` and send Rich `http://localhost:3000/...` links. For phone checks, run `npm run dev -- -H 0.0.0.0` and give him `http://<this Mac's LAN IP>:3000` (same Wi-Fi). Don't push a branch to get a preview URL.
+- **Local runs use the live Supabase database** (`.env.local`). Admin edits made while reviewing locally change real data.
+- **Before merging to `main`,** run `npm run build` locally to catch build errors. The full static pre-build takes about 12 minutes.
+- **Why:** each Vercel deployment stores the full pre-built site (~2GB). Previews pushed the Hobby team over its 10GB Deployment Storage limit (2026-10-21).
+- **Escape hatch** (rare, only if Rich asks for a shareable link): temporarily re-enable previews in the project settings, run `vercel deploy`, then `vercel remove <url>` and switch previews back off once reviewed.
+
 ## What This Is
 
 Rich Picks Film Awards — a personal film criticism site tracking awards nominations and Rich's picks across ~20 award organizations (Oscar, BAFTA, DGA, SAG, ASC, etc.) from 1927 to present. Rich Picks' own nominations/winners live in the same DB as all other orgs, distinguished by `o.short_name = 'Rich Picks'`.
