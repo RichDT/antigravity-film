@@ -13,6 +13,7 @@ import {
     ChevronRight,
 } from "lucide-react";
 import { AnticipationBoard } from "@/components/AnticipationBoard";
+import { ThisWeekStrip } from "@/components/ThisWeekStrip";
 import type { AnticipationFilm } from "@/lib/awards";
 
 const gradeValues: Record<string, number> = {
@@ -447,7 +448,9 @@ export default function HomeClient({ rawFilmsData, dbStats, filmIdMap, dbFilmsDa
                             </Link>
                         </div>
 
-                        <AnticipationBoard year={anticipationYear} films={anticipationFilms} />
+                        <div id="anticipation-board-desktop" className="scroll-mt-20">
+                            <AnticipationBoard year={anticipationYear} films={anticipationFilms} />
+                        </div>
                     </motion.div>
                 </div>
 
@@ -457,6 +460,10 @@ export default function HomeClient({ rawFilmsData, dbStats, filmIdMap, dbFilmsDa
                             <NavHex icon={Award} label="Awards" href="/categories" delay={0.05} />
                             <NavHex icon={Search} label="Search" href="/search" delay={0.1} />
                             <NavHex icon={Calendar} label="Years" href="/years" delay={0.15} />
+                        </div>
+
+                        <div className="mb-10 -mt-4">
+                            <ThisWeekStrip films={anticipationFilms} boardAnchor="#anticipation-board-desktop" />
                         </div>
 
                         <div className="flex-1 flex flex-col justify-start">
@@ -614,6 +621,10 @@ export default function HomeClient({ rawFilmsData, dbStats, filmIdMap, dbFilmsDa
                     </motion.div>
                 </div>
 
+                <div className="px-6 pb-6">
+                    <ThisWeekStrip films={anticipationFilms} boardAnchor="#anticipation-board-mobile" />
+                </div>
+
                 {/* Sticky year carousel */}
                 <div className="sticky top-0 z-20 bg-background/95 backdrop-blur-sm border-y border-border">
                     <div ref={carouselRef} className="overflow-x-auto scrollbar-hide">
@@ -650,7 +661,9 @@ export default function HomeClient({ rawFilmsData, dbStats, filmIdMap, dbFilmsDa
                         </Link>
                     </div>
 
-                    <AnticipationBoard year={anticipationYear} films={anticipationFilms} />
+                    <div id="anticipation-board-mobile" className="scroll-mt-40">
+                        <AnticipationBoard year={anticipationYear} films={anticipationFilms} />
+                    </div>
                 </div>
 
             </div>
