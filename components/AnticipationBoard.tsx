@@ -3,8 +3,10 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ChevronDown, ChevronUp, Plus, X, Loader2, Eye, Ticket, CalendarDays, Clapperboard, Tv, CircleHelp, EyeOff, Award, TreePalm, Sailboat, PawPrint, Sun, Leaf, MountainSnow, Building2, Landmark, Guitar, Crown, Shell, Waves, Cat, Play, type LucideIcon } from 'lucide-react';
+import { ChevronDown, ChevronUp, Plus, X, Loader2, Eye, Bookmark, BookmarkCheck, CheckCircle2, Circle, Ticket, CalendarDays, Clapperboard, Tv, CircleHelp, EyeOff, Award, TreePalm, Sailboat, PawPrint, Sun, Leaf, MountainSnow, Building2, Landmark, Guitar, Crown, Shell, Waves, Cat, Play, type LucideIcon } from 'lucide-react';
 import { useAuthStatus } from '@/lib/use-auth-status';
+import { useMember, useCommunityStats, type FilmStatus, type CommunityStats } from '@/lib/community';
+import { QuickReview } from '@/components/community/QuickReview';
 import type { AnticipationFilm, RPPedigree } from '@/lib/awards';
 import { AddUnseenFilm } from '@/components/add-unseen-film';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -192,6 +194,31 @@ function PedigreeBadge({ pedigree }: { pedigree: RPPedigree[] }) {
   );
 }
 
+function CommunityButtons({ status, wantCount, onWant, onSeen }: {
+  status: FilmStatus | undefined; wantCount: number; onWant: () => void; onSeen: () => void;
+}) {
+  const wants = status === 'want';
+  const seen = status === 'seen';
+  const base = 'touch-target inline-flex items-center gap-1 h-7 px-2.5 rounded-full border text-[11px] font-medium transition-colors';
+  const off = 'bg-background/40 border-border text-muted-foreground hover:text-foreground hover:border-foreground/40';
+  const on = 'bg-accent text-accent-foreground border-accent';
+  return (
+    <div className="mt-2 flex flex-wrap gap-2">
+      <button onClick={onWant} disabled={seen} aria-pressed={wants}
+        title={seen ? "You've seen this film" : 'Add to your want-to-see list (shareable) and the public count'}
+        className={`${base} ${wants ? on : off} disabled:opacity-35 disabled:pointer-events-none`}>
+        {wants ? <BookmarkCheck className="w-3 h-3" /> : <Bookmark className="w-3 h-3" />}
+        Want to see{wantCount > 0 ? ` · ${wantCount}` : ''}
+      </button>
+      <button onClick={onSeen} aria-pressed={seen} title={seen ? 'Marked as seen — tap to undo' : "I've seen it"}
+        className={`${base} ${seen ? on : off}`}>
+        {seen ? <CheckCircle2 className="w-3 h-3" /> : <Circle className="w-3 h-3" />}
+        {seen ? 'Seen it' : "I've seen it"}
+      </button>
+    </div>
+  );
+}
+
 function groupBySource(accolades: Accolade[]): Record<string, Accolade[]> {
   const out: Record<string, Accolade[]> = {};
   for (const a of accolades) (out[a.source] ??= []).push(a);
@@ -291,6 +318,30 @@ export function AnticipationBoard({
   const [expanded, setExpanded] = useState(true);
   const { isAdmin } = useAuthStatus();
   const sections = useMemo(() => sectionize(initialFilms), [initialFilms]);
+  const member = useMember();
+  const filmIds = useMemo(() => initialFilms.map(f => f.film_id), [initialFilms]);
+  const stats = useCommunityStats(filmIds);
+  const [reviewing, setReviewing] = useState<{ filmId: number; title: string } | null>(null);
+  const [localDelta, setLocalDelta] = useState<Record<number, number>>({});
+
+  async function toggleWant(film: AnticipationFilm) {
+    if (!member.userId) { router.push(`/signin?next=${encodeURIComponent(window.location.pathname)}`); return; }
+    const wanting = member.statuses[film.film_id] === 'want';
+    if (await member.setStatus(film.film_id, wanting ? null : 'want')) {
+      setLocalDelta(d => ({ ...d, [film.film_id]: (d[film.film_id] ?? 0) + (wanting ? -1 : 1) }));
+    }
+  }
+
+  async function toggleSeen(film: AnticipationFilm) {
+    if (!member.userId) { router.push(`/signin?next=${encodeURIComponent(window.location.pathname)}`); return; }
+    const status = member.statuses[film.film_id];
+    if (status === 'seen') { await member.setStatus(film.film_id, null); return; }
+    // Seeing a film replaces wanting to see it, and prompts a quick review
+    if (await member.setStatus(film.film_id, 'seen')) {
+      if (status === 'want') setLocalDelta(d => ({ ...d, [film.film_id]: (d[film.film_id] ?? 0) - 1 }));
+      setReviewing({ filmId: film.film_id, title: film.title });
+    }
+  }
   const visibleCount = initialFilms.length - sections.hidden.length;
   const firstVisible = SECTIONS.find(sec => !sec.adminOnly && sections[sec.key].length > 0)?.key;
   const [open, setOpen] = useState<Record<SectionKey, boolean>>(
@@ -411,6 +462,12 @@ export function AnticipationBoard({
                         </div>
                       </div>
                       <ReleaseLine film={film} />
+                      <CommunityButtons
+                        status={member.statuses[film.film_id]}
+                        wantCount={Math.max(0, (stats[film.film_id]?.want_count ?? 0) + (localDelta[film.film_id] ?? 0))}
+                        onWant={() => toggleWant(film)}
+                        onSeen={() => toggleSeen(film)}
+                      />
                       {film.previews.map(p => (
                         <a
                           key={`${p.event_name}-${p.screening_date}`}
@@ -457,6 +514,9 @@ export function AnticipationBoard({
             ))
           )}
           {isAdmin && <AddUnseenFilm year={year} />}
+          {reviewing && member.userId && (
+            <QuickReview userId={member.userId} filmId={reviewing.filmId} title={reviewing.title} onClose={() => setReviewing(null)} />
+          )}
         </div>
       )}
     </div>
