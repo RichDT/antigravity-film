@@ -454,7 +454,7 @@ export default function HomeClient({ rawFilmsData, dbStats, filmIdMap, dbFilmsDa
                     </motion.div>
                 </div>
 
-                <div className="flex flex-1 pt-24 pb-8 pr-12 pl-4 xl:pr-20">
+                <div className="flex flex-1 min-w-0 pt-24 pb-8 pr-12 pl-4 xl:pr-20">
                     <div className="flex flex-col h-full w-full max-w-[1200px] mx-auto" ref={containerRef}>
                         <div className="flex gap-1 justify-end w-full mb-12">
                             <NavHex icon={Award} label="Awards" href="/categories" delay={0.05} />
