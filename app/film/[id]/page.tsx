@@ -23,6 +23,7 @@ import { ExpandableGuildNominees } from "@/components/expandable-guild-nominees"
 import { OtherAwardsRow, LinkedNamesList } from "@/components/award-icons";
 import { FilmAwardsBrowser } from "@/components/film-awards-browser";
 import { BackButton } from "@/components/back-button";
+import { FilmCommunity } from "@/components/community/FilmCommunity";
 import { filmsData as filmsRawData } from "@/lib/films-data";
 
 function getGradeColor(grade: string) {
@@ -581,6 +582,7 @@ export default async function FilmPage(props: Props) {
             </div>
 
             <FilmAwardsBrowser groupedNoms={groupedNoms} />
+            <FilmCommunity filmId={filmId} richGrade={grade || null} />
       </div>
 
           {/* Right: Statistics Sidebar */}
