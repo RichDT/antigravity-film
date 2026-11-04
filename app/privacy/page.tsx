@@ -38,7 +38,7 @@ export default function PrivacyPage() {
 
       <section className="space-y-2">
         <h2 className="font-serif text-lg font-semibold text-foreground">Who processes it</h2>
-        <p>Your data is stored with <strong>Supabase</strong> (database and sign-in) and the site is hosted by <strong>Vercel</strong>. If you choose Google sign-in, <strong>Google</strong> confirms who you are. These providers handle data on our behalf under their own privacy commitments.</p>
+        <p>Your data is stored with <strong>Supabase</strong> (database and sign-in) and the site is hosted by <strong>Vercel</strong>. If you choose Google sign-in, <strong>Google</strong> confirms who you are. When you sign in by email, <strong>Cloudflare Turnstile</strong> checks that you’re a person, not a bot. These providers handle data on our behalf under their own privacy commitments.</p>
       </section>
 
       <section className="space-y-2">
