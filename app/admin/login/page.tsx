@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import { Turnstile, TURNSTILE_SITE_KEY } from '@/components/account/Turnstile'
 import { Film, Lock, Eye, EyeOff } from 'lucide-react'
 
 export default function AdminLoginPage() {
@@ -11,6 +12,8 @@ export default function AdminLoginPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [captcha, setCaptcha] = useState<string | null>(null)
+  const [captchaReset, setCaptchaReset] = useState(0)
   const router = useRouter()
 
   async function handleLogin(e: React.FormEvent) {
@@ -19,7 +22,8 @@ export default function AdminLoginPage() {
     setLoading(true)
 
     const supabase = createClient()
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
+    const { error } = await supabase.auth.signInWithPassword({ email, password, options: { captchaToken: captcha ?? undefined } })
+    setCaptchaReset(k => k + 1)
 
     if (error) {
       setError(error.message)
@@ -102,9 +106,11 @@ export default function AdminLoginPage() {
             </div>
           )}
 
+          <Turnstile onToken={setCaptcha} resetKey={captchaReset} />
+
           <button
             type="submit"
-            disabled={loading}
+            disabled={loading || (!!TURNSTILE_SITE_KEY && !captcha)}
             className="w-full py-2.5 bg-primary hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed text-primary-foreground font-medium rounded-lg transition-all flex items-center justify-center gap-2"
           >
             {loading ? (

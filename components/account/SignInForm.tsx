@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Mail, Loader2 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
+import { Turnstile, TURNSTILE_SITE_KEY } from '@/components/account/Turnstile';
 
 function GoogleMark() {
   return (
@@ -20,6 +21,8 @@ export function SignInForm({ next }: { next: string }) {
   const [email, setEmail] = useState('');
   const [state, setState] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
   const [message, setMessage] = useState('');
+  const [captcha, setCaptcha] = useState<string | null>(null);
+  const [captchaReset, setCaptchaReset] = useState(0);
 
   const callback = () => `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}`;
 
@@ -32,7 +35,8 @@ export function SignInForm({ next }: { next: string }) {
   async function emailLink(e: React.FormEvent) {
     e.preventDefault();
     setState('sending'); setMessage('');
-    const { error } = await createClient().auth.signInWithOtp({ email: email.trim(), options: { emailRedirectTo: callback() } });
+    const { error } = await createClient().auth.signInWithOtp({ email: email.trim(), options: { emailRedirectTo: callback(), captchaToken: captcha ?? undefined } });
+    setCaptchaReset(k => k + 1); // tokens are single-use
     if (error) { setState('error'); setMessage(error.message); return; }
     setState('sent');
   }
@@ -59,7 +63,8 @@ export function SignInForm({ next }: { next: string }) {
         <input id="signin-email" type="email" required autoComplete="email" value={email} onChange={e => setEmail(e.target.value)}
           placeholder="you@example.com"
           className="w-full h-11 rounded-md border border-border bg-background px-3 text-base focus:outline-none focus:border-accent/60" />
-        <button type="submit" disabled={state === 'sending'}
+        <Turnstile onToken={setCaptcha} resetKey={captchaReset} />
+        <button type="submit" disabled={state === 'sending' || (!!TURNSTILE_SITE_KEY && !captcha)}
           className="w-full h-11 inline-flex items-center justify-center gap-2 rounded-md bg-accent text-accent-foreground text-sm font-semibold disabled:opacity-60">
           {state === 'sending' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Mail className="w-4 h-4" />} Send link
         </button>
