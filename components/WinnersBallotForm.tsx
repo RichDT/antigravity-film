@@ -356,6 +356,9 @@ export default function WinnersBallotForm() {
         <Link href="/admin/feedback" className="px-3 py-1.5 rounded-lg bg-secondary/50 text-muted-foreground hover:text-foreground hover:bg-secondary transition-all">
           Feedback
         </Link>
+        <Link href="/admin/moderation" className="px-3 py-1.5 rounded-lg bg-secondary/50 text-muted-foreground hover:text-foreground hover:bg-secondary transition-all">
+          Moderation
+        </Link>
       </div>
 
       {/* Year Selector */}

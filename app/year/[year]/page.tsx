@@ -833,6 +833,7 @@ export default async function YearPage(props: Props) {
                   <>
                     <span className="font-semibold text-sky-300">Under Consideration</span>
                     {" "}— Rich Picks nominations for {year} have not been announced yet. The categories below show films Rich is currently tracking as considerations.
+                    {" "}<Link href="/picks" className="font-semibold text-sky-300 underline underline-offset-2 hover:text-sky-200">Make your own community picks →</Link>
                   </>
                 )}
               </span>
