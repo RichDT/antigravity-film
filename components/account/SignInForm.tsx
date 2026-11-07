@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Mail, Loader2 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { Turnstile, TURNSTILE_SITE_KEY } from '@/components/account/Turnstile';
+import { GoogleButton, GOOGLE_CLIENT_ID } from '@/components/account/GoogleButton';
 
 function GoogleMark() {
   return (
@@ -23,6 +24,8 @@ export function SignInForm({ next }: { next: string }) {
   const [message, setMessage] = useState('');
   const [captcha, setCaptcha] = useState<string | null>(null);
   const [captchaReset, setCaptchaReset] = useState(0);
+
+  const googleError = useCallback((m: string) => { setState('error'); setMessage(m); }, []);
 
   const callback = () => `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}`;
 
@@ -53,10 +56,12 @@ export function SignInForm({ next }: { next: string }) {
 
   return (
     <div className="space-y-4">
-      <button onClick={google}
-        className="w-full h-11 inline-flex items-center justify-center gap-2 rounded-md border border-border bg-background hover:bg-secondary/60 text-sm font-medium transition-colors">
-        <GoogleMark /> Continue with Google
-      </button>
+      {GOOGLE_CLIENT_ID ? <GoogleButton next={next} onError={googleError} /> : (
+        <button onClick={google}
+          className="w-full h-11 inline-flex items-center justify-center gap-2 rounded-md border border-border bg-background hover:bg-secondary/60 text-sm font-medium transition-colors">
+          <GoogleMark /> Continue with Google
+        </button>
+      )}
       <div className="flex items-center gap-3 text-[11px] text-muted-foreground"><span className="h-px flex-1 bg-border" />or<span className="h-px flex-1 bg-border" /></div>
       <form onSubmit={emailLink} className="space-y-2">
         <label htmlFor="signin-email" className="block text-xs text-muted-foreground">Email me a sign-in link</label>
