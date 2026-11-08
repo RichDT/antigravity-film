@@ -26,6 +26,7 @@ import Link from "next/link";
 import { BackButton } from "@/components/back-button";
 import { FilmCommunity } from "@/components/community/FilmCommunity";
 import { RichReviewSection } from "@/components/film/RichReviewSection";
+import { ReviewInitial } from "@/components/film/ReviewInitial";
 import { formatReview } from "@/lib/review-format";
 import { filmsData as filmsRawData } from "@/lib/films-data";
 
@@ -244,6 +245,16 @@ export default async function FilmPage(props: Props) {
   const dbGrade = reviewRes.rows[0]?.grade || "";
   const reviewText: string = (reviewRes.rows[0]?.review_text || "").trim();
   const reviewSegments = reviewText ? (await formatReview(reviewText, { filmTitle: filmRes.rows[0]?.title ?? "" })).segments : [];
+  // Illuminated initial: the review's first letter moves out of the text into the laurel plaque
+  let reviewInitial: string | null = null;
+  const firstSeg = reviewSegments.find(seg => seg.text.trim());
+  if (firstSeg) {
+    const m = firstSeg.text.match(/^(\s*)(\p{L})/u);
+    if (m) {
+      reviewInitial = m[2].toUpperCase();
+      firstSeg.text = firstSeg.text.slice(m[0].length);
+    }
+  }
 
   const filmJsonIndex = allYearFilms.findIndex((f: any) => f.title === film.title);
   if (filmJsonIndex !== -1) {
@@ -663,6 +674,7 @@ export default async function FilmPage(props: Props) {
             <FilmCommunity filmId={filmId} richGrade={grade || null} />
             <RichReviewSection filmId={filmId} rawText={reviewText}>
               <p className="font-reading text-[17px] md:text-[18px] leading-[1.75] text-foreground/90 whitespace-pre-line">
+                {reviewInitial && <ReviewInitial letter={reviewInitial} />}
                 {reviewSegments.map((seg, i) => {
                   const inner = seg.italic ? <em>{seg.text}</em> : seg.text;
                   return seg.href
