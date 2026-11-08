@@ -354,6 +354,53 @@ export default async function FilmPage(props: Props) {
     }
   }
 
+
+  // Rich's considerations for years whose Rich Picks nominations aren't set yet — shown in
+  // Awards History until the nominations replace them.
+  const considRes = await query(`
+    SELECT c.consideration_id, c.year, c.detail, c.character, cat.name AS category_name,
+           (SELECT p.person_id FROM people p WHERE p.name = c.detail ORDER BY p.person_id LIMIT 1) AS person_id
+    FROM considerations c
+    JOIN categories cat USING (category_id)
+    WHERE c.film_id = $1
+      AND NOT EXISTS (
+        SELECT 1 FROM nominations n
+        JOIN ceremonies ce USING (ceremony_id)
+        JOIN awards a ON ce.award_id = a.award_id
+        JOIN organizations o ON a.organization_id = o.organization_id
+        WHERE o.short_name = 'Rich Picks' AND ce.year = c.year
+      )
+    ORDER BY c.consideration_id
+  `, [filmId]);
+
+  const sameCategory = (a: string, b: string) =>
+    a === b || (['Editing', 'Film Editing'].includes(a) && ['Editing', 'Film Editing'].includes(b));
+  const normName = (n: string) => n.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();
+
+  for (const c of considRes.rows) {
+    const isActing = /actor|actress|performance/i.test(c.category_name);
+    const person = c.detail ? { id: c.person_id ?? undefined, name: c.detail, role: isActing ? (c.character || null) : null, sources: ['Rich Picks: considering'] } : null;
+    const existing = Array.from(nominationsMap.values()).find((e: any) =>
+      e.year === c.year && sameCategory(e.category_name, c.category_name) &&
+      (!isActing || !person || e.people.some((p: any) => (person.id && p.id === person.id) || normName(p.name) === normName(person.name)))
+    );
+    if (existing) {
+      existing.considered = true;
+      if (person && !isActing && !existing.people.some((p: any) => normName(p.name) === normName(person.name))) existing.people.push(person);
+      continue;
+    }
+    // Non-acting categories gather all considered people into one entry
+    const key = isActing ? `consid-${c.consideration_id}` : `consid-${c.category_name}-${c.year}`;
+    if (!nominationsMap.has(key)) {
+      nominationsMap.set(key, {
+        nomination_id: key, year: c.year, win: false, category_name: c.category_name,
+        org_name: 'Rich Picks', hasRichPick: false, considered: true,
+        allNominationIds: [], contributingOrgs: [], people: [],
+      });
+    }
+    if (person) nominationsMap.get(key).people.push(person);
+  }
+
   const nominations = Array.from(nominationsMap.values());
   const totalNoms = nominations.filter(n => n.hasRichPick).length;
   const totalWins = nominations.filter(n => n.hasRichPick && n.win).length;

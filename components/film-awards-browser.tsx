@@ -28,7 +28,7 @@ export function FilmAwardsBrowser({ groupedNoms }: Props) {
     return {
       ...group,
       noms: showOnlyRichPicks 
-        ? group.noms.filter(nom => nom.hasRichPick)
+        ? group.noms.filter(nom => nom.hasRichPick || nom.considered)
         : group.noms
     };
   }).filter(group => group.noms.length > 0);
@@ -74,7 +74,7 @@ export function FilmAwardsBrowser({ groupedNoms }: Props) {
                 {group.noms.map((nom: any) => {
                   const badges = nom.badges || {};
                   const isWon = nom.hasRichPick && nom.win;
-                  const isFaint = !nom.hasRichPick;
+                  const isFaint = !nom.hasRichPick && !nom.considered;
 
                   return (
                     <div 
@@ -94,6 +94,11 @@ export function FilmAwardsBrowser({ groupedNoms }: Props) {
                             </Link>
                           </h4>
                         </div>
+                        {!nom.hasRichPick && nom.considered && (
+                          <span className="flex-shrink-0 text-[10px] font-bold tracking-widest uppercase text-accent border border-accent/50 rounded px-2 py-1 bg-accent/5" title="Rich is considering this for a Rich Picks nomination">
+                            Considering
+                          </span>
+                        )}
                         {nom.hasRichPick && (
                           <div className="flex-shrink-0">
                             <RichPicksHexBadge
