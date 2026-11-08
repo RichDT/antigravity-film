@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import { Playfair_Display, Inter } from 'next/font/google'
+import { Playfair_Display, Inter, Newsreader } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { SiteHeader } from '@/components/site-header'
 import './globals.css'
@@ -7,6 +7,13 @@ import './globals.css'
 const playfair = Playfair_Display({
   subsets: ["latin"],
   variable: '--font-playfair',
+  display: 'swap',
+});
+
+// Long-form reading serif (Rich's reviews)
+const newsreader = Newsreader({
+  subsets: ["latin"],
+  variable: '--font-newsreader',
   display: 'swap',
 });
 
@@ -50,7 +57,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body className={`${playfair.variable} ${inter.variable} font-sans antialiased`}>
+      <body className={`${playfair.variable} ${inter.variable} ${newsreader.variable} font-sans antialiased`}>
         <div className="relative flex min-h-screen flex-col">
           <SiteHeader />
           <main className="flex-1">

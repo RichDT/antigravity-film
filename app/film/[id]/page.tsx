@@ -666,7 +666,7 @@ export default async function FilmPage(props: Props) {
                   <div className="h-px flex-1 bg-gradient-to-r from-border/60 to-transparent" />
                 </div>
                 <div className="rounded-lg border border-border bg-card px-5 py-6 md:px-8 md:py-7 max-w-3xl">
-                  <p className="font-sans text-base md:text-[17px] leading-[1.75] tracking-[0.005em] text-foreground/85 whitespace-pre-line">
+                  <p className="font-reading text-[17px] md:text-[18px] leading-[1.75] text-foreground/90 whitespace-pre-line">
                     {reviewText}
                   </p>
                 </div>
