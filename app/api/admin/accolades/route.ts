@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { revalidatePath } from 'next/cache';
+import { refreshSiteData } from '@/lib/refresh-site';
 import { getAdminUser } from '@/lib/auth';
 import { query } from '@/lib/db';
 
@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
     [film_id, source.trim().toLowerCase(), label.trim()]
   );
 
-  revalidatePath('/');
+  refreshSiteData();
   return NextResponse.json({ success: true, accolade_id: res.rows[0].accolade_id });
 }
 
@@ -38,6 +38,6 @@ export async function DELETE(request: NextRequest) {
 
   await query(`DELETE FROM film_accolades WHERE accolade_id = $1`, [accolade_id]);
 
-  revalidatePath('/');
+  refreshSiteData();
   return NextResponse.json({ success: true });
 }

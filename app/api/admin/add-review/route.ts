@@ -1,3 +1,4 @@
+import { refreshSiteData } from '@/lib/refresh-site'
 import { NextRequest, NextResponse } from 'next/server'
 import { query } from '@/lib/db'
 import { fetchWikipediaCrew } from '@/lib/wikipedia-crew'
@@ -166,6 +167,7 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    refreshSiteData()
     return NextResponse.json({ success: true, filmId })
   } catch (err: any) {
     console.error('Add review error:', err)

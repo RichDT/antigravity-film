@@ -22,8 +22,9 @@ export const cachedQuery = unstable_cache(
         const res = await pool.query(text, params);
         return { rows: res.rows, rowCount: res.rowCount };
     },
-    ['cached-db-query'],
-    { revalidate: 86400 }
+    ['cached-db-query-v2'],
+    // Tagged so admin writes can expire it at once (lib/refresh-site.ts)
+    { revalidate: 86400, tags: ['db'] }
 );
 
 export async function queryCached(text: string, params?: any[]) {

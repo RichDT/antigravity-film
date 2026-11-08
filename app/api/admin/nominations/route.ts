@@ -1,3 +1,4 @@
+import { refreshSiteData } from '@/lib/refresh-site'
 import { NextRequest, NextResponse } from 'next/server'
 import { query } from '@/lib/db'
 
@@ -146,6 +147,7 @@ export async function POST(request: NextRequest) {
       created++
     }
 
+    refreshSiteData()
     return NextResponse.json({ success: true, created })
   } catch (err: any) {
     console.error('POST nominations error:', err)

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { revalidatePath } from 'next/cache';
+import { refreshSiteData } from '@/lib/refresh-site';
 import { query } from '@/lib/db';
 import { getAdminUser } from '@/lib/auth';
 import { enrichAnticipatedFilm } from '@/lib/enrich-film';
@@ -36,9 +36,7 @@ export async function POST(request: NextRequest) {
     // Current and future boards get the full treatment: Wikipedia crew/cast, U.S. release date, official trailer
     const enriched = yearInt >= new Date().getFullYear() ? await enrichAnticipatedFilm(filmId) : null;
 
-    revalidatePath('/');
-    revalidatePath(`/year/${yearInt}`);
-    if (enriched && enriched.boardYear !== yearInt) revalidatePath(`/year/${enriched.boardYear}`);
+    refreshSiteData();
 
     return NextResponse.json({ success: true, filmId, enriched });
   } catch (err: any) {

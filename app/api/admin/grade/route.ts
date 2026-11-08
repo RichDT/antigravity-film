@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { revalidatePath } from 'next/cache'
+import { refreshSiteData } from '@/lib/refresh-site'
 import { query } from '@/lib/db'
 import { getAdminUser } from '@/lib/auth'
 
@@ -30,8 +30,6 @@ export async function POST(request: NextRequest) {
     [id, grade ?? null, reviewText?.trim() || null]
   )
 
-  revalidatePath(`/film/${id}`)
-  revalidatePath('/')
-  if (film.rows[0].release_year) revalidatePath(`/year/${film.rows[0].release_year}`)
+  refreshSiteData()
   return NextResponse.json({ ok: true })
 }

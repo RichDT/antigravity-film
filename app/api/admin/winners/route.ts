@@ -1,3 +1,4 @@
+import { refreshSiteData } from '@/lib/refresh-site'
 import { NextRequest, NextResponse } from 'next/server'
 import { query } from '@/lib/db'
 
@@ -60,6 +61,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    refreshSiteData()
     return NextResponse.json({ success: true, winnersSet: winners.length })
   } catch (err: any) {
     console.error('POST winners error:', err)
