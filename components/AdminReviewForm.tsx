@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect, useCallback } from 'react'
+import { pasteAsReviewMarkup } from '@/lib/paste-markup';
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
@@ -594,6 +595,7 @@ export default function AdminReviewForm() {
           <textarea
             value={reviewText}
             onChange={(e) => setReviewText(e.target.value)}
+            onPaste={(e) => pasteAsReviewMarkup(e, reviewText, setReviewText)}
             rows={5}
             className="w-full px-4 py-3 bg-card/50 border border-border rounded-xl text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all resize-y"
             placeholder="Write your review here..."

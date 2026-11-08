@@ -1,7 +1,7 @@
 import React from "react";
 import { notFound } from "next/navigation";
 import Image from "next/image";
-import { Trophy, Star, Film, Clapperboard, Award, Music, Scissors, Sparkles, PenTool, Palette, Globe, FileText, Wand2, Brush, Camera, Volume2, FileVideoCamera, UserStar, BookOpen, Theater, Shirt, MirrorRound, Piano, MicVocal, Headphones, SlidersHorizontal, PenLine } from "lucide-react";
+import { Trophy, Star, Film, Clapperboard, Award, Music, Scissors, Sparkles, PenTool, Palette, Globe, FileText, Wand2, Brush, Camera, Volume2, FileVideoCamera, UserStar, BookOpen, Theater, Shirt, MirrorRound, Piano, MicVocal, Headphones, SlidersHorizontal } from "lucide-react";
 import { queryCached as query } from "@/lib/db";
 import {
   CATEGORY_ICON_MAPPING,
@@ -25,6 +25,8 @@ import { FilmAwardsBrowser } from "@/components/film-awards-browser";
 import Link from "next/link";
 import { BackButton } from "@/components/back-button";
 import { FilmCommunity } from "@/components/community/FilmCommunity";
+import { RichReviewSection } from "@/components/film/RichReviewSection";
+import { formatReview } from "@/lib/review-format";
 import { filmsData as filmsRawData } from "@/lib/films-data";
 
 function getGradeColor(grade: string) {
@@ -241,6 +243,7 @@ export default async function FilmPage(props: Props) {
   // DB reviews table is the authoritative grade source; films.json is fallback for legacy data
   const dbGrade = reviewRes.rows[0]?.grade || "";
   const reviewText: string = (reviewRes.rows[0]?.review_text || "").trim();
+  const reviewSegments = reviewText ? await formatReview(reviewText, { filmTitle: filmRes.rows[0]?.title ?? "" }) : [];
 
   const filmJsonIndex = allYearFilms.findIndex((f: any) => f.title === film.title);
   if (filmJsonIndex !== -1) {
@@ -658,20 +661,16 @@ export default async function FilmPage(props: Props) {
             ))}
             <FilmAwardsBrowser groupedNoms={groupedNoms} />
             <FilmCommunity filmId={filmId} richGrade={grade || null} />
-            {reviewText && (
-              <section id="review" className="mt-12 scroll-mt-24" aria-labelledby="review-heading">
-                <div className="flex items-center gap-3 mb-6">
-                  <PenLine className="w-5 h-5 text-accent" />
-                  <h2 id="review-heading" className="font-serif text-xl font-bold text-foreground">Rich&apos;s Review</h2>
-                  <div className="h-px flex-1 bg-gradient-to-r from-border/60 to-transparent" />
-                </div>
-                <div className="rounded-lg border border-border bg-card px-5 py-6 md:px-8 md:py-7 max-w-3xl">
-                  <p className="font-reading text-[17px] md:text-[18px] leading-[1.75] text-foreground/90 whitespace-pre-line">
-                    {reviewText}
-                  </p>
-                </div>
-              </section>
-            )}
+            <RichReviewSection filmId={filmId} rawText={reviewText}>
+              <p className="font-reading text-[17px] md:text-[18px] leading-[1.75] text-foreground/90 whitespace-pre-line">
+                {reviewSegments.map((seg, i) => {
+                  const inner = seg.italic ? <em>{seg.text}</em> : seg.text;
+                  return seg.href
+                    ? <Link key={i} href={seg.href} className="text-foreground underline decoration-accent/40 decoration-1 underline-offset-[3px] hover:decoration-accent hover:text-accent transition-colors">{inner}</Link>
+                    : <React.Fragment key={i}>{inner}</React.Fragment>;
+                })}
+              </p>
+            </RichReviewSection>
       </div>
 
           {/* Right: Statistics Sidebar */}

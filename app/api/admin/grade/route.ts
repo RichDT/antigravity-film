@@ -11,14 +11,26 @@ export async function POST(request: NextRequest) {
   const user = await getAdminUser()
   if (!user) return NextResponse.json({ error: 'Admin only' }, { status: 403 })
 
-  const { filmId, grade, reviewText } = await request.json()
+  const { filmId, grade, reviewText, replaceReview } = await request.json()
   const id = parseInt(filmId)
   if (isNaN(id)) return NextResponse.json({ error: 'filmId is required' }, { status: 400 })
   if (grade != null && !GRADE_RE.test(grade)) return NextResponse.json({ error: 'Invalid grade' }, { status: 400 })
-  if (grade == null && !reviewText?.trim()) return NextResponse.json({ error: 'Nothing to save' }, { status: 400 })
+  if (grade == null && !reviewText?.trim() && !replaceReview) return NextResponse.json({ error: 'Nothing to save' }, { status: 400 })
 
   const film = await query(`SELECT release_year FROM films WHERE film_id = $1`, [id])
   if (!film.rows.length) return NextResponse.json({ error: 'Film not found' }, { status: 404 })
+
+  // Full-text edit from the film page: replace the review text outright (empty clears it)
+  if (replaceReview) {
+    const text = typeof reviewText === 'string' ? reviewText.replace(/\r\n/g, '\n').trim() : ''
+    await query(
+      `INSERT INTO reviews (film_id, review_text) VALUES ($1, $2)
+       ON CONFLICT (film_id) DO UPDATE SET review_text = EXCLUDED.review_text, updated_at = CURRENT_TIMESTAMP`,
+      [id, text || null]
+    )
+    refreshSiteData()
+    return NextResponse.json({ ok: true })
+  }
 
   await query(
     `INSERT INTO reviews (film_id, grade, review_text)
