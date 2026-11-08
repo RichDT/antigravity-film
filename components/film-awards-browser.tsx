@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import { OtherAwardsRow, LinkedNamesList, RichPicksHexBadge } from "@/components/award-icons";
 import { formatNamesList } from "@/components/person-awards-browser";
@@ -28,7 +29,7 @@ export function FilmAwardsBrowser({ groupedNoms }: Props) {
     return {
       ...group,
       noms: showOnlyRichPicks 
-        ? group.noms.filter(nom => nom.hasRichPick)
+        ? group.noms.filter(nom => nom.hasRichPick || nom.considered)
         : group.noms
     };
   }).filter(group => group.noms.length > 0);
@@ -60,13 +61,16 @@ export function FilmAwardsBrowser({ groupedNoms }: Props) {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {displayedGroups.map((group, groupIdx) => (
+          {displayedGroups.map((group, groupIdx) => {
+            // Considerations (not yet official nominations) take the year page's consideration blue
+            const hasConsideration = group.noms.some((n: any) => n.considered && !n.hasRichPick);
+            return (
             <div 
               key={group.id} 
-              className="bg-card border border-border rounded-2xl overflow-hidden flex flex-col hover:border-accent/40 transition-colors animate-in fade-in slide-in-from-bottom-4 duration-500 fill-mode-both"
+              className={`bg-card border rounded-2xl overflow-hidden flex flex-col transition-colors animate-in fade-in slide-in-from-bottom-4 duration-500 fill-mode-both ${hasConsideration ? 'border-sky-500/25 hover:border-sky-400/50' : 'border-border hover:border-accent/40'}`}
               style={{ animationDelay: `${groupIdx * 100}ms` }}
             >
-              <div className="p-5 border-b border-border/50 flex items-center gap-3 bg-secondary/30">
+              <div className={`p-5 border-b flex items-center gap-3 ${hasConsideration ? 'border-sky-500/20 bg-sky-500/5' : 'border-border/50 bg-secondary/30'}`}>
                 <h3 className="font-serif font-bold text-lg text-foreground/90">{group.label}</h3>
               </div>
 
@@ -74,7 +78,8 @@ export function FilmAwardsBrowser({ groupedNoms }: Props) {
                 {group.noms.map((nom: any) => {
                   const badges = nom.badges || {};
                   const isWon = nom.hasRichPick && nom.win;
-                  const isFaint = !nom.hasRichPick;
+                  const isConsidering = !nom.hasRichPick && !!nom.considered;
+                  const isFaint = !nom.hasRichPick && !isConsidering;
 
                   return (
                     <div 
@@ -84,7 +89,7 @@ export function FilmAwardsBrowser({ groupedNoms }: Props) {
                       <div className="flex items-start justify-between gap-4 mb-3">
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-1">
-                            <Link href={`/year/${nom.year}`} className="touch-target text-[10px] font-bold tracking-widest uppercase text-accent/80 hover:underline">
+                            <Link href={`/year/${nom.year}`} className={`touch-target text-[10px] font-bold tracking-widest uppercase hover:underline ${isConsidering ? 'text-sky-400' : 'text-accent/80'}`}>
                               {nom.year}
                             </Link>
                           </div>
@@ -94,6 +99,11 @@ export function FilmAwardsBrowser({ groupedNoms }: Props) {
                             </Link>
                           </h4>
                         </div>
+                        {isConsidering && (
+                          <div className="flex-shrink-0 w-8 h-9 clip-hexagon bg-sky-500/20 flex items-center justify-center shadow-[0_0_10px_rgba(56,189,248,0.12)]" title="Rich Picks consideration">
+                            <Sparkles className="w-4 h-4 text-sky-400" />
+                          </div>
+                        )}
                         {nom.hasRichPick && (
                           <div className="flex-shrink-0">
                             <RichPicksHexBadge
@@ -241,7 +251,8 @@ export function FilmAwardsBrowser({ groupedNoms }: Props) {
                 })}
               </div>
             </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>

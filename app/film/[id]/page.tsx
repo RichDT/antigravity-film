@@ -4,8 +4,6 @@ import Image from "next/image";
 import { Trophy, Star, Film, Clapperboard, Award, Music, Scissors, Sparkles, PenTool, Palette, Globe, FileText, Wand2, Brush, Camera, Volume2, FileVideoCamera, UserStar, BookOpen, Theater, Shirt, MirrorRound, Piano, MicVocal, Headphones, SlidersHorizontal, PenLine } from "lucide-react";
 import { queryCached as query } from "@/lib/db";
 import {
-  getConsiderationsGrouped,
-  ConsiderationEntry,
   CATEGORY_ICON_MAPPING,
   CATEGORY_GROUPS_MAPPING,
   formatNamesList,
@@ -24,7 +22,6 @@ import {
 import { ExpandableGuildNominees } from "@/components/expandable-guild-nominees";
 import { OtherAwardsRow, LinkedNamesList } from "@/components/award-icons";
 import { FilmAwardsBrowser } from "@/components/film-awards-browser";
-import { ConsiderationsGrid } from "@/components/year-category-cards";
 import Link from "next/link";
 import { BackButton } from "@/components/back-button";
 import { FilmCommunity } from "@/components/community/FilmCommunity";
@@ -359,12 +356,15 @@ export default async function FilmPage(props: Props) {
   }
 
 
-  const nominations = Array.from(nominationsMap.values());
-
-  // Rich's considerations for this film, for any year whose Rich Picks nominations aren't set yet.
-  // Rendered with the year page's own consideration cards until the nominations replace them.
-  const considYearsRes = await query(`
-    SELECT DISTINCT c.year FROM considerations c
+  // Rich's considerations for years whose Rich Picks nominations aren't set yet — shown in
+  // Awards History until the nominations replace them.
+  const considRes = await query(`
+    SELECT c.consideration_id, c.year, d.name AS detail, c.character, cat.name AS category_name,
+           (SELECT p.person_id FROM people p WHERE p.name = d.name ORDER BY p.person_id LIMIT 1) AS person_id
+    FROM considerations c
+    JOIN categories cat USING (category_id)
+    -- a detail can list several people ("A, B"), split like the year page does
+    LEFT JOIN LATERAL unnest(string_to_array(c.detail, ', ')) AS d(name) ON true
     WHERE c.film_id = $1
       AND NOT EXISTS (
         SELECT 1 FROM nominations n
@@ -373,18 +373,39 @@ export default async function FilmPage(props: Props) {
         JOIN organizations o ON a.organization_id = o.organization_id
         WHERE o.short_name = 'Rich Picks' AND ce.year = c.year
       )
-    ORDER BY c.year DESC
+    ORDER BY c.consideration_id
   `, [filmId]);
-  const considerationsByYear = await Promise.all(considYearsRes.rows.map(async (r: any) => {
-    const all = await getConsiderationsGrouped(r.year);
-    const grouped: Record<string, ConsiderationEntry[]> = {};
-    for (const [cat, entries] of Object.entries(all)) {
-      const mine = entries.filter(e => e.film_id === filmId);
-      if (mine.length) grouped[cat] = mine;
+
+  const sameCategory = (a: string, b: string) =>
+    a === b || (['Editing', 'Film Editing'].includes(a) && ['Editing', 'Film Editing'].includes(b));
+  const normName = (n: string) => n.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();
+
+  for (const c of considRes.rows) {
+    const isActing = /actor|actress|performance/i.test(c.category_name);
+    const person = c.detail ? { id: c.person_id ?? undefined, name: c.detail, role: isActing ? (c.character || null) : null, sources: ['Rich Picks: considering'] } : null;
+    const existing = Array.from(nominationsMap.values()).find((e: any) =>
+      e.year === c.year && sameCategory(e.category_name, c.category_name) &&
+      (!isActing || !person || e.people.some((p: any) => (person.id && p.id === person.id) || normName(p.name) === normName(person.name)))
+    );
+    if (existing) {
+      existing.considered = true;
+      if (person && !isActing && !existing.people.some((p: any) => normName(p.name) === normName(person.name))) existing.people.push(person);
+      continue;
     }
-    return { year: r.year as number, grouped };
-  }));
-  const hasConsiderations = considerationsByYear.some(c => Object.keys(c.grouped).length > 0);
+    // Non-acting categories gather all considered people into one entry
+    const key = isActing ? `consid-${c.consideration_id}-${c.detail ?? ''}` : `consid-${c.category_name}-${c.year}`;
+    if (!nominationsMap.has(key)) {
+      nominationsMap.set(key, {
+        nomination_id: key, year: c.year, win: false, category_name: c.category_name,
+        org_name: 'Rich Picks', hasRichPick: false, considered: true,
+        allNominationIds: [], contributingOrgs: [], people: [],
+      });
+    }
+    if (person) nominationsMap.get(key).people.push(person);
+  }
+
+  const nominations = Array.from(nominationsMap.values());
+  const considerationYears = [...new Set(nominations.filter((n: any) => n.considered && !n.hasRichPick).map((n: any) => n.year as number))].sort((a, b) => b - a);
   const totalNoms = nominations.filter(n => n.hasRichPick).length;
   const totalWins = nominations.filter(n => n.hasRichPick && n.win).length;
 
@@ -612,8 +633,8 @@ export default async function FilmPage(props: Props) {
               <div className="h-px flex-1 bg-gradient-to-r from-border/60 to-transparent" />
             </div>
 
-            {considerationsByYear.map(({ year: cy, grouped }) => Object.keys(grouped).length > 0 && (
-              <div key={cy} className="mb-10">
+            {considerationYears.map(cy => (
+              <div key={cy}>
                 <div className="mb-6 flex items-start gap-3 bg-sky-500/10 border border-sky-500/30 rounded-lg px-4 py-3 text-sm">
                   <Sparkles className="w-4 h-4 mt-0.5 flex-shrink-0 text-sky-400" />
                   <span className="text-sky-200/90">
@@ -622,10 +643,9 @@ export default async function FilmPage(props: Props) {
                     {" "}<Link href="/picks" className="font-semibold text-sky-300 underline underline-offset-2 hover:text-sky-200">Make your own community picks →</Link>
                   </span>
                 </div>
-                <ConsiderationsGrid grouped={grouped} year={cy} filmIdMap={{}} />
               </div>
             ))}
-            {(!hasConsiderations || groupedNoms.length > 0) && <FilmAwardsBrowser groupedNoms={groupedNoms} />}
+            <FilmAwardsBrowser groupedNoms={groupedNoms} />
             <FilmCommunity filmId={filmId} richGrade={grade || null} />
             {reviewText && (
               <section className="mt-12" aria-labelledby="review-heading">
