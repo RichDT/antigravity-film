@@ -665,8 +665,8 @@ export default async function FilmPage(props: Props) {
                   <h2 id="review-heading" className="font-serif text-xl font-bold text-foreground">Rich&apos;s Review</h2>
                   <div className="h-px flex-1 bg-gradient-to-r from-border/60 to-transparent" />
                 </div>
-                <div className="rounded-lg border border-border bg-card p-5 md:p-6">
-                  <p className="font-serif text-[15px] md:text-base leading-relaxed text-foreground/90 whitespace-pre-line max-w-3xl">
+                <div className="rounded-lg border border-border bg-card px-5 py-6 md:px-8 md:py-7 max-w-3xl">
+                  <p className="font-sans text-base md:text-[17px] leading-[1.75] tracking-[0.005em] text-foreground/85 whitespace-pre-line">
                     {reviewText}
                   </p>
                 </div>
