@@ -80,12 +80,17 @@ function getCategoryIcon(iconName: string) {
   return icons[iconName] || Award;
 }
 
-function StatCard({ label, value, sub }: { label: string; value: string | number; sub?: string }) {
+function StatCard({ label, value, sub, link }: { label: string; value: string | number; sub?: string; link?: { href: string; text: string } }) {
   return (
     <div className="bg-card border border-border rounded-lg px-3 py-2.5">
       <div className="text-[10px] text-muted-foreground uppercase tracking-wider mb-0.5">{label}</div>
       <div className="font-serif text-xl font-bold text-accent">{value}</div>
       {sub && <div className="text-xs text-muted-foreground mt-0.5">{sub}</div>}
+      {link && (
+        <a href={link.href} className="touch-target inline-flex items-center gap-1 text-xs font-medium text-accent hover:underline underline-offset-2 mt-1.5">
+          {link.text}
+        </a>
+      )}
     </div>
   );
 }
@@ -587,7 +592,13 @@ export default async function FilmPage(props: Props) {
             iconClassName="w-6 h-6"
           />
 
-          <GradeHex grade={grade} />
+          {reviewText ? (
+            <a href="#review" title="Read Rich's review" aria-label={`Rich Picks grade ${grade || 'not set'}: read Rich's review`} className="flex-shrink-0 transition-transform hover:scale-105">
+              <GradeHex grade={grade} />
+            </a>
+          ) : (
+            <GradeHex grade={grade} />
+          )}
 
           <div className="text-center md:text-left flex-1 min-w-0">
             <div className="flex flex-wrap items-baseline justify-center md:justify-start gap-4 mb-2">
@@ -648,7 +659,7 @@ export default async function FilmPage(props: Props) {
             <FilmAwardsBrowser groupedNoms={groupedNoms} />
             <FilmCommunity filmId={filmId} richGrade={grade || null} />
             {reviewText && (
-              <section className="mt-12" aria-labelledby="review-heading">
+              <section id="review" className="mt-12 scroll-mt-24" aria-labelledby="review-heading">
                 <div className="flex items-center gap-3 mb-6">
                   <PenLine className="w-5 h-5 text-accent" />
                   <h2 id="review-heading" className="font-serif text-xl font-bold text-foreground">Rich&apos;s Review</h2>
@@ -670,7 +681,7 @@ export default async function FilmPage(props: Props) {
             </h2>
             
             <div className="flex flex-col gap-3">
-              <StatCard label="Rich Picks Grade" value={grade || "-"} sub="Overall quality" />
+              <StatCard label="Rich Picks Grade" value={grade || "-"} sub="Overall quality" link={reviewText ? { href: "#review", text: "Read Rich's review ↓" } : undefined} />
               
               {topTenRank && (
                 <StatCard label="Top 10 Rank" value={`#${topTenRank}`} sub={`Best of ${film.release_year}`} />
