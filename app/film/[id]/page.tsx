@@ -576,8 +576,16 @@ export default async function FilmPage(props: Props) {
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_260px] xl:grid-cols-[1fr_280px] gap-6 lg:gap-10">
           
           <div>
+            <div className="flex items-center gap-3 mb-8">
+              <Award className="w-5 h-5 text-accent" />
+              <h2 className="font-serif text-xl font-bold text-foreground">Awards History</h2>
+              <div className="h-px flex-1 bg-gradient-to-r from-border/60 to-transparent" />
+            </div>
+
+            <FilmAwardsBrowser groupedNoms={groupedNoms} />
+            <FilmCommunity filmId={filmId} richGrade={grade || null} />
             {reviewText && (
-              <section className="mb-12" aria-labelledby="review-heading">
+              <section className="mt-12" aria-labelledby="review-heading">
                 <div className="flex items-center gap-3 mb-6">
                   <PenLine className="w-5 h-5 text-accent" />
                   <h2 id="review-heading" className="font-serif text-xl font-bold text-foreground">Rich&apos;s Review</h2>
@@ -590,15 +598,6 @@ export default async function FilmPage(props: Props) {
                 </div>
               </section>
             )}
-
-            <div className="flex items-center gap-3 mb-8">
-              <Award className="w-5 h-5 text-accent" />
-              <h2 className="font-serif text-xl font-bold text-foreground">Awards History</h2>
-              <div className="h-px flex-1 bg-gradient-to-r from-border/60 to-transparent" />
-            </div>
-
-            <FilmAwardsBrowser groupedNoms={groupedNoms} />
-            <FilmCommunity filmId={filmId} richGrade={grade || null} />
       </div>
 
           {/* Right: Statistics Sidebar */}
