@@ -2,10 +2,11 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { EyeOff, ChevronDown, ChevronUp } from 'lucide-react';
+import { EyeOff, ChevronDown, ChevronUp, Play } from 'lucide-react';
 import { useAuthStatus } from '@/lib/use-auth-status';
 import type { UnseenFilm } from '@/lib/unseen-films';
 import { AddUnseenFilm } from '@/components/add-unseen-film';
+import { FestivalBadge, ReleaseLine, groupBySource } from '@/components/AnticipationBoard';
 
 export function UnseenFilmsTable({ films, year }: { films: UnseenFilm[]; year: number }) {
   const [expanded, setExpanded] = useState(false);
@@ -60,6 +61,31 @@ export function UnseenFilmsTable({ films, year }: { films: UnseenFilm[]; year: n
                       <span className="block text-[10px] text-muted-foreground/60 italic mt-0.5">
                         reviewed {film.review_year}; not considered for this year&apos;s awards (frozen)
                       </span>
+                    </div>
+                  ) : film.details ? (
+                    // 2026 on: keep the board's trailer, festival badges and release/streaming dates
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-baseline gap-2 flex-wrap">
+                        <Link href={`/film/${film.film_id}`} className="touch-target text-sm text-foreground/80 hover:text-accent transition-colors leading-snug">
+                          {film.title}
+                        </Link>
+                        {film.details.trailer_url && (
+                          <a href={film.details.trailer_url} target="_blank" rel="noopener noreferrer"
+                            className="relative inline-flex items-center gap-1 h-7 px-2.5 rounded-full border border-border bg-background/40 text-xs text-muted-foreground hover:text-accent hover:border-accent/50 transition-colors touch-target sm:h-auto sm:px-0 sm:gap-0.5 sm:rounded-none sm:border-0 sm:bg-transparent sm:text-[10px]"
+                            title={`Watch the official trailer for ${film.title} on YouTube`} aria-label={`Watch the official trailer for ${film.title}`}>
+                            <Play className="w-2.5 h-2.5 sm:w-2 sm:h-2 self-center" fill="currentColor" />
+                            Trailer
+                          </a>
+                        )}
+                        {film.details.accolades.length > 0 && (
+                          <div className="flex items-center gap-1 max-sm:gap-1.5 flex-wrap">
+                            {Object.entries(groupBySource(film.details.accolades)).map(([source, accs]) => (
+                              <FestivalBadge key={source} source={source} accolades={accs} />
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                      {(film.details.us_release_date || film.details.streaming_service) && <ReleaseLine film={{ title: film.title, ...film.details }} />}
                     </div>
                   ) : (
                     <Link

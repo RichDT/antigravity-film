@@ -34,7 +34,7 @@ const FESTIVAL_SOURCES = Object.entries(FESTIVAL_CONFIG).map(([key, val]) => ({ 
 
 type Accolade = { accolade_id: number; source: string; label: string };
 
-function FestivalBadge({ source, accolades }: { source: string; accolades: Accolade[] }) {
+export function FestivalBadge({ source, accolades }: { source: string; accolades: Accolade[] }) {
   const config = FESTIVAL_CONFIG[source] ?? { icon: Award, name: source, topPrize: /$^/ };
   const Icon = config.icon;
   const isTop = accolades.some(a => config.topPrize.test(a.label));
@@ -115,7 +115,9 @@ function sectionize(films: AnticipationFilm[]): Record<SectionKey, AnticipationF
   return out;
 }
 
-function ReleaseLine({ film }: { film: AnticipationFilm }) {
+export type ReleaseInfo = Pick<AnticipationFilm, 'title' | 'us_release_date' | 'release_venue' | 'streaming_date' | 'streaming_service' | 'streaming_url'>;
+
+export function ReleaseLine({ film }: { film: ReleaseInfo }) {
   const today = todayInSF();
   const venue = film.release_venue ?? 'Release';
   const inTheaters = venue === 'Theaters';
@@ -225,7 +227,7 @@ function CommunityButtons({ status, wantCount, onWant, onSeen }: {
   );
 }
 
-function groupBySource(accolades: Accolade[]): Record<string, Accolade[]> {
+export function groupBySource(accolades: Accolade[]): Record<string, Accolade[]> {
   const out: Record<string, Accolade[]> = {};
   for (const a of accolades) (out[a.source] ??= []).push(a);
   return out;

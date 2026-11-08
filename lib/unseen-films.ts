@@ -8,7 +8,22 @@ export interface UnseenFilm {
   source: 'auto' | 'manual';
   status: 'unseen' | 'reviewed_late';
   review_year?: number;
+  /** From 2026 on, the board's details carry over once the year's awards are done */
+  details?: UnseenFilmDetails;
 }
+
+export interface UnseenFilmDetails {
+  trailer_url: string | null;
+  us_release_date: string | null;
+  release_venue: string | null;
+  streaming_date: string | null;
+  streaming_service: string | null;
+  streaming_url: string | null;
+  accolades: { accolade_id: number; source: string; label: string }[];
+}
+
+/** First awards year whose Films Not Screened list keeps trailers, festival badges and release dates. */
+export const DETAILED_UNSEEN_FROM_YEAR = 2026;
 
 export async function getUnseenFilmsForYear(year: number): Promise<UnseenFilm[]> {
   let res;
@@ -85,6 +100,22 @@ export async function getUnseenFilmsForYear(year: number): Promise<UnseenFilm[]>
       status: hasGrade ? 'reviewed_late' : 'unseen',
       review_year: reviewYear,
     });
+  }
+
+  if (year >= DETAILED_UNSEEN_FROM_YEAR && films.length > 0) {
+    const det = await query(
+      `SELECT f.film_id, f.trailer_url,
+              to_char(f.us_release_date, 'YYYY-MM-DD') AS us_release_date, f.release_venue,
+              to_char(f.streaming_date, 'YYYY-MM-DD') AS streaming_date, f.streaming_service, f.streaming_url,
+              COALESCE(json_agg(json_build_object('accolade_id', a.accolade_id, 'source', a.source, 'label', a.label)
+                                ORDER BY a.created_at) FILTER (WHERE a.accolade_id IS NOT NULL), '[]'::json) AS accolades
+       FROM films f LEFT JOIN film_accolades a USING (film_id)
+       WHERE f.film_id = ANY($1)
+       GROUP BY f.film_id`,
+      [films.map(f => f.film_id)]
+    );
+    const byId = new Map<number, UnseenFilmDetails>(det.rows.map((r: any) => [r.film_id, r]));
+    for (const f of films) f.details = byId.get(f.film_id);
   }
 
   return films.sort((a, b) => a.title.localeCompare(b.title));
