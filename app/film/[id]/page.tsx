@@ -1,7 +1,7 @@
 import React from "react";
 import { notFound } from "next/navigation";
 import Image from "next/image";
-import { Trophy, Star, Film, Clapperboard, Award, Music, Scissors, Sparkles, PenTool, Palette, Globe, FileText, Wand2, Brush, Camera, Volume2, FileVideoCamera, UserStar, BookOpen, Theater, Shirt, MirrorRound, Piano, MicVocal, Headphones, SlidersHorizontal } from "lucide-react";
+import { Trophy, Star, Film, Clapperboard, Award, Music, Scissors, Sparkles, PenTool, Palette, Globe, FileText, Wand2, Brush, Camera, Volume2, FileVideoCamera, UserStar, BookOpen, Theater, Shirt, MirrorRound, Piano, MicVocal, Headphones, SlidersHorizontal, PenLine } from "lucide-react";
 import { queryCached as query } from "@/lib/db";
 import {
   CATEGORY_ICON_MAPPING,
@@ -206,7 +206,7 @@ export default async function FilmPage(props: Props) {
   `, [filmId]),
     query(`SELECT person_id, crew_role FROM film_crew WHERE film_id = $1`, [filmId]),
     getAllRichPicksStats(),
-    query(`SELECT grade FROM reviews WHERE film_id = $1`, [filmId]),
+    query(`SELECT grade, review_text FROM reviews WHERE film_id = $1`, [filmId]),
     getReverseCanonicalMap(),
   ]);
 
@@ -234,6 +234,7 @@ export default async function FilmPage(props: Props) {
 
   // DB reviews table is the authoritative grade source; films.json is fallback for legacy data
   const dbGrade = reviewRes.rows[0]?.grade || "";
+  const reviewText: string = (reviewRes.rows[0]?.review_text || "").trim();
 
   const filmJsonIndex = allYearFilms.findIndex((f: any) => f.title === film.title);
   if (filmJsonIndex !== -1) {
@@ -575,6 +576,21 @@ export default async function FilmPage(props: Props) {
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_260px] xl:grid-cols-[1fr_280px] gap-6 lg:gap-10">
           
           <div>
+            {reviewText && (
+              <section className="mb-12" aria-labelledby="review-heading">
+                <div className="flex items-center gap-3 mb-6">
+                  <PenLine className="w-5 h-5 text-accent" />
+                  <h2 id="review-heading" className="font-serif text-xl font-bold text-foreground">Rich&apos;s Review</h2>
+                  <div className="h-px flex-1 bg-gradient-to-r from-border/60 to-transparent" />
+                </div>
+                <div className="rounded-lg border border-border bg-card p-5 md:p-6">
+                  <p className="font-serif text-[15px] md:text-base leading-relaxed text-foreground/90 whitespace-pre-line max-w-3xl">
+                    {reviewText}
+                  </p>
+                </div>
+              </section>
+            )}
+
             <div className="flex items-center gap-3 mb-8">
               <Award className="w-5 h-5 text-accent" />
               <h2 className="font-serif text-xl font-bold text-foreground">Awards History</h2>

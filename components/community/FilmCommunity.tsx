@@ -14,9 +14,20 @@ interface Take { comment_id: number; handle: string; body: string; created_at: s
 function Hex({ grade, label }: { grade: string | null; label: string }) {
   return (
     <div className="flex flex-col items-center gap-1 min-w-[4.5rem]">
-      <div className={`w-11 h-12 clip-hexagon flex items-center justify-center text-sm font-bold font-serif ${grade ? getGradeColor(grade) : 'bg-muted text-muted-foreground'}`}>
-        {grade ?? '–'}
-      </div>
+      {grade?.includes('//') ? (() => {
+        const [hi, lo] = grade.split('//').map(s => s.trim());
+        return (
+          <div className={`w-11 h-12 clip-hexagon flex flex-col items-center justify-center font-bold font-serif leading-none ${getGradeColor(hi)}`}>
+            <span className="text-[11px] leading-none">{hi}</span>
+            <div className="w-6 h-[1px] bg-white/80 my-[2px]" />
+            <span className="text-[11px] leading-none">{lo}</span>
+          </div>
+        );
+      })() : (
+        <div className={`w-11 h-12 clip-hexagon flex items-center justify-center text-sm font-bold font-serif ${grade ? getGradeColor(grade) : 'bg-muted text-muted-foreground'}`}>
+          {grade ?? '–'}
+        </div>
+      )}
       <span className="text-[11px] text-muted-foreground text-center leading-tight">{label}</span>
     </div>
   );
@@ -150,7 +161,7 @@ export function FilmCommunity({ filmId, richGrade }: { filmId: number; richGrade
 
       <div className="rounded-lg border border-border bg-card p-4 space-y-5">
         <div className="flex flex-wrap items-end gap-4 sm:gap-6">
-          <Hex grade={richLocal ? richLocal.split('//')[0].trim() : null} label={richLocal ? 'Rich' : 'Rich: not yet'} />
+          <Hex grade={richLocal || null} label={richLocal ? 'Rich' : 'Rich: not yet'} />
           <Hex grade={liveStats?.rating_median ?? null} label={`Community median${liveStats?.rating_count ? ` · ${liveStats.rating_count}` : ''}`} />
           {!isAdmin && <Hex grade={myGrade} label={member.userId ? 'You' : 'You (sign in)'} />}
           <div className="ml-auto flex flex-wrap gap-2">
