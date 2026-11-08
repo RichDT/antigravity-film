@@ -5,7 +5,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ChevronDown, ChevronUp, Plus, X, Loader2, Eye, Bookmark, BookmarkCheck, CheckCircle2, Circle, Ticket, CalendarDays, Clapperboard, Tv, CircleHelp, EyeOff, Award, TreePalm, Sailboat, PawPrint, Sun, Leaf, MountainSnow, Building2, Landmark, Guitar, Crown, Shell, Waves, Cat, Play, type LucideIcon } from 'lucide-react';
 import { useAuthStatus } from '@/lib/use-auth-status';
-import { useMember, useCommunityStats, type FilmStatus, type CommunityStats } from '@/lib/community';
+import { GRADES, useMember, useCommunityStats, type FilmStatus, type CommunityStats } from '@/lib/community';
+import { getGradeColor } from '@/components/grade-hex';
 import { QuickReview } from '@/components/community/QuickReview';
 import type { AnticipationFilm, RPPedigree } from '@/lib/awards';
 import { AddUnseenFilm } from '@/components/add-unseen-film';
@@ -72,7 +73,7 @@ function formatDate(iso: string, withWeekday = false): string {
   });
 }
 
-type SectionKey = 'previews' | 'coming' | 'out' | 'streaming' | 'tba' | 'hidden';
+type SectionKey = 'previews' | 'coming' | 'out' | 'streaming' | 'tba' | 'seen' | 'hidden';
 
 const SECTIONS: { key: SectionKey; label: string; hint: string; icon: LucideIcon; adminOnly?: boolean }[] = [
   { key: 'previews',  label: 'Preview screenings', hint: 'SF early access', icon: Ticket },
@@ -80,6 +81,7 @@ const SECTIONS: { key: SectionKey; label: string; hint: string; icon: LucideIcon
   { key: 'out',       label: 'Out now',            hint: 'Not streaming yet',       icon: Clapperboard },
   { key: 'streaming', label: 'Streaming now',      hint: 'Watch at home',                     icon: Tv },
   { key: 'tba',       label: 'Date TBA',           hint: 'Trailer, no date',  icon: CircleHelp },
+  { key: 'seen',      label: 'Rich has seen',      hint: 'Graded · best first', icon: Eye },
   { key: 'hidden',    label: 'Hidden',             hint: 'Admin only', icon: EyeOff, adminOnly: true },
 ];
 
@@ -88,6 +90,7 @@ function isStreamingLive(f: AnticipationFilm, today: string): boolean {
 }
 
 function sectionOf(f: AnticipationFilm, today: string): SectionKey {
+  if (f.rich_grade) return 'seen';
   if (f.previews.length > 0) return 'previews';
   if (isStreamingLive(f, today)) return 'streaming';
   if (f.us_release_date && f.us_release_date > today) return 'coming';
@@ -97,7 +100,7 @@ function sectionOf(f: AnticipationFilm, today: string): SectionKey {
 
 function sectionize(films: AnticipationFilm[]): Record<SectionKey, AnticipationFilm[]> {
   const today = todayInSF();
-  const out: Record<SectionKey, AnticipationFilm[]> = { previews: [], coming: [], out: [], streaming: [], tba: [], hidden: [] };
+  const out: Record<SectionKey, AnticipationFilm[]> = { previews: [], coming: [], out: [], streaming: [], tba: [], seen: [], hidden: [] };
   for (const f of films) out[sectionOf(f, today)].push(f);
   const byTitle = (a: AnticipationFilm, b: AnticipationFilm) => a.title.localeCompare(b.title);
   out.previews.sort((a, b) => a.previews[0].screening_date.localeCompare(b.previews[0].screening_date) || byTitle(a, b));
@@ -105,6 +108,9 @@ function sectionize(films: AnticipationFilm[]): Record<SectionKey, AnticipationF
   out.out.sort((a, b) => b.us_release_date!.localeCompare(a.us_release_date!) || byTitle(a, b));
   out.streaming.sort((a, b) => b.streaming_date!.localeCompare(a.streaming_date!) || byTitle(a, b));
   out.tba.sort(byTitle);
+  // Best grade first (compound grades like "A-//B+" rank by their first part)
+  const rank = (g: string) => { const i = (GRADES as readonly string[]).indexOf(g.split('//')[0].trim()); return i < 0 ? GRADES.length : i; };
+  out.seen.sort((a, b) => rank(a.rich_grade!) - rank(b.rich_grade!) || byTitle(a, b));
   out.hidden.sort(byTitle);
   return out;
 }
@@ -424,6 +430,11 @@ export function AnticipationBoard({
                     {sections[sec.key].map(film => (
                     <li key={film.film_id} className="px-3 py-2.5">
                       <div className="flex items-baseline gap-2 flex-wrap">
+                        {film.rich_grade && (
+                          <span title={`Rich's grade: ${film.rich_grade}`} className={`self-center w-7 h-8 clip-hexagon flex items-center justify-center text-[10px] font-bold font-serif shrink-0 ${getGradeColor(film.rich_grade.split('//')[0])}`}>
+                            {film.rich_grade.split('//')[0]}
+                          </span>
+                        )}
                         <Link
                           href={`/film/${film.film_id}`}
                           className="touch-target text-sm text-foreground/90 hover:text-accent transition-colors font-medium leading-snug"

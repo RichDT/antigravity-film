@@ -1514,6 +1514,8 @@ export interface AnticipationFilm {
     pedigree: RPPedigree[];
     accolades: { accolade_id: number; source: string; label: string }[];
     previews: { event_name: string; theatre: string; screening_date: string; showtimes: string | null; ticket_url: string }[];
+    /** Rich's grade once he has seen the film; graded films move to the board's "Rich has seen" list */
+    rich_grade: string | null;
 }
 
 export async function getAnticipationBoardFilms(year: number): Promise<AnticipationFilm[]> {
@@ -1524,6 +1526,7 @@ export async function getAnticipationBoardFilms(year: number): Promise<Anticipat
                f.film_id, f.title, f.release_year, f.trailer_url,
                to_char(f.us_release_date, 'YYYY-MM-DD') AS us_release_date, f.release_venue,
                to_char(f.streaming_date, 'YYYY-MM-DD') AS streaming_date, f.streaming_service, f.streaming_url,
+               NULLIF((SELECT r.grade FROM reviews r WHERE r.film_id = f.film_id), '') AS rich_grade,
                COALESCE((
                  SELECT json_agg(json_build_object('event_name', sp.event_name, 'theatre', sp.theatre,
                    'screening_date', to_char(sp.screening_date, 'YYYY-MM-DD'), 'showtimes', sp.showtimes, 'ticket_url', sp.ticket_url)
