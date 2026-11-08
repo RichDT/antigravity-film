@@ -266,6 +266,18 @@ export default async function FilmPage(props: Props) {
     }
   } else {
     grade = dbGrade;
+    // Years kept only in the database (2026 on): rank among that year's graded films, the same
+    // ordering the year page's Top 10 uses (grade, then Rich Picks wins, then nominations)
+    if (grade && allYearFilms.length === 0) {
+      const yearReviews = await query(
+        `SELECT f.title, r.grade FROM reviews r JOIN films f ON f.film_id = r.film_id
+         WHERE f.release_year = $1 AND r.grade IS NOT NULL AND r.grade != ''`, [film.release_year]);
+      const ranked = yearReviews.rows
+        .map((row: any) => ({ title: row.title as string, grade: row.grade as string, ...(yearStat[row.title] || { wins: 0, noms: 0 }) }))
+        .sort((a: any, b: any) => (getGradeValue(b.grade) - getGradeValue(a.grade)) || (b.wins - a.wins) || (b.noms - a.noms));
+      const idx = ranked.findIndex((r: any) => r.title === film.title);
+      if (idx >= 0 && idx < 10) topTenRank = idx + 1;
+    }
   }
 
   const rawAllNominations = nomRes.rows;
@@ -592,6 +604,9 @@ export default async function FilmPage(props: Props) {
     });
   });
 
+  const hasExternalNoms = Object.values(ceremonyStats).some(c => c.n > 0);
+  const hasGlance = !!grade || !!topTenRank || !!(film.budget || film.box_office) || totalNoms > 0 || hasExternalNoms;
+
   return (
     <div className="min-h-screen bg-background text-foreground pb-20 font-sans">
       <div className="relative pt-24 pb-12 px-6 border-b border-border bg-card/30 overflow-hidden">
@@ -687,12 +702,16 @@ export default async function FilmPage(props: Props) {
 
           {/* Right: Statistics Sidebar */}
           <div className="space-y-4">
-            <h2 className="font-serif text-sm font-bold text-muted-foreground uppercase tracking-wider mb-2">
-              At a Glance
-            </h2>
+            {hasGlance && (
+              <h2 className="font-serif text-sm font-bold text-muted-foreground uppercase tracking-wider mb-2">
+                At a Glance
+              </h2>
+            )}
             
             <div className="flex flex-col gap-3">
-              <StatCard label="Rich Picks Grade" value={grade || "-"} sub="Overall quality" link={reviewText ? { href: "#review", text: "Read Rich's review ↓" } : undefined} />
+              {grade && (
+                <StatCard label="Rich Picks Grade" value={grade} sub="Overall quality" link={reviewText ? { href: "#review", text: "Read Rich's review ↓" } : undefined} />
+              )}
               
               {topTenRank && (
                 <StatCard label="Top 10 Rank" value={`#${topTenRank}`} sub={`Best of ${film.release_year}`} />
@@ -715,19 +734,25 @@ export default async function FilmPage(props: Props) {
                 </div>
               )}
               
-              <StatCard 
-                label="Rich Picks Wins" 
-                value={totalWins} 
-                sub={`of ${totalNoms} categories`} 
-              />
+              {/* Boxes appear only once there is something to show (e.g. no nominations yet → no wins boxes) */}
+              {totalNoms > 0 && (
+                <StatCard 
+                  label="Rich Picks Wins" 
+                  value={totalWins} 
+                  sub={`of ${totalNoms} categories`} 
+                />
+              )}
               
-              <StatCard 
-                label="External Wins" 
-                value={externalWins} 
-                sub="Oscar / Globe / SAG / DGA / BAFTA" 
-              />
+              {hasExternalNoms && (
+                <StatCard 
+                  label="External Wins" 
+                  value={externalWins} 
+                  sub="Oscar / Globe / SAG / DGA / BAFTA" 
+                />
+              )}
 
               {/* Ceremony Breakdown */}
+              {hasExternalNoms && (
               <div className="bg-card border border-border rounded-lg px-3 py-2.5 mt-2 shadow-sm">
                 <div className="text-[10px] text-muted-foreground uppercase tracking-wider mb-2 font-semibold">By Ceremony</div>
                 {Object.entries(ceremonyStats).map(([key, stats]) => {
@@ -746,6 +771,7 @@ export default async function FilmPage(props: Props) {
                   );
                 })}
               </div>
+              )}
             </div>
           </div>
         </div>
