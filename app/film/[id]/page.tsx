@@ -243,7 +243,7 @@ export default async function FilmPage(props: Props) {
   // DB reviews table is the authoritative grade source; films.json is fallback for legacy data
   const dbGrade = reviewRes.rows[0]?.grade || "";
   const reviewText: string = (reviewRes.rows[0]?.review_text || "").trim();
-  const reviewSegments = reviewText ? await formatReview(reviewText, { filmTitle: filmRes.rows[0]?.title ?? "" }) : [];
+  const reviewSegments = reviewText ? (await formatReview(reviewText, { filmTitle: filmRes.rows[0]?.title ?? "" })).segments : [];
 
   const filmJsonIndex = allYearFilms.findIndex((f: any) => f.title === film.title);
   if (filmJsonIndex !== -1) {

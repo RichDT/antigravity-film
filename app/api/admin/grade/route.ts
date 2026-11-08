@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { refreshSiteData } from '@/lib/refresh-site'
 import { query } from '@/lib/db'
 import { getAdminUser } from '@/lib/auth'
+import { formatReview } from '@/lib/review-format'
 
 const GRADE_RE = /^(A\+|A|A-|B\+|B|B-|C\+|C|C-|D\+|D|D-|F)$/
 
@@ -17,16 +18,18 @@ export async function POST(request: NextRequest) {
   if (grade != null && !GRADE_RE.test(grade)) return NextResponse.json({ error: 'Invalid grade' }, { status: 400 })
   if (grade == null && !reviewText?.trim() && !replaceReview) return NextResponse.json({ error: 'Nothing to save' }, { status: 400 })
 
-  const film = await query(`SELECT release_year FROM films WHERE film_id = $1`, [id])
+  const film = await query(`SELECT release_year, title FROM films WHERE film_id = $1`, [id])
   if (!film.rows.length) return NextResponse.json({ error: 'Film not found' }, { status: 404 })
 
   // Full-text edit from the film page: replace the review text outright (empty clears it)
   if (replaceReview) {
     const text = typeof reviewText === 'string' ? reviewText.replace(/\r\n/g, '\n').trim() : ''
+    // Names, titles and cited years are corrected to the database's official versions
+    const corrected = text ? (await formatReview(text, { filmTitle: film.rows[0].title })).correctedRaw : ''
     await query(
       `INSERT INTO reviews (film_id, review_text) VALUES ($1, $2)
        ON CONFLICT (film_id) DO UPDATE SET review_text = EXCLUDED.review_text, updated_at = CURRENT_TIMESTAMP`,
-      [id, text || null]
+      [id, corrected || null]
     )
     refreshSiteData()
     return NextResponse.json({ ok: true })
@@ -39,7 +42,7 @@ export async function POST(request: NextRequest) {
        grade = COALESCE(EXCLUDED.grade, reviews.grade),
        review_text = COALESCE(EXCLUDED.review_text, reviews.review_text),
        updated_at = CURRENT_TIMESTAMP`,
-    [id, grade ?? null, reviewText?.trim() || null]
+    [id, grade ?? null, reviewText?.trim() ? (await formatReview(reviewText.trim(), { filmTitle: film.rows[0].title })).correctedRaw : null]
   )
 
   refreshSiteData()

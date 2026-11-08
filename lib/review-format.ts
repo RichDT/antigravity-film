@@ -11,7 +11,14 @@ import { queryCached as query } from '@/lib/db'
 
 export type ReviewSegment = { text: string; italic?: boolean; href?: string }
 
-type Range = { start: number; end: number; italic: boolean; href?: string; priority: number }
+type Range = { start: number; end: number; italic: boolean; href?: string; priority: number; replace?: string }
+
+export type ReviewFormatResult = {
+  segments: ReviewSegment[]
+  /** The raw text with spellings and cited years corrected to the database's official versions */
+  correctedRaw: string
+  corrections: { from: string; to: string }[]
+}
 
 const LOANWORDS = [
   'début', 'débuts', 'magnum opus', 'magna opera', 'oeuvre', 'œuvre', 'auteur', 'auteurs', 'auteurist',
@@ -45,8 +52,8 @@ const WORD = /[\p{L}\p{N}][\p{L}\p{M}\p{N}'’\-]*/gu
 type Tok = { s: number; e: number; w: string }
 
 // Accent-insensitive match key (JS side mirrors FOLD_SQL)
-const ACC_FROM = 'áàâäãåéèêëíìîïóòôöõøúùûüñçýÿ'
-const ACC_TO   = 'aaaaaaeeeeiiiiooooooouuuuncyy'
+const ACC_FROM = 'áàâäãåāąéèêëēęěíìîïīóòôöõøōőúùûüūůűñńňçćčýÿłśšşżźžřďť'
+const ACC_TO   = 'aaaaaaaaeeeeeeeiiiiioooooooouuuuuuunnncccyylssszzzrdt'
 const fold = (s: string) => [...s.toLowerCase()].map(ch => { const k = ACC_FROM.indexOf(ch); return k >= 0 ? ACC_TO[k] : ch }).join('')
 const FOLD_SQL = (col: string) => `translate(lower(${col}), '${ACC_FROM}', '${ACC_TO}')`
 
@@ -61,9 +68,10 @@ function tokenize(text: string): Tok[] {
 }
 
 /** Strip *asterisk* markup, returning plain text and the explicit italic ranges. */
-function parseMarkup(raw: string): { text: string; em: { start: number; end: number }[] } {
+function parseMarkup(raw: string): { text: string; em: { start: number; end: number }[]; map: number[] } {
   let text = ''
   const em: { start: number; end: number }[] = []
+  const map: number[] = [] // plain-text index → raw index
   let i = 0
   while (i < raw.length) {
     if (raw[i] === '*') {
@@ -71,18 +79,21 @@ function parseMarkup(raw: string): { text: string; em: { start: number; end: num
       const inner = close > i + 1 ? raw.slice(i + 1, close) : ''
       if (close > i + 1 && !inner.includes('\n')) {
         em.push({ start: text.length, end: text.length + inner.length })
+        for (let k = 0; k < inner.length; k++) map.push(i + 1 + k)
         text += inner
         i = close + 1
         continue
       }
     }
+    map.push(i)
     text += raw[i++]
   }
-  return { text, em }
+  map.push(raw.length)
+  return { text, em, map }
 }
 
-export async function formatReview(raw: string, opts: { filmTitle: string }): Promise<ReviewSegment[]> {
-  const { text, em } = parseMarkup(raw)
+export async function formatReview(raw: string, opts: { filmTitle: string }): Promise<ReviewFormatResult> {
+  const { text, em, map } = parseMarkup(raw)
   const toks = tokenize(text)
   const ranges: Range[] = []
   const lower = (s: string) => s.toLowerCase()
@@ -94,19 +105,19 @@ export async function formatReview(raw: string, opts: { filmTitle: string }): Pr
   const plainSep = (a: Tok, b: Tok) => /^[ \t]+$/.test(text.slice(a.e, b.s)) || /^[ \t]*:[ \t]+$/.test(text.slice(a.e, b.s))
 
   // ── 1. Year-anchored title candidates ──────────────────────────────────────
-  type Anchor = { year: number; dir: 'fwd' | 'back'; startTok: number; candidates: { s: number; e: number }[]; fallback: { s: number; e: number } | null }
+  type Anchor = { year: number; yearStart: number; dir: 'fwd' | 'back'; startTok: number; candidates: { s: number; e: number }[]; fallback: { s: number; e: number } | null }
   const anchors: Anchor[] = []
   // Year markers: (2002) / (Creator [creator], 2021-present), [2015] inside parentheses,
   // and "Title, 2023)" closing a parenthetical
   const YEAR = '(1[89]\\d\\d|20\\d\\d)'
-  const marks: { open: number; close: number; year: number; backOnly: boolean }[] = []
+  const marks: { open: number; close: number; year: number; yearStart: number; backOnly: boolean }[] = []
   for (const m of text.matchAll(new RegExp(`\\(([^()\\n]*?\\b${YEAR}\\b[^()\\n]*)\\)`, 'g')))
-    marks.push({ open: m.index!, close: m.index! + m[0].length, year: parseInt(m[2], 10), backOnly: false })
+    marks.push({ open: m.index!, close: m.index! + m[0].length, year: parseInt(m[2], 10), yearStart: m.index! + 1 + m[1].search(new RegExp(`\\b${m[2]}\\b`)), backOnly: false })
   for (const m of text.matchAll(new RegExp(`\\[${YEAR}(?:[–-](?:\\d{4}|present))?\\]`, 'g')))
-    marks.push({ open: m.index!, close: m.index! + m[0].length, year: parseInt(m[1], 10), backOnly: false })
+    marks.push({ open: m.index!, close: m.index! + m[0].length, year: parseInt(m[1], 10), yearStart: m.index! + 1, backOnly: false })
   for (const m of text.matchAll(new RegExp(`,[ \\t]*${YEAR}(?:[–-](?:\\d{4}|present))?[ \\t]*\\)`, 'g')))
-    marks.push({ open: m.index!, close: m.index! + m[0].length, year: parseInt(m[1], 10), backOnly: true })
-  for (const { open, close, year, backOnly } of marks) {
+    marks.push({ open: m.index!, close: m.index! + m[0].length, year: parseInt(m[1], 10), yearStart: m.index! + m[0].indexOf(m[1]), backOnly: true })
+  for (const { open, close, year, yearStart, backOnly } of marks) {
     const prev = tokIndexBefore(open)
     const prevTok = prev >= 0 ? toks[prev] : null
     const touchesPrev = prevTok && /^[ \t]*$/.test(text.slice(prevTok.e, open))
@@ -128,7 +139,7 @@ export async function formatReview(raw: string, opts: { filmTitle: string }): Pr
           else if (!MINOR.has(lower(toks[j].w))) break
         }
       }
-      anchors.push({ year, dir: 'fwd', startTok: first, candidates, fallback: end >= 0 ? { s: toks[first].s, e: toks[end].e } : null })
+      anchors.push({ year, yearStart, dir: 'fwd', startTok: first, candidates, fallback: end >= 0 ? { s: toks[first].s, e: toks[end].e } : null })
     } else if (prevTok && touchesPrev) {
       // Title (Year) / Title (Creator [creator], Years) — title precedes
       const last = prev
@@ -147,7 +158,7 @@ export async function formatReview(raw: string, opts: { filmTitle: string }): Pr
         // A run can't open on a lowercase minor word
         while (start < last && !isCap(toks[start].w)) start++
       }
-      anchors.push({ year, dir: 'back', startTok: last, candidates, fallback: start >= 0 ? { s: toks[start].s, e: toks[last].e } : null })
+      anchors.push({ year, yearStart, dir: 'back', startTok: last, candidates, fallback: start >= 0 ? { s: toks[start].s, e: toks[last].e } : null })
     }
   }
 
@@ -175,21 +186,21 @@ export async function formatReview(raw: string, opts: { filmTitle: string }): Pr
       ? query(`SELECT film_id, title, release_year FROM films WHERE ${FOLD_SQL('title')} = ANY($1)`, [[...titleKeys]])
       : Promise.resolve({ rows: [] as any[] }),
     nameCands.length
-      ? query(`SELECT DISTINCT ON (${FOLD_SQL('p.name')}) p.person_id, ${FOLD_SQL('p.name')} AS lname
+      ? query(`SELECT DISTINCT ON (${FOLD_SQL('p.name')}) p.person_id, p.name, ${FOLD_SQL('p.name')} AS lname
                FROM people p LEFT JOIN nomination_people np USING (person_id)
                WHERE ${FOLD_SQL('p.name')} = ANY($1)
                GROUP BY p.person_id, p.name
                ORDER BY ${FOLD_SQL('p.name')}, count(np.nomination_id) DESC, p.person_id`, [[...new Set(nameCands.map(c => c.key))]])
       : Promise.resolve({ rows: [] as any[] }),
   ])
-  const filmsByTitle = new Map<string, { id: number; year: number }[]>()
+  const filmsByTitle = new Map<string, { id: number; year: number; title: string }[]>()
   for (const f of filmRes.rows as any[]) {
     const k = fold(f.title)
     if (!filmsByTitle.has(k)) filmsByTitle.set(k, [])
-    filmsByTitle.get(k)!.push({ id: f.film_id, year: f.release_year })
+    filmsByTitle.get(k)!.push({ id: f.film_id, year: f.release_year, title: f.title })
   }
-  const personByName = new Map<string, number>()
-  for (const p of peopleRes.rows as any[]) personByName.set(p.lname, p.person_id)
+  const personByName = new Map<string, { id: number; name: string }>()
+  for (const p of peopleRes.rows as any[]) personByName.set(p.lname, { id: p.person_id, name: p.name })
 
   const findFilm = (title: string, year?: number) => {
     const list = filmsByTitle.get(fold(title)) ?? []
@@ -198,17 +209,23 @@ export async function formatReview(raw: string, opts: { filmTitle: string }): Pr
   }
 
   // ── 4. Build ranges ───────────────────────────────────────────────────────
-  const knownTitles = new Map<string, string | undefined>() // exact title text → href
+  // exact title text as written → link and the database's official spelling
+  const knownTitles = new Map<string, { href?: string; official?: string }>()
   for (const a of anchors) {
-    let best: { s: number; e: number; href: string } | null = null
+    let best: { s: number; e: number; href: string; official: string; year: number } | null = null
     for (const c of a.candidates) {
       const f = findFilm(text.slice(c.s, c.e), a.year)
-      if (f && (!best || c.e - c.s > best.e - best.s)) best = { ...c, href: `/film/${f.id}` }
+      if (f && (!best || c.e - c.s > best.e - best.s)) best = { ...c, href: `/film/${f.id}`, official: f.title, year: f.year }
     }
-    const r = best ?? (a.fallback ? { ...a.fallback, href: undefined } : null)
-    if (!r) continue
-    ranges.push({ start: r.s, end: r.e, italic: true, href: r.href, priority: 3 })
-    knownTitles.set(text.slice(r.s, r.e), r.href)
+    if (best) {
+      ranges.push({ start: best.s, end: best.e, italic: true, href: best.href, priority: 3, replace: best.official })
+      knownTitles.set(text.slice(best.s, best.e), { href: best.href, official: best.official })
+      // The cited year must match the film's year in the database
+      if (best.year !== a.year) ranges.push({ start: a.yearStart, end: a.yearStart + 4, italic: false, priority: 5, replace: String(best.year) })
+    } else if (a.fallback) {
+      ranges.push({ start: a.fallback.s, end: a.fallback.e, italic: true, priority: 3 })
+      knownTitles.set(text.slice(a.fallback.s, a.fallback.e), {})
+    }
   }
   for (const r of em) {
     const t = text.slice(r.start, r.end)
@@ -216,23 +233,23 @@ export async function formatReview(raw: string, opts: { filmTitle: string }): Pr
     const near = text.slice(Math.max(0, r.start - 12), r.start) + text.slice(r.end, r.end + 40)
     const y = near.match(/\((?:[^()]*?)\b(1[89]\d\d|20\d\d)\b/)?.[1]
     const f = findFilm(t, y ? parseInt(y, 10) : undefined)
-    ranges.push({ start: r.start, end: r.end, italic: true, href: f ? `/film/${f.id}` : undefined, priority: 4 })
-    if (f) knownTitles.set(t, `/film/${f.id}`)
+    ranges.push({ start: r.start, end: r.end, italic: true, href: f ? `/film/${f.id}` : undefined, priority: 4, replace: f?.title })
+    if (f) knownTitles.set(t, { href: `/film/${f.id}`, official: f.title })
   }
   // Repeat mentions of titles already identified, plus the reviewed film's own title
-  if (opts.filmTitle) knownTitles.set(opts.filmTitle, knownTitles.get(opts.filmTitle))
+  if (opts.filmTitle && !knownTitles.has(opts.filmTitle)) knownTitles.set(opts.filmTitle, {})
   const escape = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-  for (const [t, href] of knownTitles) {
+  for (const [t, { href, official }] of knownTitles) {
     if (t.length < 3) continue
     const re = new RegExp(`(?<![\\p{L}\\p{N}])${escape(t)}(?![\\p{L}\\p{N}])`, 'gu')
     for (const m of text.matchAll(re)) {
       const isOwn = t === opts.filmTitle
-      ranges.push({ start: m.index!, end: m.index! + t.length, italic: true, href: isOwn ? undefined : href, priority: 2 })
+      ranges.push({ start: m.index!, end: m.index! + t.length, italic: true, href: isOwn ? undefined : href, priority: 2, replace: official })
     }
   }
   // People
   const sortedNames = nameCands.filter(c => personByName.has(c.key)).sort((a, b) => (b.e - b.s) - (a.e - a.s))
-  for (const c of sortedNames) ranges.push({ start: c.s, end: c.e, italic: false, href: `/person/${personByName.get(c.key)}`, priority: 1 })
+  for (const c of sortedNames) { const p = personByName.get(c.key)!; ranges.push({ start: c.s, end: c.e, italic: false, href: `/person/${p.id}`, priority: 1, replace: p.name }) }
   // Loanwords
   for (const w of LOANWORDS) {
     if (NOT_ITALIC.has(w)) continue
@@ -252,9 +269,21 @@ export async function formatReview(raw: string, opts: { filmTitle: string }): Pr
   let pos = 0
   for (const r of placed) {
     if (r.start > pos) out.push({ text: text.slice(pos, r.start) })
-    out.push({ text: text.slice(r.start, r.end), italic: r.italic || undefined, href: r.href })
+    out.push({ text: r.replace ?? text.slice(r.start, r.end), italic: r.italic || undefined, href: r.href })
     pos = r.end
   }
   if (pos < text.length) out.push({ text: text.slice(pos) })
-  return out
+
+  // Apply the same corrections to the raw text (asterisks kept), last first so positions hold
+  const corrections: { from: string; to: string }[] = []
+  let correctedRaw = raw
+  for (const r of [...placed].reverse()) {
+    const from = text.slice(r.start, r.end)
+    if (r.replace == null || r.replace === from) continue
+    const rs = map[r.start], re = map[r.end - 1] + 1
+    if (raw.slice(rs, re) !== from) continue // markup inside the span; leave it alone
+    correctedRaw = correctedRaw.slice(0, rs) + r.replace + correctedRaw.slice(re)
+    corrections.unshift({ from, to: r.replace })
+  }
+  return { segments: out, correctedRaw, corrections }
 }

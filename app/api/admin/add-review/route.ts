@@ -1,4 +1,5 @@
 import { refreshSiteData } from '@/lib/refresh-site'
+import { formatReview } from '@/lib/review-format'
 import { NextRequest, NextResponse } from 'next/server'
 import { query } from '@/lib/db'
 import { fetchWikipediaCrew } from '@/lib/wikipedia-crew'
@@ -44,8 +45,10 @@ export async function POST(request: NextRequest) {
       filmId = insertRes.rows[0].film_id
     }
 
-    // 2. Upsert the review (grade + review text)
-    if (grade || reviewText) {
+    // 2. Upsert the review (grade + review text); names, titles and cited years are corrected
+    //    to the database's official spellings
+    const cleanReview = reviewText?.trim() ? (await formatReview(reviewText.trim(), { filmTitle: filmTitle.trim() })).correctedRaw : reviewText
+    if (grade || cleanReview) {
       await query(
         `INSERT INTO reviews (film_id, grade, review_text)
          VALUES ($1, $2, $3)
@@ -53,7 +56,7 @@ export async function POST(request: NextRequest) {
            grade = COALESCE(EXCLUDED.grade, reviews.grade),
            review_text = COALESCE(EXCLUDED.review_text, reviews.review_text),
            updated_at = CURRENT_TIMESTAMP`,
-        [filmId, grade || null, reviewText || null]
+        [filmId, grade || null, cleanReview || null]
       )
     }
 
