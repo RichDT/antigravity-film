@@ -171,8 +171,8 @@ export function ThisWeekStrip({ films, boardAnchor = '#anticipation-board' }: { 
           {/* spacer so the last card can scroll fully into view past the edge fade */}
           <li aria-hidden className="shrink-0 w-px" />
         </ul>
-        {!edges.atEnd && <div className="pointer-events-none absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-background to-transparent" />}
-        {!edges.atStart && <div className="pointer-events-none absolute inset-y-0 left-0 w-10 bg-gradient-to-r from-background to-transparent" />}
+        {!edges.atEnd && <div className="pointer-events-none absolute inset-y-0 -right-6 lg:right-0 w-10 bg-gradient-to-l from-background to-transparent" />}
+        {!edges.atStart && <div className="pointer-events-none absolute inset-y-0 -left-6 lg:left-0 w-10 bg-gradient-to-r from-background to-transparent" />}
       </div>
     </section>
   );
