@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { Bookmark, Play } from 'lucide-react';
 import { query } from '@/lib/db';
 import { CalendarLinks } from '@/components/account/CalendarLinks';
+import { createClient } from '@/lib/supabase/server';
 
 export const dynamic = 'force-dynamic';
 
@@ -38,6 +39,10 @@ export default async function WantListPage(props: Props) {
     [profile.rows[0].user_id]
   );
 
+  // Signed-in visitors already have a list — only invite people without an account to make one
+  const { data: { user } } = await (await createClient()).auth.getUser();
+  const isOwner = user?.id === profile.rows[0].user_id;
+
   return (
     <div className="max-w-2xl mx-auto px-4 pt-12 pb-16">
       <p className="text-xs uppercase tracking-wide text-muted-foreground flex items-center gap-1.5"><Bookmark className="w-3.5 h-3.5" /> Want-to-see list</p>
@@ -60,11 +65,17 @@ export default async function WantListPage(props: Props) {
         {films.length === 0 && <li className="px-3 py-8 text-center text-sm text-muted-foreground italic">Nothing on this list yet.</li>}
       </ul>
 
+      {isOwner ? (
+        <p className="mt-6 text-sm text-muted-foreground">This is your list as others see it. Manage it, and the films you’ve seen, on <Link href="/account" className="text-accent hover:underline">your account page</Link>.</p>
+      ) : user ? (
+        <p className="mt-6 text-sm text-muted-foreground"><Link href="/account" className="text-accent hover:underline">Your own list</Link> is on your account page.</p>
+      ) : (
       <div className="mt-6 rounded-lg border border-border bg-secondary/30 p-4 text-sm">
         <p className="font-medium">Make your own list</p>
         <p className="mt-1 text-muted-foreground text-xs">Sign in with Google or an email link to keep a want-to-see list, grade what you’ve seen on Rich’s A+–F scale, and share your take.</p>
-        <Link href={`/signin?next=/`} className="mt-3 inline-flex h-10 items-center px-4 rounded-md bg-accent text-accent-foreground text-xs font-semibold">Sign in</Link>
+        <Link href={`/signin?next=/account`} className="mt-3 inline-flex h-10 items-center px-4 rounded-md bg-accent text-accent-foreground text-xs font-semibold">Sign in</Link>
       </div>
+      )}
     </div>
   );
 }

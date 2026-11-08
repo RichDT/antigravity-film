@@ -15,7 +15,7 @@ export default async function AccountPage() {
     supabase.from('user_roles').select('role').eq('user_id', user.id).maybeSingle(),
   ]);
   return (
-    <div className="max-w-xl mx-auto px-4 pt-12 pb-16">
+    <div className="max-w-2xl mx-auto px-4 pt-12 pb-16">
       <h1 className="font-serif text-3xl font-bold tracking-tight">Your account</h1>
       <AccountPanel email={user.email ?? ''} handle={profile?.handle ?? ''} isAdmin={role?.role === 'admin'} />
     </div>

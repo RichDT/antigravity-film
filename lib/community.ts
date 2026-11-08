@@ -80,7 +80,8 @@ export async function saveQuickReview(userId: string, filmId: number, grade: str
   }
   const body = take.trim();
   if (body) {
-    const { error } = await supabase.from('film_comments').insert({ user_id: userId, film_id: filmId, body });
+    // One take per member per film: a new take replaces the existing one
+    const { error } = await supabase.from('film_comments').upsert({ user_id: userId, film_id: filmId, body }, { onConflict: 'user_id,film_id' });
     if (error) return error.message.includes('Too many') ? 'You’ve posted a lot in the last hour — please try again later.' : error.message;
   }
   return null;
@@ -97,4 +98,3 @@ export async function saveRichGrade(filmId: number, grade: string | undefined, r
   return body.error ?? 'Couldn’t save your grade.';
 }
 
-export const TAKE_EDIT_WINDOW_MS = 60 * 60 * 1000;

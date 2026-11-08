@@ -3,10 +3,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Users, Bookmark, BookmarkCheck, CheckCircle2, Circle, Flag, Trash2, EyeOff, Loader2, Pencil } from 'lucide-react';
+import { Users, Bookmark, BookmarkCheck, CheckCircle2, Circle, Flag, Trash2, EyeOff, Loader2 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { getGradeColor } from '@/components/grade-hex';
-import { COMMENT_MAX, TAKE_EDIT_WINDOW_MS, useMember, saveRichGrade, type CommunityStats } from '@/lib/community';
+import { COMMENT_MAX, useMember, saveRichGrade, type CommunityStats } from '@/lib/community';
 import { useAuthStatus } from '@/lib/use-auth-status';
 import { GradePicker } from '@/components/community/GradePicker';
 
@@ -55,9 +55,11 @@ export function FilmCommunity({ filmId, richGrade }: { filmId: number; richGrade
   const [posting, setPosting] = useState(false);
   const [error, setError] = useState('');
   const [reported, setReported] = useState<Set<number>>(new Set());
-  const [editing, setEditing] = useState<{ id: number; body: string } | null>(null);
   // The admin's grade is Rich's grade, kept locally so it updates the moment it's saved
   const [richLocal, setRichLocal] = useState(richGrade);
+  const [invite, setInvite] = useState(false);
+  const inviteTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const gradeRef = useRef<HTMLDivElement>(null);
 
   const status = member.statuses[filmId];
   const signIn = () => router.push(`/signin?next=${encodeURIComponent(window.location.pathname)}`);
@@ -104,33 +106,33 @@ export function FilmCommunity({ filmId, richGrade }: { filmId: number; richGrade
 
   async function toggle(target: 'want' | 'seen') {
     if (!member.userId) return signIn();
-    await member.setStatus(filmId, status === target ? null : target);
+    const marking = status !== target;
+    await member.setStatus(filmId, marking ? target : null);
     setStatsKey(k => k + 1);
+    // Just seen it: invite a grade and a take right here — a soft gold glow that fades
+    if (target === 'seen' && marking) {
+      gradeRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setInvite(true);
+      if (inviteTimer.current) clearTimeout(inviteTimer.current);
+      inviteTimer.current = setTimeout(() => setInvite(false), 1600);
+    }
   }
 
+  // One take per member per film: the composer holds your take, and posting again updates it
+  const myTake = takes.find(t => t.is_mine) ?? null;
+  useEffect(() => { setDraft(myTake?.body ?? ''); }, [myTake?.comment_id, myTake?.body]);
   async function post(e: React.FormEvent) {
     e.preventDefault();
     if (!member.userId) return signIn();
     const body = draft.trim();
     if (!body) return;
     setPosting(true); setError('');
-    const { error: err } = await createClient().from('film_comments').insert({ user_id: member.userId, film_id: filmId, body });
+    const supabase = createClient();
+    const { error: err } = myTake
+      ? await supabase.from('film_comments').update({ body }).eq('comment_id', myTake.comment_id)
+      : await supabase.from('film_comments').insert({ user_id: member.userId, film_id: filmId, body });
     setPosting(false);
     if (err) { setError(err.message.includes('Too many') ? 'You’ve posted a lot in the last hour. Please try again later.' : err.message); return; }
-    setDraft('');
-    loadTakes();
-  }
-
-  async function saveEdit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!editing) return;
-    const body = editing.body.trim();
-    if (!body) return;
-    setError('');
-    const { data, error: err } = await createClient().from('film_comments').update({ body }).eq('comment_id', editing.id).select('comment_id');
-    if (err) { setError(err.message); return; }
-    if (!data?.length) { setError('Takes can be edited for one hour after posting.'); setEditing(null); return; }
-    setEditing(null);
     loadTakes();
   }
 
@@ -170,9 +172,11 @@ export function FilmCommunity({ filmId, richGrade }: { filmId: number; richGrade
 
       <div className="rounded-lg border border-border bg-card p-4 space-y-5">
         <div className="flex flex-wrap items-end gap-4 sm:gap-6">
-          <Hex grade={richLocal || null} label={richLocal ? 'Rich' : 'Rich: not yet'} />
-          <Hex grade={liveStats?.rating_median ?? null} label={`Community median${liveStats?.rating_count ? ` · ${liveStats.rating_count}` : ''}`} />
-          {!isAdmin && <Hex grade={myGrade} label={member.userId ? 'You' : 'You (sign in)'} />}
+          <Hex grade={richLocal || null} label={richLocal ? 'Rich’s grade' : 'Rich: not yet'} />
+          {/* Rich isn't part of the community median, so his grade stands apart */}
+          <div className="self-stretch w-px bg-border/70 my-1" aria-hidden="true" />
+          <Hex grade={liveStats?.rating_median ?? null} label="Members’ median" />
+          {!isAdmin && <Hex grade={myGrade} label={member.userId ? 'Your grade' : 'You (sign in)'} />}
           <div className="ml-auto flex flex-wrap gap-2">
             <button onClick={() => toggle('want')} disabled={status === 'seen'} aria-pressed={status === 'want'}
               className={`${btn} ${status === 'want' ? on : off} disabled:opacity-35 disabled:pointer-events-none`}>
@@ -186,7 +190,9 @@ export function FilmCommunity({ filmId, richGrade }: { filmId: number; richGrade
           </div>
         </div>
 
-        <div>
+        <p className="-mt-2 text-[11px] text-muted-foreground">The members’ median is the middle grade of everyone who has graded this film on the site. Rich’s grade isn’t included.</p>
+
+        <div ref={gradeRef} className={`rounded-lg transition-shadow duration-[1400ms] ${invite ? 'ring-2 ring-primary/80 shadow-[0_0_18px_rgba(212,175,55,0.35)]' : 'ring-0 ring-transparent'}`}>
           <p className="text-xs text-muted-foreground mb-2">{isAdmin ? 'Your grade, saved as Rich’s grade' : member.userId ? 'Your grade, on Rich’s scale' : 'Sign in to grade this film on Rich’s A+–F scale'}</p>
           <GradePicker value={isAdmin ? richLocal : myGrade} onChange={rate} onClear={isAdmin ? undefined : () => rate(null)} />
         </div>
@@ -194,32 +200,31 @@ export function FilmCommunity({ filmId, richGrade }: { filmId: number; richGrade
         <div className="border-t border-border/60 pt-4">
           <h3 className="font-serif text-base font-semibold mb-3">Takes</h3>
           {member.userId ? (
-            <form onSubmit={post} className="mb-4">
+            <form onSubmit={post} className={`mb-4 rounded-lg transition-shadow duration-[1400ms] ${invite ? 'ring-2 ring-primary/80 shadow-[0_0_18px_rgba(212,175,55,0.35)]' : 'ring-0 ring-transparent'}`}>
               <div className="flex gap-2 items-start">
                 <textarea value={draft} onChange={e => setDraft(e.target.value.slice(0, COMMENT_MAX))} rows={2} maxLength={COMMENT_MAX}
-                  placeholder={`Your take as @${member.handle ?? 'you'} (280 characters)…`} aria-label="Your take"
+                  placeholder={`Your take as @${member.handle ?? 'you'} (280 characters)…`} aria-label={myTake ? 'Edit your take' : 'Your take'}
                   className="flex-1 min-w-0 rounded-md bg-background border border-border px-2.5 py-2 text-base sm:text-sm focus:outline-none focus:border-accent/60 placeholder:text-muted-foreground/60" />
                 <button disabled={posting || !draft.trim()} className="h-10 px-4 rounded-md bg-accent text-accent-foreground text-xs font-semibold disabled:opacity-40 inline-flex items-center gap-1.5">
-                  {posting && <Loader2 className="w-3.5 h-3.5 animate-spin" />} Post
+                  {posting && <Loader2 className="w-3.5 h-3.5 animate-spin" />} {myTake ? 'Update' : 'Post'}
                 </button>
               </div>
-              <p className={`mt-1 text-[11px] ${COMMENT_MAX - draft.length < 20 ? 'text-orange-400' : 'text-muted-foreground'}`}>{COMMENT_MAX - draft.length} characters left</p>
+              <p className={`mt-1 text-[11px] ${COMMENT_MAX - draft.length < 20 ? 'text-orange-400' : 'text-muted-foreground'}`}>
+                {COMMENT_MAX - draft.length} characters left{myTake ? ' · this is your take on this film; editing it updates it' : ''}
+              </p>
             </form>
           ) : (
             <p className="mb-4 text-sm text-muted-foreground"><Link href={`/signin?next=/film/${filmId}`} className="text-accent hover:underline">Sign in</Link> to add your take.</p>
           )}
           {error && <p className="mb-3 text-sm text-destructive">{error}</p>}
 
-          <ul className="space-y-3">
+          <ul className="divide-y divide-border/60">
             {takes.map(t => (
-              <li key={t.comment_id} className="text-sm leading-snug">
+              <li key={t.comment_id} className="text-sm leading-snug py-3 first:pt-0 last:pb-0">
                 <div className="flex items-baseline gap-2">
                   <Link href={`/list/${t.handle}`} className="font-medium text-foreground/90 hover:text-accent">@{t.handle}</Link>
                   <span className="text-[11px] text-muted-foreground">{ago(t.created_at)}{t.edited_at ? ' · edited' : ''}</span>
                   <span className="ml-auto flex items-center gap-1">
-                    {t.is_mine && Date.now() - Date.parse(t.created_at) < TAKE_EDIT_WINDOW_MS && editing?.id !== t.comment_id && (
-                      <button onClick={() => setEditing({ id: t.comment_id, body: t.body })} title="Edit your take (for an hour after posting)" aria-label="Edit your take" className="touch-target p-1 text-muted-foreground hover:text-foreground"><Pencil className="w-3.5 h-3.5" /></button>
-                    )}
                     {t.is_mine && (
                       <button onClick={() => remove(t.comment_id)} title="Delete your take" aria-label="Delete your take" className="touch-target p-1 text-muted-foreground hover:text-destructive"><Trash2 className="w-3.5 h-3.5" /></button>
                     )}
@@ -233,19 +238,7 @@ export function FilmCommunity({ filmId, richGrade }: { filmId: number; richGrade
                     )}
                   </span>
                 </div>
-                {editing?.id === t.comment_id ? (
-                  <form onSubmit={saveEdit} className="mt-1">
-                    <textarea value={editing.body} onChange={e => setEditing({ id: t.comment_id, body: e.target.value.slice(0, COMMENT_MAX) })} rows={3} maxLength={COMMENT_MAX} aria-label="Edit your take" autoFocus
-                      className="w-full rounded-md bg-background border border-border px-2.5 py-2 text-base sm:text-sm focus:outline-none focus:border-accent/60" />
-                    <div className="mt-1 flex items-center gap-2">
-                      <span className="text-[11px] text-muted-foreground mr-auto">{COMMENT_MAX - editing.body.length} characters left</span>
-                      <button type="button" onClick={() => setEditing(null)} className="h-9 px-3 rounded-md text-xs text-muted-foreground hover:text-foreground">Cancel</button>
-                      <button disabled={!editing.body.trim() || editing.body.trim() === t.body} className="h-9 px-3 rounded-md bg-accent text-accent-foreground text-xs font-semibold disabled:opacity-40">Save</button>
-                    </div>
-                  </form>
-                ) : (
-                  <p className="text-foreground/80 mt-0.5 whitespace-pre-line break-words">{t.body}</p>
-                )}
+                <p className="text-foreground/80 mt-0.5 whitespace-pre-line break-words">{t.body}</p>
               </li>
             ))}
             {takes.length === 0 && <li className="text-xs text-muted-foreground italic">No takes yet.</li>}

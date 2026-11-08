@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect, useRef } from "react";
+import { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import {
@@ -179,6 +179,7 @@ function YearHex({
     return (
         <motion.div
             data-active={isActive}
+            data-year={year}
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2 + index * 0.015, duration: 0.3 }}
@@ -320,14 +321,36 @@ export default function HomeClient({ rawFilmsData, dbStats, filmIdMap, dbFilmsDa
         return () => observer.disconnect();
     }, []);
 
-    // Scroll the active year hex into view in the mobile carousel
+    // Mobile carousel: start centred on the active year; afterwards the Top 10 preview follows
+    // whichever year is centred as the strip scrolls, and tapping a hex opens that year's page
     useEffect(() => {
         if (!carouselRef.current) return;
         const activeEl = carouselRef.current.querySelector('[data-active="true"]');
         if (activeEl) {
-            (activeEl as HTMLElement).scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            (activeEl as HTMLElement).scrollIntoView({ behavior: 'auto', block: 'nearest', inline: 'center' });
         }
-    }, [selectedYear]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+    const scrollFrame = useRef<number | null>(null);
+    const onCarouselScroll = useCallback(() => {
+        if (scrollFrame.current) cancelAnimationFrame(scrollFrame.current);
+        scrollFrame.current = requestAnimationFrame(() => {
+            const box = carouselRef.current;
+            if (!box) return;
+            const hexes = box.querySelectorAll<HTMLElement>('[data-year]');
+            // At either end of the strip the end year can't reach the centre, so it wins there
+            if (box.scrollLeft < 8) { setSelectedYear(Number(hexes[0]?.dataset.year)); return; }
+            if (box.scrollLeft + box.clientWidth > box.scrollWidth - 8) { setSelectedYear(Number(hexes[hexes.length - 1]?.dataset.year)); return; }
+            const mid = box.getBoundingClientRect().left + box.clientWidth / 2;
+            let best: { year: number; d: number } | null = null;
+            hexes.forEach(el => {
+                const r = el.getBoundingClientRect();
+                const d = Math.abs(r.left + r.width / 2 - mid);
+                if (!best || d < best.d) best = { year: Number(el.dataset.year), d };
+            });
+            if (best) setSelectedYear((best as { year: number }).year);
+        });
+    }, []);
 
     const currentTop10 = useMemo(() => {
         const staticFilms = filmsData.filter(f => String(f.year).trim() === String(selectedYear));
@@ -627,7 +650,7 @@ export default function HomeClient({ rawFilmsData, dbStats, filmIdMap, dbFilmsDa
 
                 {/* Sticky year carousel */}
                 <div className="sticky top-0 z-20 bg-background/95 backdrop-blur-sm border-y border-border">
-                    <div ref={carouselRef} className="overflow-x-auto scrollbar-hide">
+                    <div ref={carouselRef} onScroll={onCarouselScroll} className="overflow-x-auto scrollbar-hide">
                         <div className="flex gap-1 px-4 py-3 w-max">
                             {YEARS_DATA.map((d, i) => (
                                 <YearHex
@@ -636,8 +659,7 @@ export default function HomeClient({ rawFilmsData, dbStats, filmIdMap, dbFilmsDa
                                     film={d.film}
                                     index={i}
                                     isActive={selectedYear === d.year}
-                                    onHover={setSelectedYear}
-                                    onSelect={setSelectedYear}
+                                    onHover={() => {}}
                                 />
                             ))}
                         </div>

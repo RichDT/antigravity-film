@@ -3,9 +3,9 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Bookmark, Download, LogOut, Trash2, Loader2 } from 'lucide-react';
+import { Download, LogOut, Trash2, Loader2 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
-import { MyTakes } from '@/components/account/MyTakes';
+import { MyFilms } from '@/components/account/MyFilms';
 
 const HANDLE_RE = /^[a-z0-9_.]{3,24}$/;
 
@@ -81,14 +81,14 @@ export function AccountPanel({ email, handle: initialHandle, isAdmin }: { email:
         {msg && <p className={`mt-2 text-sm ${msg.ok ? 'text-emerald-400' : 'text-destructive'}`}>{msg.text}</p>}
       </section>
 
+      <MyFilms handle={handle} />
+
       <section className="rounded-lg border border-border bg-card p-4 space-y-3">
-        <Link href={`/list/${handle}`} className="flex items-center gap-2 text-sm hover:text-accent"><Bookmark className="w-4 h-4" /> My want-to-see list</Link>
         {isAdmin && <Link href="/admin/add-review" className="block text-sm text-accent hover:underline">Admin tools</Link>}
         <button onClick={exportData} className="flex items-center gap-2 text-sm hover:text-accent"><Download className="w-4 h-4" /> Download my data</button>
         <button onClick={signOut} className="flex items-center gap-2 text-sm hover:text-accent"><LogOut className="w-4 h-4" /> Log out</button>
       </section>
 
-      <MyTakes />
 
       {!isAdmin && (
         <section className="rounded-lg border border-destructive/40 p-4">
