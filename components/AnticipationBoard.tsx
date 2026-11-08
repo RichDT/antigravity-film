@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ChevronDown, ChevronUp, Plus, X, Loader2, Eye, Bookmark, BookmarkCheck, CheckCircle2, Circle, Ticket, CalendarDays, Clapperboard, Tv, CircleHelp, EyeOff, Award, TreePalm, Sailboat, PawPrint, Sun, Leaf, MountainSnow, Building2, Landmark, Guitar, Crown, Shell, Waves, Cat, Play, type LucideIcon } from 'lucide-react';
 import { useAuthStatus } from '@/lib/use-auth-status';
-import { GRADES, useMember, useCommunityStats, type FilmStatus, type CommunityStats } from '@/lib/community';
+import { useMember, useCommunityStats, type FilmStatus, type CommunityStats } from '@/lib/community';
 import { getGradeColor } from '@/components/grade-hex';
 import { QuickReview } from '@/components/community/QuickReview';
 import type { AnticipationFilm, RPPedigree } from '@/lib/awards';
@@ -81,7 +81,7 @@ const SECTIONS: { key: SectionKey; label: string; hint: string; icon: LucideIcon
   { key: 'out',       label: 'Out now',            hint: 'Not streaming yet',       icon: Clapperboard },
   { key: 'streaming', label: 'Streaming now',      hint: 'Watch at home',                     icon: Tv },
   { key: 'tba',       label: 'Date TBA',           hint: 'Trailer, no date',  icon: CircleHelp },
-  { key: 'seen',      label: 'Rich has seen',      hint: 'Graded · best first', icon: Eye },
+  { key: 'seen',      label: 'Rich has seen',      hint: 'Graded', icon: Eye },
   { key: 'hidden',    label: 'Hidden',             hint: 'Admin only', icon: EyeOff, adminOnly: true },
 ];
 
@@ -103,15 +103,10 @@ function sectionize(films: AnticipationFilm[]): Record<SectionKey, AnticipationF
   const out: Record<SectionKey, AnticipationFilm[]> = { previews: [], coming: [], out: [], streaming: [], tba: [], seen: [], hidden: [] };
   for (const f of films) out[sectionOf(f, today)].push(f);
   const byTitle = (a: AnticipationFilm, b: AnticipationFilm) => a.title.localeCompare(b.title);
-  out.previews.sort((a, b) => a.previews[0].screening_date.localeCompare(b.previews[0].screening_date) || byTitle(a, b));
-  out.coming.sort((a, b) => a.us_release_date!.localeCompare(b.us_release_date!) || byTitle(a, b));
-  out.out.sort((a, b) => b.us_release_date!.localeCompare(a.us_release_date!) || byTitle(a, b));
-  out.streaming.sort((a, b) => b.streaming_date!.localeCompare(a.streaming_date!) || byTitle(a, b));
-  out.tba.sort(byTitle);
-  // Best grade first (compound grades like "A-//B+" rank by their first part)
-  const rank = (g: string) => { const i = (GRADES as readonly string[]).indexOf(g.split('//')[0].trim()); return i < 0 ? GRADES.length : i; };
-  out.seen.sort((a, b) => rank(a.rich_grade!) - rank(b.rich_grade!) || byTitle(a, b));
-  out.hidden.sort(byTitle);
+  // Only "Coming soon" goes by date (soonest first); every other list is alphabetical, easier to scan
+  for (const key of Object.keys(out) as SectionKey[]) {
+    out[key].sort(key === 'coming' ? (a, b) => a.us_release_date!.localeCompare(b.us_release_date!) || byTitle(a, b) : byTitle);
+  }
   return out;
 }
 
