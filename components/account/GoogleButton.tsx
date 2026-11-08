@@ -61,9 +61,13 @@ export function GoogleButton({ next, onError }: { next: string; onError: (messag
           nonce: hashed,
           use_fedcm_for_button: true,
           callback: async ({ credential }: { credential: string }) => {
-            const { error } = await createClient().auth.signInWithIdToken({ provider: 'google', token: credential, nonce: raw });
-            if (error) { onError(error.message); return; }
-            window.location.assign(next.startsWith('/') && !next.startsWith('//') ? next : '/');
+            const supabase = createClient();
+            const { data, error } = await supabase.auth.signInWithIdToken({ provider: 'google', token: credential, nonce: raw });
+            if (error || !data.session) { onError(error?.message ?? 'Google sign-in didn’t finish. Please try again.'); return; }
+            // Make sure the new session is stored before leaving, so the next page loads signed in
+            await supabase.auth.getSession();
+            const dest = next.startsWith('/') && !next.startsWith('//') && !next.startsWith('/signin') ? next : '/';
+            window.location.replace(dest);
           },
         });
         window.google.accounts.id.renderButton(ref.current, {

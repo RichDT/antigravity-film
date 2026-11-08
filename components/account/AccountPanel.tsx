@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Bookmark, Download, LogOut, Trash2, Loader2 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
+import { MyTakes } from '@/components/account/MyTakes';
 
 const HANDLE_RE = /^[a-z0-9_.]{3,24}$/;
 
@@ -31,11 +32,13 @@ export function AccountPanel({ email, handle: initialHandle, isAdmin }: { email:
 
   async function exportData() {
     const supabase = createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
     const [status, ratings, picks, comments] = await Promise.all([
-      supabase.from('user_film_status').select('film_id, status, updated_at'),
-      supabase.from('user_ratings').select('film_id, grade, updated_at'),
-      supabase.from('community_picks').select('year, category_id, film_id, person_id, updated_at'),
-      supabase.from('film_comments').select('film_id, body, created_at, hidden'),
+      supabase.from('user_film_status').select('film_id, status, updated_at').eq('user_id', user.id),
+      supabase.from('user_ratings').select('film_id, grade, updated_at').eq('user_id', user.id),
+      supabase.from('community_picks').select('year, category_id, consideration_id, film_id, person_id, updated_at').eq('user_id', user.id),
+      supabase.from('film_comments').select('film_id, body, created_at, edited_at, hidden').eq('user_id', user.id),
     ]);
     const blob = new Blob([JSON.stringify({ email, handle, exported_at: new Date().toISOString(),
       want_to_see_and_seen: status.data, ratings: ratings.data, community_picks: picks.data, comments: comments.data }, null, 2)], { type: 'application/json' });
@@ -84,6 +87,8 @@ export function AccountPanel({ email, handle: initialHandle, isAdmin }: { email:
         <button onClick={exportData} className="flex items-center gap-2 text-sm hover:text-accent"><Download className="w-4 h-4" /> Download my data</button>
         <button onClick={signOut} className="flex items-center gap-2 text-sm hover:text-accent"><LogOut className="w-4 h-4" /> Log out</button>
       </section>
+
+      <MyTakes />
 
       {!isAdmin && (
         <section className="rounded-lg border border-destructive/40 p-4">

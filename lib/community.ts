@@ -82,3 +82,16 @@ export async function saveQuickReview(userId: string, filmId: number, grade: str
   }
   return null;
 }
+
+/** The admin's grade (and review text) is Rich's official grade — saved to reviews, never to community ratings. */
+export async function saveRichGrade(filmId: number, grade: string | undefined, reviewText?: string): Promise<string | null> {
+  const res = await fetch('/api/admin/grade', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ filmId, grade: grade ?? null, reviewText: reviewText?.trim() || undefined }),
+  });
+  if (res.ok) return null;
+  const body = await res.json().catch(() => ({}));
+  return body.error ?? 'Couldn’t save your grade.';
+}
+
+export const TAKE_EDIT_WINDOW_MS = 60 * 60 * 1000;

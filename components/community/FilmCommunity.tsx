@@ -3,13 +3,13 @@
 import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Users, Bookmark, BookmarkCheck, CheckCircle2, Circle, Flag, Trash2, EyeOff, Loader2 } from 'lucide-react';
+import { Users, Bookmark, BookmarkCheck, CheckCircle2, Circle, Flag, Trash2, EyeOff, Loader2, Pencil } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { getGradeColor } from '@/components/grade-hex';
-import { GRADES, COMMENT_MAX, useMember, type CommunityStats } from '@/lib/community';
+import { GRADES, COMMENT_MAX, TAKE_EDIT_WINDOW_MS, useMember, saveRichGrade, type CommunityStats } from '@/lib/community';
 import { useAuthStatus } from '@/lib/use-auth-status';
 
-interface Take { comment_id: number; handle: string; body: string; created_at: string; is_mine: boolean }
+interface Take { comment_id: number; handle: string; body: string; created_at: string; edited_at: string | null; is_mine: boolean }
 
 function Hex({ grade, label }: { grade: string | null; label: string }) {
   return (
@@ -43,6 +43,9 @@ export function FilmCommunity({ filmId, richGrade }: { filmId: number; richGrade
   const [posting, setPosting] = useState(false);
   const [error, setError] = useState('');
   const [reported, setReported] = useState<Set<number>>(new Set());
+  const [editing, setEditing] = useState<{ id: number; body: string } | null>(null);
+  // The admin's grade is Rich's grade, kept locally so it updates the moment it's saved
+  const [richLocal, setRichLocal] = useState(richGrade);
 
   const status = member.statuses[filmId];
   const signIn = () => router.push(`/signin?next=${encodeURIComponent(window.location.pathname)}`);
@@ -60,6 +63,14 @@ export function FilmCommunity({ filmId, richGrade }: { filmId: number; richGrade
 
   async function rate(g: string) {
     if (!member.userId) return signIn();
+    if (isAdmin) {
+      setError('');
+      const err = await saveRichGrade(filmId, g);
+      if (err) { setError(err); return; }
+      setRichLocal(g);
+      if (status !== 'seen') await member.setStatus(filmId, 'seen');
+      return;
+    }
     const next = myGrade === g ? null : g;
     const supabase = createClient();
     const { error: err } = next
@@ -87,6 +98,19 @@ export function FilmCommunity({ filmId, richGrade }: { filmId: number; richGrade
     setPosting(false);
     if (err) { setError(err.message.includes('Too many') ? 'You’ve posted a lot in the last hour. Please try again later.' : err.message); return; }
     setDraft('');
+    loadTakes();
+  }
+
+  async function saveEdit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!editing) return;
+    const body = editing.body.trim();
+    if (!body) return;
+    setError('');
+    const { data, error: err } = await createClient().from('film_comments').update({ body }).eq('comment_id', editing.id).select('comment_id');
+    if (err) { setError(err.message); return; }
+    if (!data?.length) { setError('Takes can be edited for one hour after posting.'); setEditing(null); return; }
+    setEditing(null);
     loadTakes();
   }
 
@@ -126,9 +150,9 @@ export function FilmCommunity({ filmId, richGrade }: { filmId: number; richGrade
 
       <div className="rounded-lg border border-border bg-card p-4 space-y-5">
         <div className="flex flex-wrap items-end gap-4 sm:gap-6">
-          <Hex grade={richGrade ? richGrade.split('//')[0].trim() : null} label={richGrade ? 'Rich' : 'Rich: not yet'} />
+          <Hex grade={richLocal ? richLocal.split('//')[0].trim() : null} label={richLocal ? 'Rich' : 'Rich: not yet'} />
           <Hex grade={liveStats?.rating_median ?? null} label={`Community median${liveStats?.rating_count ? ` · ${liveStats.rating_count}` : ''}`} />
-          <Hex grade={myGrade} label={member.userId ? 'You' : 'You (sign in)'} />
+          {!isAdmin && <Hex grade={myGrade} label={member.userId ? 'You' : 'You (sign in)'} />}
           <div className="ml-auto flex flex-wrap gap-2">
             <button onClick={() => toggle('want')} disabled={status === 'seen'} aria-pressed={status === 'want'}
               className={`${btn} ${status === 'want' ? on : off} disabled:opacity-35 disabled:pointer-events-none`}>
@@ -143,14 +167,14 @@ export function FilmCommunity({ filmId, richGrade }: { filmId: number; richGrade
         </div>
 
         <div>
-          <p className="text-xs text-muted-foreground mb-2">{member.userId ? 'Your grade, on Rich’s scale' : 'Sign in to grade this film on Rich’s A+–F scale'}</p>
+          <p className="text-xs text-muted-foreground mb-2">{isAdmin ? 'Your grade, saved as Rich’s grade' : member.userId ? 'Your grade, on Rich’s scale' : 'Sign in to grade this film on Rich’s A+–F scale'}</p>
           <div className="flex flex-wrap gap-1.5">
-            {GRADES.map(g => (
-              <button key={g} onClick={() => rate(g)} aria-pressed={myGrade === g} aria-label={`Grade ${g}`}
-                className={`w-10 h-10 sm:w-9 sm:h-9 clip-hexagon flex items-center justify-center text-xs font-bold transition-transform hover:scale-110 ${myGrade === g ? getGradeColor(g) + ' scale-110' : 'bg-secondary text-muted-foreground'}`}>
+            {GRADES.map(g => { const picked = isAdmin ? richLocal === g : myGrade === g; return (
+              <button key={g} onClick={() => rate(g)} aria-pressed={picked} aria-label={`Grade ${g}`}
+                className={`w-10 h-10 sm:w-9 sm:h-9 clip-hexagon flex items-center justify-center text-xs font-bold transition-transform hover:scale-110 ${picked ? getGradeColor(g) + ' scale-110' : 'bg-secondary text-muted-foreground'}`}>
                 {g}
               </button>
-            ))}
+            ); })}
           </div>
         </div>
 
@@ -178,8 +202,11 @@ export function FilmCommunity({ filmId, richGrade }: { filmId: number; richGrade
               <li key={t.comment_id} className="text-sm leading-snug">
                 <div className="flex items-baseline gap-2">
                   <Link href={`/list/${t.handle}`} className="font-medium text-foreground/90 hover:text-accent">@{t.handle}</Link>
-                  <span className="text-[11px] text-muted-foreground">{ago(t.created_at)}</span>
+                  <span className="text-[11px] text-muted-foreground">{ago(t.created_at)}{t.edited_at ? ' · edited' : ''}</span>
                   <span className="ml-auto flex items-center gap-1">
+                    {t.is_mine && Date.now() - Date.parse(t.created_at) < TAKE_EDIT_WINDOW_MS && editing?.id !== t.comment_id && (
+                      <button onClick={() => setEditing({ id: t.comment_id, body: t.body })} title="Edit your take (for an hour after posting)" aria-label="Edit your take" className="touch-target p-1 text-muted-foreground hover:text-foreground"><Pencil className="w-3.5 h-3.5" /></button>
+                    )}
                     {t.is_mine && (
                       <button onClick={() => remove(t.comment_id)} title="Delete your take" aria-label="Delete your take" className="touch-target p-1 text-muted-foreground hover:text-destructive"><Trash2 className="w-3.5 h-3.5" /></button>
                     )}
@@ -193,7 +220,19 @@ export function FilmCommunity({ filmId, richGrade }: { filmId: number; richGrade
                     )}
                   </span>
                 </div>
-                <p className="text-foreground/80 mt-0.5 whitespace-pre-line break-words">{t.body}</p>
+                {editing?.id === t.comment_id ? (
+                  <form onSubmit={saveEdit} className="mt-1">
+                    <textarea value={editing.body} onChange={e => setEditing({ id: t.comment_id, body: e.target.value.slice(0, COMMENT_MAX) })} rows={3} maxLength={COMMENT_MAX} aria-label="Edit your take" autoFocus
+                      className="w-full rounded-md bg-background border border-border px-2.5 py-2 text-base sm:text-sm focus:outline-none focus:border-accent/60" />
+                    <div className="mt-1 flex items-center gap-2">
+                      <span className="text-[11px] text-muted-foreground mr-auto">{COMMENT_MAX - editing.body.length} characters left</span>
+                      <button type="button" onClick={() => setEditing(null)} className="h-9 px-3 rounded-md text-xs text-muted-foreground hover:text-foreground">Cancel</button>
+                      <button disabled={!editing.body.trim() || editing.body.trim() === t.body} className="h-9 px-3 rounded-md bg-accent text-accent-foreground text-xs font-semibold disabled:opacity-40">Save</button>
+                    </div>
+                  </form>
+                ) : (
+                  <p className="text-foreground/80 mt-0.5 whitespace-pre-line break-words">{t.body}</p>
+                )}
               </li>
             ))}
             {takes.length === 0 && <li className="text-xs text-muted-foreground italic">No takes yet.</li>}

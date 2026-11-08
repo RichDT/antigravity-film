@@ -515,7 +515,7 @@ export function AnticipationBoard({
           )}
           {isAdmin && <AddUnseenFilm year={year} />}
           {reviewing && member.userId && (
-            <QuickReview userId={member.userId} filmId={reviewing.filmId} title={reviewing.title} onClose={() => setReviewing(null)} />
+            <QuickReview userId={member.userId} filmId={reviewing.filmId} title={reviewing.title} isAdmin={isAdmin} onClose={() => setReviewing(null)} />
           )}
         </div>
       )}
