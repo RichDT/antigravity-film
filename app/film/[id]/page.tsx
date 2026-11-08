@@ -358,10 +358,12 @@ export default async function FilmPage(props: Props) {
   // Rich's considerations for years whose Rich Picks nominations aren't set yet — shown in
   // Awards History until the nominations replace them.
   const considRes = await query(`
-    SELECT c.consideration_id, c.year, c.detail, c.character, cat.name AS category_name,
-           (SELECT p.person_id FROM people p WHERE p.name = c.detail ORDER BY p.person_id LIMIT 1) AS person_id
+    SELECT c.consideration_id, c.year, d.name AS detail, c.character, cat.name AS category_name,
+           (SELECT p.person_id FROM people p WHERE p.name = d.name ORDER BY p.person_id LIMIT 1) AS person_id
     FROM considerations c
     JOIN categories cat USING (category_id)
+    -- a detail can list several people ("A, B"), split like the year page does
+    LEFT JOIN LATERAL unnest(string_to_array(c.detail, ', ')) AS d(name) ON true
     WHERE c.film_id = $1
       AND NOT EXISTS (
         SELECT 1 FROM nominations n
@@ -390,7 +392,7 @@ export default async function FilmPage(props: Props) {
       continue;
     }
     // Non-acting categories gather all considered people into one entry
-    const key = isActing ? `consid-${c.consideration_id}` : `consid-${c.category_name}-${c.year}`;
+    const key = isActing ? `consid-${c.consideration_id}-${c.detail ?? ''}` : `consid-${c.category_name}-${c.year}`;
     if (!nominationsMap.has(key)) {
       nominationsMap.set(key, {
         nomination_id: key, year: c.year, win: false, category_name: c.category_name,

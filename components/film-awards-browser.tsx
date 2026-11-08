@@ -75,30 +75,26 @@ export function FilmAwardsBrowser({ groupedNoms }: Props) {
                   const badges = nom.badges || {};
                   const isWon = nom.hasRichPick && nom.win;
                   const isFaint = !nom.hasRichPick && !nom.considered;
+                  const isConsidering = !nom.hasRichPick && !!nom.considered;
 
                   return (
                     <div 
                       key={nom.nomination_id || `${nom.category_name}-${nom.year}`} 
-                      className={`p-5 group/item transition-all duration-300 ${isWon ? 'bg-accent/10' : 'hover:bg-secondary/20'} ${isFaint ? 'opacity-60 hover:opacity-100 saturate-[0.6] hover:saturate-100' : ''}`}
+                      className={`p-5 group/item transition-all duration-300 ${isWon ? 'bg-accent/10' : isConsidering ? 'bg-sky-500/5 border-l-2 border-sky-500/40 hover:bg-sky-500/10' : 'hover:bg-secondary/20'} ${isFaint ? 'opacity-60 hover:opacity-100 saturate-[0.6] hover:saturate-100' : ''}`}
                     >
                       <div className="flex items-start justify-between gap-4 mb-3">
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-1">
-                            <Link href={`/year/${nom.year}`} className="touch-target text-[10px] font-bold tracking-widest uppercase text-accent/80 hover:underline">
+                            <Link href={`/year/${nom.year}`} className={`touch-target text-[10px] font-bold tracking-widest uppercase hover:underline ${isConsidering ? 'text-sky-400' : 'text-accent/80'}`}>
                               {nom.year}
                             </Link>
                           </div>
-                          <h4 className={`font-serif text-lg leading-tight transition-colors ${isWon ? 'text-accent font-bold' : 'text-foreground font-medium'}`}>
+                          <h4 className={`font-serif text-lg leading-tight transition-colors ${isWon ? 'text-accent font-bold' : isConsidering ? 'text-sky-300 font-medium' : 'text-foreground font-medium'}`}>
                             <Link href={`/categories/${slugify(nom.category_name)}`} className="touch-target hover:underline">
                               {nom.category_name}
                             </Link>
                           </h4>
                         </div>
-                        {!nom.hasRichPick && nom.considered && (
-                          <span className="flex-shrink-0 text-[10px] font-bold tracking-widest uppercase text-accent border border-accent/50 rounded px-2 py-1 bg-accent/5" title="Rich is considering this for a Rich Picks nomination">
-                            Considering
-                          </span>
-                        )}
                         {nom.hasRichPick && (
                           <div className="flex-shrink-0">
                             <RichPicksHexBadge
