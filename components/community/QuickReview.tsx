@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import { Loader2 } from 'lucide-react';
-import { getGradeColor } from '@/components/grade-hex';
+import { GradePicker } from '@/components/community/GradePicker';
 import { createClient } from '@/lib/supabase/client';
-import { GRADES, COMMENT_MAX, saveQuickReview, saveRichGrade } from '@/lib/community';
+import { COMMENT_MAX, saveQuickReview, saveRichGrade } from '@/lib/community';
 
 /**
  * Prompted the moment a member marks a film as seen: a grade on Rich's scale and an optional short take.
@@ -20,7 +20,7 @@ export function QuickReview({ userId, filmId, title, isAdmin = false, onClose }:
   useEffect(() => {
     if (!isAdmin) return;
     createClient().from('reviews').select('grade, review_text').eq('film_id', filmId).maybeSingle().then(({ data }) => {
-      if (data?.grade && !data.grade.includes('//')) setGrade(data.grade);
+      if (data?.grade) setGrade(data.grade);
       if (data?.review_text) setTake(data.review_text);
     });
   }, [isAdmin, filmId]);
@@ -35,22 +35,14 @@ export function QuickReview({ userId, filmId, title, isAdmin = false, onClose }:
   return (
     <div role="dialog" aria-modal="true" aria-labelledby={`qr-${filmId}`} onClick={onClose}
       className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center bg-black/60 sm:p-4">
-      <div onClick={e => e.stopPropagation()} className="w-full sm:max-w-md rounded-t-2xl sm:rounded-2xl border border-border bg-card p-4 space-y-4">
+      <div onClick={e => e.stopPropagation()} className="w-full sm:max-w-md max-h-[92dvh] overflow-y-auto rounded-t-2xl sm:rounded-2xl border border-border bg-card p-4 space-y-4">
         <div>
           <p className="text-[11px] uppercase tracking-wide text-muted-foreground">{isAdmin ? 'Rich’s review' : 'Quick review'}</p>
           <h3 id={`qr-${filmId}`} className="font-serif text-lg font-semibold leading-snug">How was {title}?</h3>
         </div>
         <div>
           <p className="text-xs text-muted-foreground mb-2">{isAdmin ? 'Your grade, saved as Rich’s grade' : 'Your grade, on Rich’s scale'}</p>
-          <div className="flex flex-wrap gap-1.5">
-            {GRADES.map(g => (
-              <button key={g} onClick={() => setGrade(grade === g ? undefined : g)} aria-pressed={grade === g}
-                className={`w-10 h-10 sm:w-9 sm:h-9 clip-hexagon flex items-center justify-center text-xs font-bold transition-transform hover:scale-110 ${
-                  grade === g ? getGradeColor(g) + ' scale-110' : 'bg-secondary text-muted-foreground'}`}>
-                {g}
-              </button>
-            ))}
-          </div>
+          <GradePicker value={grade ?? null} onChange={setGrade} onClear={() => setGrade(undefined)} />
         </div>
         <div>
           <textarea value={take} onChange={e => setTake(isAdmin ? e.target.value : e.target.value.slice(0, COMMENT_MAX))} rows={isAdmin ? 6 : 3} maxLength={isAdmin ? undefined : COMMENT_MAX}

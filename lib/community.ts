@@ -4,6 +4,9 @@ import { useCallback, useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 
 export const GRADES = ['A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'D-', 'F'] as const;
+/** Rich's full scale, best to worst: each whole grade, then the split grade between it and the next (e.g. B//B-). */
+export const GRADE_SCALE = GRADES.flatMap((g, i) => (i < GRADES.length - 1 ? [g, `${g}//${GRADES[i + 1]}`] : [g])) as readonly string[];
+export const QUALITY_LEVELS: Record<string, string> = { A: 'Excellent', B: 'Good', C: 'OK', D: 'Bad', F: 'Abysmal' };
 export const COMMENT_MAX = 280;
 export type FilmStatus = 'want' | 'seen';
 export interface CommunityStats { want_count: number; seen_count: number; rating_count: number; rating_median: string | null }

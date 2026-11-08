@@ -1,13 +1,14 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Users, Bookmark, BookmarkCheck, CheckCircle2, Circle, Flag, Trash2, EyeOff, Loader2, Pencil } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { getGradeColor } from '@/components/grade-hex';
-import { GRADES, COMMENT_MAX, TAKE_EDIT_WINDOW_MS, useMember, saveRichGrade, type CommunityStats } from '@/lib/community';
+import { COMMENT_MAX, TAKE_EDIT_WINDOW_MS, useMember, saveRichGrade, type CommunityStats } from '@/lib/community';
 import { useAuthStatus } from '@/lib/use-auth-status';
+import { GradePicker } from '@/components/community/GradePicker';
 
 interface Take { comment_id: number; handle: string; body: string; created_at: string; edited_at: string | null; is_mine: boolean }
 
@@ -72,17 +73,25 @@ export function FilmCommunity({ filmId, richGrade }: { filmId: number; richGrade
     createClient().from('user_ratings').select('grade').eq('film_id', filmId).maybeSingle().then(({ data }) => setMyGrade(data?.grade ?? null));
   }, [filmId, member.userId]);
 
-  async function rate(g: string) {
+  // The picker updates instantly; saving waits until the grade has stopped changing for a moment,
+  // so stepping along the rail doesn't save every intermediate grade
+  const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  function rate(g: string | null) {
     if (!member.userId) return signIn();
+    if (isAdmin) { if (g) setRichLocal(g) } else setMyGrade(g);
+    if (saveTimer.current) clearTimeout(saveTimer.current);
+    saveTimer.current = setTimeout(() => { void commit(g); }, 700);
+  }
+  async function commit(next: string | null) {
+    if (!member.userId) return;
     if (isAdmin) {
+      if (!next) return;
       setError('');
-      const err = await saveRichGrade(filmId, g);
+      const err = await saveRichGrade(filmId, next);
       if (err) { setError(err); return; }
-      setRichLocal(g);
       if (status !== 'seen') await member.setStatus(filmId, 'seen');
       return;
     }
-    const next = myGrade === g ? null : g;
     const supabase = createClient();
     const { error: err } = next
       ? await supabase.from('user_ratings').upsert({ user_id: member.userId, film_id: filmId, grade: next, updated_at: new Date().toISOString() })
@@ -179,14 +188,7 @@ export function FilmCommunity({ filmId, richGrade }: { filmId: number; richGrade
 
         <div>
           <p className="text-xs text-muted-foreground mb-2">{isAdmin ? 'Your grade, saved as Rich’s grade' : member.userId ? 'Your grade, on Rich’s scale' : 'Sign in to grade this film on Rich’s A+–F scale'}</p>
-          <div className="flex flex-wrap gap-1.5">
-            {GRADES.map(g => { const picked = isAdmin ? richLocal === g : myGrade === g; return (
-              <button key={g} onClick={() => rate(g)} aria-pressed={picked} aria-label={`Grade ${g}`}
-                className={`w-10 h-10 sm:w-9 sm:h-9 clip-hexagon flex items-center justify-center text-xs font-bold transition-transform hover:scale-110 ${picked ? getGradeColor(g) + ' scale-110' : 'bg-secondary text-muted-foreground'}`}>
-                {g}
-              </button>
-            ); })}
-          </div>
+          <GradePicker value={isAdmin ? richLocal : myGrade} onChange={rate} onClear={isAdmin ? undefined : () => rate(null)} />
         </div>
 
         <div className="border-t border-border/60 pt-4">

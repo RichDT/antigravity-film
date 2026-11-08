@@ -4,7 +4,9 @@ import { query } from '@/lib/db'
 import { getAdminUser } from '@/lib/auth'
 import { formatReview } from '@/lib/review-format'
 
-const GRADE_RE = /^(A\+|A|A-|B\+|B|B-|C\+|C|C-|D\+|D|D-|F)$/
+// A whole grade, or a split grade between two (e.g. B//B-)
+const G = '(?:A\\+|A|A-|B\\+|B|B-|C\\+|C|C-|D\\+|D|D-|F)'
+const GRADE_RE = new RegExp(`^${G}(?://${G})?$`)
 
 // Rich's grade (and optionally review text) saved from the site's community widgets — the
 // admin's grade is always Rich's official grade, never a community rating.
