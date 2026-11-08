@@ -87,7 +87,7 @@ function StatCard({ label, value, sub, link }: { label: string; value: string | 
       <div className="font-serif text-xl font-bold text-accent">{value}</div>
       {sub && <div className="text-xs text-muted-foreground mt-0.5">{sub}</div>}
       {link && (
-        <a href={link.href} className="touch-target inline-flex items-center gap-1 text-xs font-medium text-accent hover:underline underline-offset-2 mt-1.5">
+        <a href={link.href} className="touch-target hidden lg:inline-flex items-center gap-1 text-xs font-medium text-accent hover:underline underline-offset-2 mt-1.5">
           {link.text}
         </a>
       )}
