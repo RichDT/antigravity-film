@@ -271,7 +271,9 @@ export default function NominationsBallotForm() {
     setSuccess(false)
 
     // Build flat selections array from selected ballot items
-    const flatSelections: { category_id: number; film_id: number; detail: string | null }[] = []
+    // One selection per nomination: an acting item is one performer, a song item is one song,
+    // any other item is the whole film with every credited person in `details`.
+    const flatSelections: { category_id: number; film_id: number; detail: string | null; details: string[] }[] = []
     for (const cat of categories) {
       const catSel = selections.get(cat.category_name)
       if (!catSel || catSel.size === 0) continue
@@ -281,6 +283,7 @@ export default function NominationsBallotForm() {
             category_id: item.category_id,
             film_id: item.film_id,
             detail: item.detail,
+            details: item.details,
           })
         }
       }
