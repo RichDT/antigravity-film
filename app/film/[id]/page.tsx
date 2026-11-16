@@ -372,7 +372,12 @@ export default async function FilmPage(props: Props) {
       }
 
       for (const role of rolesToApply) {
-        let personObj = entry.people.find((p: any) => p.id === r.person_id && p.role === role);
+        // One entry per person and role. A row without a character role (e.g. an
+        // Oscar nomination) joins the same person's entry from a row that has one
+        // (e.g. BAFTA "as Leonie Delt"), so the person isn't listed twice.
+        let personObj = entry.people.find((p: any) => p.id === r.person_id && p.role === role)
+          ?? entry.people.find((p: any) => p.id === r.person_id && (role == null || p.role == null));
+        if (personObj && personObj.role == null && role != null) personObj.role = role;
         if (!personObj) {
           personObj = { id: r.person_id, name: r.person_name, is_inverted: r.is_inverted_name, role: role, sources: [] };
           entry.people.push(personObj);
