@@ -7,6 +7,11 @@ export const revalidate = 3600;
 
 type Props = { params: Promise<{ year: string }> };
 
+// Cached like the year pages: last season is built ahead; any other year is built on its first visit, then cached
+export async function generateStaticParams() {
+  return [{ year: String(new Date().getFullYear() - 1) }];
+}
+
 export async function generateMetadata(props: Props): Promise<Metadata> {
   const { year } = await props.params;
   return { title: `The ${year} season · Rich Picks` };
