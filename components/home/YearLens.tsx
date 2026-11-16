@@ -323,7 +323,7 @@ export default function YearLens(p: Props) {
         <span className="flex items-center gap-1"><span className="w-2 h-2 bg-sky-400/70 rounded-sm" />Still open</span>
         <span className="flex items-center gap-1"><span className="w-2 h-2 bg-primary/45 rounded-sm" />Settled</span>
         <span className="flex items-center gap-1"><span className="w-2 h-2 bg-border/70 rounded-sm" />Before Rich Picks</span>
-        <span className="ml-auto pr-11">Hover to preview a year · click to keep it · ← → to step</span>
+        <span className="ml-auto pr-11">← → to step</span>
       </div>
     </div>
   );
@@ -673,6 +673,14 @@ export default function YearLens(p: Props) {
   );
   useEffect(() => { if (tab === "still" && !(open && still.length)) setTab("top"); }, [shown]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // Section heading for the timeline and the year below it, styled like "Opening this week"
+  const lensHeading = (hint: string) => (
+    <div className="mb-3">
+      <h2 className="font-serif text-xl font-semibold leading-tight">Year by year</h2>
+      <p className="text-xs text-muted-foreground mt-0.5">Every year since {asc[0].yr} · {hint}</p>
+    </div>
+  );
+
   const mobileView = (
     <div className="pb-16">
       {/* header: title, intro, search full-width below (beside the title on tablets) */}
@@ -687,8 +695,10 @@ export default function YearLens(p: Props) {
       </div>
       <div className="px-6 md:px-8 mt-7"><ThisWeekStrip films={anticipationFilms} boardAnchor="/season" boardLabel={`Full ${anticipationYear} season`} /></div>
 
+      <div className="px-6 mt-8 md:hidden">{lensHeading("swipe to change years")}</div>
+      <div className="px-8 mt-8 hidden md:block">{lensHeading("drag across the bars to change years")}</div>
       {/* timeline: sticky under the site header */}
-      <div className="sticky top-14 z-30 mt-6 px-4 md:px-8 pt-2 pb-2 bg-background/95 backdrop-blur border-y border-border/60">
+      <div className="sticky top-14 z-30 px-4 md:px-8 pt-2 pb-2 bg-background/95 backdrop-blur border-y border-border/60">
         {/* phones */}
         <div className="md:hidden">
           {swipeBars}
@@ -696,7 +706,7 @@ export default function YearLens(p: Props) {
         </div>
         {/* tablets */}
         <div className="hidden md:block">
-          <div className="flex items-center justify-between">{metricSelect}<span className="text-[10px] text-muted-foreground">Drag across the bars to move through the years</span></div>
+          <div className="flex items-center justify-between">{metricSelect}</div>
           <div className="flex items-end gap-3">
             <button onClick={() => setSelected(y => Math.max(asc[0].yr, y - 1))} aria-label="Earlier year" className="mb-5 w-9 h-9 shrink-0 rounded-full border border-border flex items-center justify-center"><ChevronLeft className="w-4 h-4" /></button>
             <div className="flex-1 min-w-0">{centuryStrip(64)}</div>
@@ -731,6 +741,7 @@ export default function YearLens(p: Props) {
         <div className="max-w-[1240px] mx-auto px-12 pt-20 pb-28">
           {header}
           <div className="mb-10"><ThisWeekStrip films={anticipationFilms} boardAnchor="/season" boardLabel={`Full ${anticipationYear} season`} /></div>
+          {lensHeading("hover to preview a year, click to keep it")}
           {scrubber}
           <motion.div key={shown} {...fade} className="mt-8">
             {stageHead}
