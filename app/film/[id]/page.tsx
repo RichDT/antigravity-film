@@ -686,7 +686,7 @@ export default async function FilmPage(props: Props) {
               </div>
             ))}
             <FilmAwardsBrowser groupedNoms={groupedNoms} />
-            <FilmCommunity filmId={filmId} richGrade={grade || null} />
+            <FilmCommunity filmId={filmId} richGrade={grade || null} filmTitle={film.title} />
             <RichReviewSection filmId={filmId} rawText={reviewText}>
               <p className="font-reading text-[17px] md:text-[18px] leading-[1.75] text-foreground/90 whitespace-pre-line">
                 {reviewInitial && <ReviewInitial letter={reviewInitial} />}

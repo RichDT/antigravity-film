@@ -1496,6 +1496,7 @@ export async function getConsiderationsGrouped(year: number): Promise<Record<str
 export interface RPPedigree {
     person_id: number;
     name: string;
+    gender: string | null;
     roles: string;
     won: boolean;
     history: { category: string; year: number; win: boolean; film: string }[];
@@ -1538,14 +1539,14 @@ export async function getAnticipationBoardFilms(year: number): Promise<Anticipat
                  SELECT json_agg(ped ORDER BY (ped->>'won')::boolean DESC, ped->>'name')
                  FROM (
                    SELECT json_build_object(
-                     'person_id', h.person_id, 'name', h.name,
+                     'person_id', h.person_id, 'name', h.name, 'gender', h.gender,
                      'roles', string_agg(DISTINCT h.crew_role, ', '),
                      'won', bool_or(h.win),
                      'history', json_agg(json_build_object('category', h.category, 'year', h.year, 'win', h.win, 'film', h.film)
                                          ORDER BY h.win DESC, h.year DESC)
                    ) AS ped
                    FROM (
-                     SELECT DISTINCT pe.person_id, pe.name, fc.crew_role, cat.name AS category, c.year, n.win, nf.title AS film
+                     SELECT DISTINCT pe.person_id, pe.name, pe.gender, fc.crew_role, cat.name AS category, c.year, n.win, nf.title AS film
                      FROM film_crew fc
                      JOIN people pe ON pe.person_id = fc.person_id
                      JOIN nomination_people np ON np.person_id = pe.person_id
@@ -1561,7 +1562,7 @@ export async function getAnticipationBoardFilms(year: number): Promise<Anticipat
                          OR (fc.crew_role = 'Writer' AND cat.name IN ('Screenplay (Original)', 'Screenplay (Adapted)'))
                          OR (fc.crew_role = 'Cinematographer' AND cat.name = 'Cinematography'))
                    ) h
-                   GROUP BY h.person_id, h.name
+                   GROUP BY h.person_id, h.name, h.gender
                  ) peds
                ), '[]'::json) AS pedigree,
                COALESCE(

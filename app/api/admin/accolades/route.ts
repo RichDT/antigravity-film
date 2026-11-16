@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
     [film_id, source.trim().toLowerCase(), label.trim()]
   );
 
-  refreshSiteData();
+  await refreshSiteData({ films: [Number(film_id)] });
   return NextResponse.json({ success: true, accolade_id: res.rows[0].accolade_id });
 }
 
@@ -36,8 +36,8 @@ export async function DELETE(request: NextRequest) {
     return NextResponse.json({ error: 'accolade_id is required' }, { status: 400 });
   }
 
-  await query(`DELETE FROM film_accolades WHERE accolade_id = $1`, [accolade_id]);
+  const del = await query(`DELETE FROM film_accolades WHERE accolade_id = $1 RETURNING film_id`, [accolade_id]);
 
-  refreshSiteData();
+  await refreshSiteData({ films: del.rows.map((r: any) => r.film_id) });
   return NextResponse.json({ success: true });
 }

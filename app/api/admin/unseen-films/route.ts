@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
     // Current and future boards get the full treatment: Wikipedia crew/cast, U.S. release date, official trailer
     const enriched = yearInt >= new Date().getFullYear() ? await enrichAnticipatedFilm(filmId) : null;
 
-    refreshSiteData();
+    await refreshSiteData({ films: [filmId], years: [yearInt] });
 
     return NextResponse.json({ success: true, filmId, enriched });
   } catch (err: any) {

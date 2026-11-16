@@ -1,4 +1,4 @@
-import { refreshSiteData } from '@/lib/refresh-site'
+import { refreshSiteData, scopeForNominations } from '@/lib/refresh-site'
 import { NextRequest, NextResponse } from 'next/server'
 import { query } from '@/lib/db'
 
@@ -71,6 +71,7 @@ export async function POST(request: NextRequest) {
 
     // Insert new nominations
     let created = 0
+    const createdIds: number[] = []
     for (const sel of selections) {
       const { category_id, film_id, detail } = sel
 
@@ -88,6 +89,7 @@ export async function POST(request: NextRequest) {
         [ceremonyId, category_id, film_id]
       )
       const nominationId = nomRes.rows[0].nomination_id
+      createdIds.push(nominationId)
 
       // For all non-song categories with a detail: link to person via nomination_people
       if (detail && catName !== 'Original Song') {
@@ -147,7 +149,7 @@ export async function POST(request: NextRequest) {
       created++
     }
 
-    refreshSiteData()
+    await refreshSiteData({ ...(await scopeForNominations(createdIds)), years: [yearInt], categories: true })
     return NextResponse.json({ success: true, created })
   } catch (err: any) {
     console.error('POST nominations error:', err)

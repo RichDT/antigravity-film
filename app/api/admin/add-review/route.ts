@@ -170,7 +170,7 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    refreshSiteData()
+    await refreshSiteData({ films: [filmId], years: [yearInt] })
     return NextResponse.json({ success: true, filmId })
   } catch (err: any) {
     console.error('Add review error:', err)

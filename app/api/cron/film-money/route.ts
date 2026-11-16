@@ -13,6 +13,6 @@ export async function GET(request: NextRequest) {
   }
   const films = await filmsDueForMoneyRefresh(50)
   const changed = await refreshFilmMoney(films)
-  if (changed.length) refreshSiteData()
+  if (changed.length) await refreshSiteData({ films: changed.map(c => c.film_id) })
   return NextResponse.json({ checked: films.length, changed })
 }

@@ -157,14 +157,21 @@ export function ReleaseLine({ film }: { film: ReleaseInfo }) {
   );
 }
 
-function PedigreeBadge({ pedigree }: { pedigree: RPPedigree[] }) {
+/** Latin forms: alumnus (a man), alumna (a woman), alumnae (only women), alumni (otherwise); "alum" when one person's gender isn't on record. */
+function alumTerm(people: { gender: string | null }[]) {
+  if (people.length === 1) return people[0].gender === 'Male' ? 'alumnus' : people[0].gender === 'Female' ? 'alumna' : 'alum';
+  return people.every(p => p.gender === 'Female') ? 'alumnae' : 'alumni';
+}
+
+/** RICH badge: tap or click for who made the film and their Rich Picks history (stays on the page). */
+export function PedigreeBadge({ pedigree, size = 'sm' }: { pedigree: RPPedigree[]; size?: 'sm' | 'md' }) {
   if (pedigree.length === 0) return null;
   const anyWin = pedigree.some(p => p.won);
   return (
     <Popover>
       <PopoverTrigger asChild>
         <button
-          className={`inline-flex items-center justify-center text-[8px] font-bold rounded px-1 h-3.5 max-sm:h-6 max-sm:px-1.5 max-sm:min-w-[2.25rem] touch-target cursor-pointer transition-all hover:scale-110 hover:shadow-sm ${
+          className={`inline-flex items-center justify-center font-bold rounded touch-target cursor-pointer transition-all hover:scale-110 hover:shadow-sm ${size === 'md' ? 'text-[10px] px-1.5 h-5' : 'text-[8px] px-1 h-3.5 max-sm:h-6 max-sm:px-1.5 max-sm:min-w-[2.25rem]'} ${
             anyWin ? 'bg-accent text-accent-foreground shadow-sm' : 'bg-secondary text-secondary-foreground border border-border'
           }`}
           title={`Made by past Rich Picks ${anyWin ? 'winners' : 'nominees'}: ${pedigree.map(p => p.name).join(', ')}`}
@@ -173,7 +180,8 @@ function PedigreeBadge({ pedigree }: { pedigree: RPPedigree[] }) {
         </button>
       </PopoverTrigger>
       <PopoverContent side="top" className="w-auto max-w-[300px] px-3 py-2 text-xs">
-        <p className="font-semibold text-foreground">Rich Picks alumni</p>
+        <p className="font-semibold text-foreground">Rich Picks {alumTerm(pedigree)}</p>
+        <p className="mt-0.5 text-muted-foreground">Made by people Rich has already {anyWin ? 'honored' : 'nominated'} in the same craft:</p>
         <ul className="mt-1 space-y-1.5">
           {pedigree.map(p => {
             const wins = p.history.filter(h => h.win);
@@ -328,7 +336,7 @@ export function AnticipationBoard({
   const [localDelta, setLocalDelta] = useState<Record<number, number>>({});
 
   async function toggleWant(film: AnticipationFilm) {
-    if (!member.userId) { router.push(`/signin?next=${encodeURIComponent(window.location.pathname)}`); return; }
+    if (!member.userId) { router.push(`/signin?${new URLSearchParams({ next: window.location.pathname, reason: 'want', film: film.title })}`); return; }
     const wanting = member.statuses[film.film_id] === 'want';
     if (await member.setStatus(film.film_id, wanting ? null : 'want')) {
       setLocalDelta(d => ({ ...d, [film.film_id]: (d[film.film_id] ?? 0) + (wanting ? -1 : 1) }));
@@ -336,7 +344,7 @@ export function AnticipationBoard({
   }
 
   async function toggleSeen(film: AnticipationFilm) {
-    if (!member.userId) { router.push(`/signin?next=${encodeURIComponent(window.location.pathname)}`); return; }
+    if (!member.userId) { router.push(`/signin?${new URLSearchParams({ next: window.location.pathname, reason: 'seen', film: film.title })}`); return; }
     const status = member.statuses[film.film_id];
     if (status === 'seen') { await member.setStatus(film.film_id, null); return; }
     // Seeing a film replaces wanting to see it, and prompts a quick review

@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
        ON CONFLICT (film_id) DO UPDATE SET review_text = EXCLUDED.review_text, updated_at = CURRENT_TIMESTAMP`,
       [id, corrected || null]
     )
-    refreshSiteData()
+    await refreshSiteData({ films: [id] })
     return NextResponse.json({ ok: true })
   }
 
@@ -47,6 +47,6 @@ export async function POST(request: NextRequest) {
     [id, grade ?? null, reviewText?.trim() ? (await formatReview(reviewText.trim(), { filmTitle: film.rows[0].title })).correctedRaw : null]
   )
 
-  refreshSiteData()
+  await refreshSiteData({ films: [id] })
   return NextResponse.json({ ok: true })
 }

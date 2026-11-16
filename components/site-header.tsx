@@ -2,13 +2,14 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Search, Film, Award, Calendar, LockOpen, LogOut, HelpCircle, MessageSquare, LogIn, UserRound } from "lucide-react";
+import { Search, Film, Award, Calendar, LockOpen, LogOut, HelpCircle, MessageSquare, LogIn, UserRound, Info } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useAuthStatus } from "@/lib/use-auth-status";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
 const navItems = [
+  { href: "/about", label: "About", icon: Info },
   { href: "/", label: "Years", icon: Calendar },
   { href: "/categories", label: "Categories", icon: Award },
   { href: "/search", label: "Search", icon: Search },
@@ -32,10 +33,10 @@ export function SiteHeader() {
         {/* Logo */}
         <Link 
           href="/" 
-          className="flex items-center gap-2 transition-colors hover:opacity-80"
+          className="flex items-center gap-2 shrink-0 transition-colors hover:opacity-80"
         >
-          <Film className="h-6 w-6 text-primary" />
-          <span className="font-serif text-xl font-bold tracking-tight">
+          <Film className="h-6 w-6 text-primary max-sm:hidden" />
+          <span className="font-serif text-xl max-sm:text-lg font-bold tracking-tight whitespace-nowrap">
             Rich Picks
           </span>
         </Link>
@@ -48,17 +49,17 @@ export function SiteHeader() {
               : pathname.startsWith(href);
             
             return (
-              <Link key={href} href={href}>
+              <Link key={href} href={href} title={label} aria-label={label}>
                 <Button
                   variant={isActive ? "secondary" : "ghost"}
                   size="sm"
                   className={cn(
-                    "gap-2 transition-all max-sm:h-11 max-sm:min-w-11",
+                    "gap-2 transition-all max-sm:h-10 max-sm:w-9 max-sm:min-w-0 max-sm:px-0 touch-target",
                     isActive && "text-primary"
                   )}
                 >
                   <Icon className="h-4 w-4" />
-                  <span className="hidden sm:inline">{label}</span>
+                  <span className="hidden lg:inline">{label}</span>
                 </Button>
               </Link>
             );
@@ -70,7 +71,7 @@ export function SiteHeader() {
             {isAdmin && (
               <Link href="/admin/add-review">
                 <Button variant={pathname.startsWith('/admin') ? 'secondary' : 'ghost'} size="sm"
-                  className="gap-2 transition-all max-sm:h-11 max-sm:min-w-11 text-accent hover:text-accent" title="Admin tools">
+                  className="gap-2 transition-all max-sm:h-10 max-sm:w-9 max-sm:min-w-0 max-sm:px-0 touch-target text-accent hover:text-accent" title="Admin tools">
                   <LockOpen className="h-3.5 w-3.5" />
                   <span className="hidden sm:inline text-xs">Admin</span>
                 </Button>
@@ -79,7 +80,7 @@ export function SiteHeader() {
             {signedIn ? (
               <Link href="/account">
                 <Button variant={pathname === '/account' ? 'secondary' : 'ghost'} size="sm"
-                  className="gap-2 transition-all max-sm:h-11 max-sm:min-w-11 text-muted-foreground hover:text-foreground" title="Your account">
+                  className="gap-2 transition-all max-sm:h-10 max-sm:w-9 max-sm:min-w-0 max-sm:px-0 touch-target text-muted-foreground hover:text-foreground" title="Your account">
                   <UserRound className="h-3.5 w-3.5" />
                   <span className="hidden sm:inline text-xs max-w-[10rem] truncate">{handle ? `@${handle}` : 'Account'}</span>
                 </Button>
@@ -87,7 +88,7 @@ export function SiteHeader() {
             ) : (
               <Link href={`/signin?next=${encodeURIComponent(pathname)}`}>
                 <Button variant={pathname === '/signin' ? 'secondary' : 'ghost'} size="sm"
-                  className="gap-2 transition-all max-sm:h-11 max-sm:min-w-11 text-muted-foreground hover:text-foreground" title="Sign in">
+                  className="gap-2 transition-all max-sm:h-10 max-sm:w-9 max-sm:min-w-0 max-sm:px-0 touch-target text-muted-foreground hover:text-foreground" title="Sign in">
                   <LogIn className="h-3.5 w-3.5" />
                   <span className="hidden sm:inline text-xs">Sign in</span>
                 </Button>

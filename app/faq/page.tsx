@@ -45,7 +45,7 @@ const FAQ_SECTIONS: FAQSection[] = [
       },
       {
         question: "How far back does the archive go?",
-        answer: "While the archive includes data reaching back to the beginning of the major awards for cinema (circa 1928), Rich Picks reaches back to 2005, the first year I started giving my own awards for the best films of the year.",
+        answer: "While the archive includes data reaching back to the beginning of the major awards for cinema in 1928, Rich Picks reaches back to 2005, the first year I started giving my own awards for the best films of the year.",
       },
       {
         question: "How often is the site updated?",
@@ -122,7 +122,7 @@ const FAQ_SECTIONS: FAQSection[] = [
       },
       {
         question: "How do I explore by category?",
-        answer: "Visit the Categories section to see all 16 award categories. Click on any category to view its complete history of winners and nominees across all years in the database.",
+        answer: "Visit the Categories section to see all 23 award categories. Click on any category to view its complete history of winners and nominees across all years in the database.",
       },
       {
         question: "Can I see a specific film's full awards history?",

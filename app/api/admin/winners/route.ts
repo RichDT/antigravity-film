@@ -1,4 +1,4 @@
-import { refreshSiteData } from '@/lib/refresh-site'
+import { refreshSiteData, scopeForNominations } from '@/lib/refresh-site'
 import { NextRequest, NextResponse } from 'next/server'
 import { query } from '@/lib/db'
 
@@ -61,7 +61,12 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    refreshSiteData()
+    // Winners changed in these categories: refresh their nominees' film and person pages, the year and category pages
+    const touched = await query(
+      `SELECT nomination_id FROM nominations WHERE ceremony_id = $1
+       AND category_id IN (SELECT category_id FROM nominations WHERE nomination_id = ANY($2::int[]))`,
+      [ceremonyId, winners])
+    await refreshSiteData({ ...(await scopeForNominations(touched.rows.map((r: any) => r.nomination_id))), years: [yearInt], categories: true })
     return NextResponse.json({ success: true, winnersSet: winners.length })
   } catch (err: any) {
     console.error('POST winners error:', err)

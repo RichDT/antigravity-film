@@ -43,7 +43,7 @@ function ago(iso: string) {
 }
 
 /** Film-page community section: Rich · community median · you, want/seen, and short takes. */
-export function FilmCommunity({ filmId, richGrade }: { filmId: number; richGrade: string | null }) {
+export function FilmCommunity({ filmId, richGrade, filmTitle }: { filmId: number; richGrade: string | null; filmTitle?: string }) {
   const router = useRouter();
   const member = useMember();
   const { isAdmin } = useAuthStatus();
@@ -62,7 +62,8 @@ export function FilmCommunity({ filmId, richGrade }: { filmId: number; richGrade
   const gradeRef = useRef<HTMLDivElement>(null);
 
   const status = member.statuses[filmId];
-  const signIn = () => router.push(`/signin?next=${encodeURIComponent(window.location.pathname)}`);
+  const signIn = (reason?: 'want' | 'seen' | 'take') =>
+    router.push(`/signin?${new URLSearchParams({ next: window.location.pathname, ...(reason ? { reason, film: filmTitle ?? '' } : {}) })}`);
 
   const loadTakes = useCallback(async () => {
     const { data } = await createClient().rpc('film_takes', { p_film_id: filmId });
@@ -79,7 +80,7 @@ export function FilmCommunity({ filmId, richGrade }: { filmId: number; richGrade
   // so stepping along the rail doesn't save every intermediate grade
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   function rate(g: string | null) {
-    if (!member.userId) return signIn();
+    if (!member.userId) return signIn('seen');
     if (isAdmin) { if (g) setRichLocal(g) } else setMyGrade(g);
     if (saveTimer.current) clearTimeout(saveTimer.current);
     saveTimer.current = setTimeout(() => { void commit(g); }, 700);
@@ -105,7 +106,7 @@ export function FilmCommunity({ filmId, richGrade }: { filmId: number; richGrade
   }
 
   async function toggle(target: 'want' | 'seen') {
-    if (!member.userId) return signIn();
+    if (!member.userId) return signIn(target);
     const marking = status !== target;
     await member.setStatus(filmId, marking ? target : null);
     setStatsKey(k => k + 1);
@@ -123,7 +124,7 @@ export function FilmCommunity({ filmId, richGrade }: { filmId: number; richGrade
   useEffect(() => { setDraft(myTake?.body ?? ''); }, [myTake?.comment_id, myTake?.body]);
   async function post(e: React.FormEvent) {
     e.preventDefault();
-    if (!member.userId) return signIn();
+    if (!member.userId) return signIn('take');
     const body = draft.trim();
     if (!body) return;
     setPosting(true); setError('');
