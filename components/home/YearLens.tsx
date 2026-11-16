@@ -3,6 +3,7 @@
 // year, still being decided; earlier years fill the same sections with what was settled.
 "use client";
 
+import { festivalPremiereLabel, type FestivalPremiere } from "@/lib/release";
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -114,11 +115,12 @@ function shortDate(iso: string, season?: number) {
 }
 
 /** One quiet line: when and where it opens, then links out to the trailer and (when live) the streaming page. */
-export function MetaLinks({ f, season }: { f: Pick<AnticipationFilm, "us_release_date" | "release_venue" | "trailer_url" | "streaming_date" | "streaming_service" | "streaming_url"> & { previews?: AnticipationFilm["previews"] }; season?: number }) {
+export function MetaLinks({ f, season }: { f: Pick<AnticipationFilm, "us_release_date" | "release_venue" | "trailer_url" | "streaming_date" | "streaming_service" | "streaming_url"> & FestivalPremiere & { previews?: AnticipationFilm["previews"] }; season?: number }) {
   const today = todaySF();
   const streamingLive = !!f.streaming_service && !!f.streaming_date && f.streaming_date <= today;
   const venue = f.release_venue === "Theaters" || !f.release_venue ? "theaters" : f.release_venue;
-  const when = !f.us_release_date ? "Date TBA"
+  // No U.S. release date: fall back to the U.S. festival premiere
+  const when = !f.us_release_date ? (festivalPremiereLabel(f, iso => shortDate(iso, season)) ?? "Date TBA")
     : f.us_release_date > today ? `${shortDate(f.us_release_date, season)} · ${venue === "theaters" ? "in theaters" : `on ${venue}`}`
     : `Out ${shortDate(f.us_release_date, season)}${streamingLive ? "" : ` · ${venue === "theaters" ? "in theaters" : `on ${venue}`}`}`;
   const preview = f.previews?.[0];

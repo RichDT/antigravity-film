@@ -1,5 +1,6 @@
 'use client';
 
+import { festivalPremiereLabel, type FestivalPremiere } from '@/lib/release';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -110,7 +111,7 @@ function sectionize(films: AnticipationFilm[]): Record<SectionKey, AnticipationF
   return out;
 }
 
-export type ReleaseInfo = Pick<AnticipationFilm, 'title' | 'us_release_date' | 'release_venue' | 'streaming_date' | 'streaming_service' | 'streaming_url'>;
+export type ReleaseInfo = Pick<AnticipationFilm, 'title' | 'us_release_date' | 'release_venue' | 'streaming_date' | 'streaming_service' | 'streaming_url'> & FestivalPremiere;
 
 export function ReleaseLine({ film }: { film: ReleaseInfo }) {
   const today = todayInSF();
@@ -124,7 +125,8 @@ export function ReleaseLine({ film }: { film: ReleaseInfo }) {
   if (streamingLive && directToStreaming) {
     text = null;
   } else if (!film.us_release_date) {
-    text = `Date TBA${film.release_venue ? ` · ${venue}` : ''}`;
+    // No U.S. release date: fall back to the U.S. festival premiere
+    text = festivalPremiereLabel(film, formatDate) ?? `Date TBA${film.release_venue ? ` · ${venue}` : ''}`;
   } else if (film.us_release_date <= today) {
     text = `Released ${formatDate(film.us_release_date)} · ${inTheaters ? 'Theaters' : venue}`;
   } else {

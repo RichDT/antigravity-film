@@ -48,7 +48,7 @@ export function SeasonPage({ year, currentYear, films }: { year: number; current
   const [show, setShow] = useState<Show>("all");
   const today = todaySF();
   const all = films;
-  const visible = all.filter(f => f.grade || f.us_release_date || f.trailer_url); // unseen films appear once there's a date or trailer
+  const visible = all.filter(f => f.grade || f.us_release_date || f.us_festival_date || f.trailer_url); // unseen films appear once there's a date (release or U.S. festival premiere) or trailer
   const list = visible.filter(f => show === "all" || (show === "seen" ? !!f.grade : !f.grade));
   const { coming, out, tba } = useMemo(() => {
     const byTitle = (a: SeasonFilm, b: SeasonFilm) => a.title.localeCompare(b.title);
@@ -88,7 +88,7 @@ export function SeasonPage({ year, currentYear, films }: { year: number; current
         <div className="grid lg:grid-cols-2 gap-x-12 gap-y-10 items-start">
           <div className="space-y-10 min-w-0">
             <Group title="Coming soon" hint="By date, then festival honors" icon={CalendarDays} films={coming} season={y} />
-            <Group title="Date to be announced" hint="Alphabetical" icon={CircleHelp} films={tba} season={y} />
+            <Group title="No U.S. release yet" hint="U.S. festival premiere where known · alphabetical" icon={CircleHelp} films={tba} season={y} />
           </div>
           <Group title="Out now" hint="In theaters or streaming · alphabetical" icon={Clapperboard} films={out} season={y} />
         </div>

@@ -23,7 +23,22 @@ const STREAMERS = ['Netflix', 'Apple TV', 'Prime Video', 'Amazon Prime Video', '
       if (!/^\d{4}$/.test(y) || !/^\d+$/.test(m) || !/^\d+$/.test(d)) break;
       if ((label && /United States/i.test(label)) || (!label && parts.length === 3)) date = `${y}-${m.padStart(2, '0')}-${d.padStart(2, '0')}`;
     }
-    if (!date) continue;
+    if (!date) {
+      // No U.S. release: fall back to the first U.S. festival premiere in the infobox (see lib/release.ts)
+      const US_FESTIVALS = ['Sundance', 'Frameline', 'Tribeca', 'Telluride', 'SXSW', 'South by Southwest', 'AFI Fest', 'New York Film Festival', 'Santa Barbara', 'Palm Springs', 'Outfest', 'Fantastic Fest', 'Mill Valley', 'Woodstock', 'DOC NYC', 'Full Frame', 'Savannah'];
+      for (let i = 0; i + 3 < parts.length; i += 4) {
+        const [y, m, d, label] = parts.slice(i, i + 4);
+        const fest = US_FESTIVALS.find(f => label && label.toLowerCase().includes(f.toLowerCase()));
+        if (fest && /^\d{4}$/.test(y) && /^\d+$/.test(m) && /^\d+$/.test(d)) {
+          const fd = `${y}-${m.padStart(2, '0')}-${d.padStart(2, '0')}`;
+          const name = fest === 'South by Southwest' ? 'SXSW' : fest;
+          await pool.query(`UPDATE films SET us_festival_date = $1, us_festival = $2, us_festival_date_exact = true WHERE film_id = $3 AND us_festival_date IS NULL`, [fd, name, r.film_id]);
+          console.log(`${r.title}: U.S. festival premiere ${fd} · ${name}`);
+          break;
+        }
+      }
+      continue;
+    }
     // Only the U.S. distributor line counts, with footnotes stripped (they mention other territories/platforms)
     const dist = extractInfoboxField(wt, 'distributor').replace(/\{\{efn[\s\S]*?\}\}/gi, '');
     const usLine = dist.split(/\n|\*/).find(l => /United States|^[^()]*$/.test(l.trim()) && l.trim()) ?? dist;
