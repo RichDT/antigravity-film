@@ -1,4 +1,5 @@
 import { queryCached as query, query as queryUncached } from './db';
+import { FESTIVAL_COLUMNS, type FestivalPremiere } from './release';
 
 // TYPES
 export type AwardStatus = "won" | "nominated" | "won_slant" | "nominated_slant" | "considered" | "considered_slant" | null;
@@ -1502,7 +1503,7 @@ export interface RPPedigree {
     history: { category: string; year: number; win: boolean; film: string }[];
 }
 
-export interface AnticipationFilm {
+export interface AnticipationFilm extends FestivalPremiere {
     film_id: number;
     title: string;
     release_year: number;
@@ -1525,7 +1526,7 @@ export async function getAnticipationBoardFilms(year: number): Promise<Anticipat
         res = await queryUncached(
             `SELECT
                f.film_id, f.title, f.release_year, f.trailer_url,
-               to_char(f.us_release_date, 'YYYY-MM-DD') AS us_release_date, f.release_venue,
+               to_char(f.us_release_date, 'YYYY-MM-DD') AS us_release_date, f.release_venue, ${FESTIVAL_COLUMNS},
                to_char(f.streaming_date, 'YYYY-MM-DD') AS streaming_date, f.streaming_service, f.streaming_url,
                NULLIF((SELECT r.grade FROM reviews r WHERE r.film_id = f.film_id), '') AS rich_grade,
                COALESCE((

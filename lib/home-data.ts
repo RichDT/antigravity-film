@@ -1,5 +1,6 @@
 // Data for the homepage year lens and the season page.
 import { query } from "@/lib/db";
+import { FESTIVAL_COLUMNS, type FestivalPremiere } from "@/lib/release";
 import { filmsData } from "@/lib/films-data";
 import { getAllRichPicksStats, getFilmIdMap, getDBFilmsForDisplay, getTopFilmPerYear, getAnticipationBoardFilms, getConsiderationCounts } from "@/lib/awards";
 
@@ -70,7 +71,7 @@ export async function loadLens() {
   return { ...base, peers: peers.rows as PeerWin[], preTop: preTop.rows as PreTop[], rpNoms: rpNoms.rows as RpNominee[], prevAnticipation };
 }
 
-export interface SeasonFilm {
+export interface SeasonFilm extends FestivalPremiere {
   film_id: number; title: string; us_release_date: string | null; release_venue: string | null; trailer_url: string | null;
   streaming_date: string | null; streaming_service: string | null; streaming_url: string | null; grade: string | null;
   accolades: { accolade_id: number; source: string; label: string }[];
@@ -80,7 +81,7 @@ export interface SeasonFilm {
 /** Every film of a season: those Rich is waiting to see and those he has graded. */
 export async function loadSeason(year: number): Promise<SeasonFilm[]> {
   const res = await query(`
-    select f.film_id, f.title, to_char(f.us_release_date,'YYYY-MM-DD') us_release_date, f.release_venue, f.trailer_url,
+    select f.film_id, f.title, to_char(f.us_release_date,'YYYY-MM-DD') us_release_date, f.release_venue, ${FESTIVAL_COLUMNS}, f.trailer_url,
       to_char(f.streaming_date,'YYYY-MM-DD') streaming_date, f.streaming_service, f.streaming_url,
       nullif(r.grade,'') grade,
       coalesce((select json_agg(json_build_object('accolade_id',a.accolade_id,'source',a.source,'label',a.label) order by a.created_at)

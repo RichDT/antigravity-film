@@ -1,4 +1,5 @@
 import { queryCached as query } from './db';
+import { FESTIVAL_COLUMNS, type FestivalPremiere } from './release';
 
 export interface UnseenFilm {
   film_id: number;
@@ -12,7 +13,7 @@ export interface UnseenFilm {
   details?: UnseenFilmDetails;
 }
 
-export interface UnseenFilmDetails {
+export interface UnseenFilmDetails extends FestivalPremiere {
   trailer_url: string | null;
   us_release_date: string | null;
   release_venue: string | null;
@@ -105,7 +106,7 @@ export async function getUnseenFilmsForYear(year: number): Promise<UnseenFilm[]>
   if (year >= DETAILED_UNSEEN_FROM_YEAR && films.length > 0) {
     const det = await query(
       `SELECT f.film_id, f.trailer_url,
-              to_char(f.us_release_date, 'YYYY-MM-DD') AS us_release_date, f.release_venue,
+              to_char(f.us_release_date, 'YYYY-MM-DD') AS us_release_date, f.release_venue, ${FESTIVAL_COLUMNS},
               to_char(f.streaming_date, 'YYYY-MM-DD') AS streaming_date, f.streaming_service, f.streaming_url,
               COALESCE(json_agg(json_build_object('accolade_id', a.accolade_id, 'source', a.source, 'label', a.label)
                                 ORDER BY a.created_at) FILTER (WHERE a.accolade_id IS NOT NULL), '[]'::json) AS accolades

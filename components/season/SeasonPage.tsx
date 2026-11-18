@@ -12,7 +12,7 @@ import { MemberActionsProvider, FilmStatusIcons } from "@/components/community/F
 const todaySF = () => new Intl.DateTimeFormat("en-CA", { timeZone: "America/Los_Angeles" }).format(new Date());
 type Show = "all" | "seen" | "unseen";
 
-function Row({ f }: { f: SeasonFilm }) {
+function Row({ f, season }: { f: SeasonFilm; season: number }) {
   return (
     <li className="group flex items-start gap-3 py-2.5 min-w-0">
       {f.grade ? <GradeHex grade={f.grade} /> : <span className="w-7 h-8 shrink-0 flex items-center justify-center"><Eye className="w-4 h-4 text-sky-400" /></span>}
@@ -21,14 +21,14 @@ function Row({ f }: { f: SeasonFilm }) {
           <Link href={`/film/${f.film_id}`} className="text-sm font-medium hover:text-accent">{f.title}</Link>
           {Object.entries(groupBySource(f.accolades)).map(([src, acc]) => <FestivalBadge key={src} source={src} accolades={acc} />)}
         </div>
-        <MetaLinks f={f} />
+        <MetaLinks f={f} season={season} />
       </div>
       <FilmStatusIcons filmId={f.film_id} title={f.title} quiet className="-mr-1" />
     </li>
   );
 }
 
-function Group({ title, hint, icon: Icon, films }: { title: string; hint: string; icon: React.ElementType; films: SeasonFilm[] }) {
+function Group({ title, hint, icon: Icon, films, season }: { title: string; hint: string; icon: React.ElementType; films: SeasonFilm[]; season: number }) {
   if (!films.length) return null;
   return (
     <section className="min-w-0">
@@ -38,7 +38,7 @@ function Group({ title, hint, icon: Icon, films }: { title: string; hint: string
         <span className="text-xs text-muted-foreground">{films.length}</span>
         <span className="ml-auto text-[11px] text-muted-foreground/80">{hint}</span>
       </div>
-      <ul className="divide-y divide-border/40">{films.map(f => <Row key={f.film_id} f={f} />)}</ul>
+      <ul className="divide-y divide-border/40">{films.map(f => <Row key={f.film_id} f={f} season={season} />)}</ul>
     </section>
   );
 }
@@ -48,7 +48,7 @@ export function SeasonPage({ year, currentYear, films }: { year: number; current
   const [show, setShow] = useState<Show>("all");
   const today = todaySF();
   const all = films;
-  const visible = all.filter(f => f.grade || f.us_release_date || f.trailer_url); // unseen films appear once there's a date or trailer
+  const visible = all.filter(f => f.grade || f.us_release_date || f.us_festival_date || f.trailer_url); // unseen films appear once there's a date (release or U.S. festival premiere) or trailer
   const list = visible.filter(f => show === "all" || (show === "seen" ? !!f.grade : !f.grade));
   const { coming, out, tba } = useMemo(() => {
     const byTitle = (a: SeasonFilm, b: SeasonFilm) => a.title.localeCompare(b.title);
@@ -87,10 +87,10 @@ export function SeasonPage({ year, currentYear, films }: { year: number; current
         </div>
         <div className="grid lg:grid-cols-2 gap-x-12 gap-y-10 items-start">
           <div className="space-y-10 min-w-0">
-            <Group title="Coming soon" hint="By date, then festival honors" icon={CalendarDays} films={coming} />
-            <Group title="Date to be announced" hint="Alphabetical" icon={CircleHelp} films={tba} />
+            <Group title="Coming soon" hint="By date, then festival honors" icon={CalendarDays} films={coming} season={y} />
+            <Group title="No U.S. release yet" hint="U.S. festival premiere where known · alphabetical" icon={CircleHelp} films={tba} season={y} />
           </div>
-          <Group title="Out now" hint="In theaters or streaming · alphabetical" icon={Clapperboard} films={out} />
+          <Group title="Out now" hint="In theaters or streaming · alphabetical" icon={Clapperboard} films={out} season={y} />
         </div>
         <p className="mt-12 text-[11px] text-muted-foreground">Hover a film for Want to see and I’ve seen it. Marking a film seen asks for a quick grade and take.</p>
       </div>
