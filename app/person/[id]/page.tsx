@@ -6,7 +6,7 @@ import {
   Camera, Music, Scissors, Sparkles, PenTool, Palette,
   Globe, FileText, Wand2, Brush, Volume2, ExternalLink, MapPin, GraduationCap, CalendarDays,
   Film, FileVideoCamera, UserStar, BookOpen, Theater, Shirt, MirrorRound,
-  Piano, MicVocal, Headphones, SlidersHorizontal
+  Piano, MicVocal, Headphones, SlidersHorizontal, Medal
 } from "lucide-react";
 import { queryCached as query } from "@/lib/db";
 import {
@@ -20,6 +20,7 @@ import {
   buildAwardContextsFromBatch,
   getRPCategoryMappingsBatch,
   getReverseCanonicalMap,
+  getPersonHonors,
   OtherAwards,
   AwardPopoverContext,
   AwardPopoverNominee,
@@ -102,8 +103,8 @@ export default async function PersonPage(props: Props) {
 
   const ALL_RP_CATEGORIES = Object.keys(CATEGORY_GROUPS_MAPPING);
 
-  // Run all three independent queries in parallel.
-  const [personRes, rawNomRes, reverseMap] = await Promise.all([
+  // Run all independent queries in parallel.
+  const [personRes, rawNomRes, reverseMap, honors] = await Promise.all([
     query(`
       SELECT person_id as id, name, nickname, is_inverted_name,
              birth_date, death_date, gender,
@@ -154,6 +155,8 @@ export default async function PersonPage(props: Props) {
       ORDER BY c.year DESC, n.win DESC, f.title ASC
     `, [personId]),
     getReverseCanonicalMap(),
+    // Person-only honors (film_id NULL) — shown in their own sidebar section, never in Awards History
+    getPersonHonors(personId),
   ]);
 
   if (personRes.rowCount === 0) return notFound();
@@ -521,6 +524,27 @@ export default async function PersonPage(props: Props) {
                   </div>
                 </div>
               ) : null}
+
+              {/* Honors — person-only awards with no film (Cecil B. DeMille, Rising Star, …) */}
+              {honors.length > 0 && (
+                <div>
+                  <h2 className="font-serif text-sm font-bold text-muted-foreground uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                    <Medal className="w-3.5 h-3.5" />
+                    Honors
+                  </h2>
+                  <div className="bg-card border border-border rounded-lg divide-y divide-border/50">
+                    {honors.map(h => (
+                      <div key={h.nominationId} className="px-3 py-2.5">
+                        <div className="text-sm text-foreground leading-snug">
+                          {h.categoryName}
+                          {!h.win && <span className="text-muted-foreground"> (nominee)</span>}
+                        </div>
+                        <div className="text-xs text-muted-foreground mt-0.5">{h.orgDisplayName} · {h.year}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               {/* Awards stats */}
               <div>

@@ -44,6 +44,7 @@ import { filmsData as filmsRawData } from "@/lib/films-data";
 import {
   getCategoriesForYear,
   getPreRPCategoriesForYear,
+  getHonorsForYear,
   Category,
   Nominee,
   OtherAwards,
@@ -774,7 +775,11 @@ export default async function YearPage(props: Props) {
   }
 
   // 3) Load category data — for pre-RP years derive from external org nominations
-  const categories = await (isPreRPYear ? getPreRPCategoriesForYear(year) : getCategoriesForYear(year));
+  const [categories, yearHonors] = await Promise.all([
+    isPreRPYear ? getPreRPCategoriesForYear(year) : getCategoriesForYear(year),
+    // Person-only honors (film_id NULL): shown only as a quiet footnote, never in categories or the Top 10
+    getHonorsForYear(year),
+  ]);
 
   const categoriesByGroup = CATEGORY_GROUPS.map(group => ({
     ...group,
@@ -925,6 +930,22 @@ export default async function YearPage(props: Props) {
                     );
                   })
                 )}
+              </div>
+            )}
+            {!isPreSeason && yearHonors.length > 0 && (
+              <div className="mt-6 space-y-1 text-xs text-muted-foreground">
+                {yearHonors.map(g => (
+                  <p key={g.orgShortName}>
+                    {g.orgDisplayName} also honored:{" "}
+                    {g.honorees.map((h, i) => (
+                      <React.Fragment key={`${h.personId}-${h.categoryName}`}>
+                        {i > 0 && "; "}
+                        <Link href={`/person/${h.personId}`} className="text-foreground/80 hover:text-accent transition-colors">{h.name}</Link>
+                        {" "}({h.categoryName})
+                      </React.Fragment>
+                    ))}
+                  </p>
+                ))}
               </div>
             )}
           </div>

@@ -1681,3 +1681,76 @@ export async function getDBFilmsForDisplay(): Promise<Array<{ release_year: numb
     );
     return res.rows;
 }
+
+// ─── Honors (person-only awards) ─────────────────────────────────────────────
+// Honorary awards such as the Cecil B. DeMille Award, the Carol Burnett Award,
+// the Henrietta (World Film Favorite) or BAFTA Rising Star are stored as
+// nominations with film_id = NULL, in categories flagged categories.is_honorary.
+// Every film-centric query (rankings, Top 10s, badges, timeline stats) inner-joins
+// films, so these rows never reach them. They surface only through the two
+// helpers below: the person-page Honors section and the year-page footnote.
+
+export interface PersonHonor {
+    nominationId: number;
+    year: number;
+    categoryName: string;
+    orgShortName: string;
+    orgDisplayName: string;
+    win: boolean;
+}
+
+export async function getPersonHonors(personId: number): Promise<PersonHonor[]> {
+    const res = await query(`
+        SELECT n.nomination_id, c.year, cat.name AS category_name, o.short_name, n.win
+        FROM nominations n
+        JOIN nomination_people np USING (nomination_id)
+        JOIN ceremonies c USING (ceremony_id)
+        JOIN categories cat USING (category_id)
+        JOIN awards a ON a.award_id = c.award_id
+        JOIN organizations o ON o.organization_id = a.organization_id
+        WHERE np.person_id = $1 AND n.film_id IS NULL
+        ORDER BY c.year DESC, cat.name
+    `, [personId]);
+    return res.rows.map((r: any) => ({
+        nominationId: r.nomination_id,
+        year: r.year,
+        categoryName: r.category_name,
+        orgShortName: r.short_name,
+        orgDisplayName: ORG_DISPLAY_NAMES[r.short_name] || r.short_name,
+        win: r.win === true,
+    }));
+}
+
+export interface YearHonorsGroup {
+    orgShortName: string;
+    orgDisplayName: string;
+    honorees: Array<{ personId: number; name: string; categoryName: string }>;
+}
+
+/** Winners of person-only honors for a year, grouped by organization (for the year-page footnote). */
+export async function getHonorsForYear(year: number): Promise<YearHonorsGroup[]> {
+    const res = await query(`
+        SELECT o.short_name, cat.name AS category_name, p.person_id, p.name
+        FROM nominations n
+        JOIN nomination_people np USING (nomination_id)
+        JOIN people p ON p.person_id = np.person_id
+        JOIN ceremonies c USING (ceremony_id)
+        JOIN categories cat USING (category_id)
+        JOIN awards a ON a.award_id = c.award_id
+        JOIN organizations o ON o.organization_id = a.organization_id
+        WHERE c.year = $1 AND n.film_id IS NULL AND n.win = true
+        ORDER BY o.short_name, cat.name, p.name
+    `, [year]);
+    const groups = new Map<string, YearHonorsGroup>();
+    for (const r of res.rows) {
+        if (!groups.has(r.short_name)) {
+            groups.set(r.short_name, {
+                orgShortName: r.short_name,
+                orgDisplayName: ORG_DISPLAY_NAMES[r.short_name] || r.short_name,
+                honorees: [],
+            });
+        }
+        groups.get(r.short_name)!.honorees.push({ personId: r.person_id, name: r.name, categoryName: r.category_name });
+    }
+    return Array.from(groups.values());
+}
