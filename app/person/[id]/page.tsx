@@ -380,6 +380,7 @@ export default async function PersonPage(props: Props) {
     const l = categoryName.toLowerCase();
     if (l.includes('actor') || l.includes('actress') || l.includes('performance') ||
         l.includes('cast') || l.includes('rising star') || l.includes('ensemble')) return 'acting';
+    if (l.includes('art direction')) return 'visual';
     if (l.includes('direct')) return 'directing';
     if (l.includes('editing') || l.includes('edited')) return 'directing';
     if (l.includes('screenplay') || l.includes('writing') || l.includes('script')) return 'writing';

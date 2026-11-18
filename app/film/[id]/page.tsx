@@ -10,7 +10,7 @@ import {
   getAllRichPicksStats,
   getFilmIdsForStaticBuild,
   getGradeValue,
-  getExternalAwardsForYear,
+  getExternalAwardsForYears,
   computeBadgesFromBatch,
   buildAwardContextsFromBatch,
   getRPCategoryMappings,
@@ -451,8 +451,11 @@ export default async function FilmPage(props: Props) {
   }).filter(g => g.noms.length > 0);
 
   const distinctCatNames = [...new Set(nominations.map((n: any) => n.category_name as string).filter((n: string) => ALL_RP_CATEGORIES.includes(n)))];
-  const [externalBatch, catMappingEntries] = await Promise.all([
-    getExternalAwardsForYear(film.release_year),
+  // Load other orgs' awards for every year this film was honored (not just its release year),
+  // so e.g. a 1955 BAFTA for a film released in the U.S. in 1956 finds its own year's rows.
+  const honoredYears = [...new Set<number>([film.release_year, ...rawAllNominations.map((r: any) => r.year)].filter((y): y is number => y != null))];
+  const [externalBatchAll, catMappingEntries] = await Promise.all([
+    getExternalAwardsForYears(honoredYears),
     Promise.all(distinctCatNames.map(async name => [name, await getRPCategoryMappings(name)] as const)),
   ]);
   const catMappings = new Map<string, Map<number, 'exact' | 'slant'>>(catMappingEntries);
@@ -471,6 +474,9 @@ export default async function FilmPage(props: Props) {
       }
     }
     const rpMappings = catMappings.get(n.category_name) ?? new Map();
+    // Each card only sees its own year's awards; otherwise a 1956 Oscar nomination would
+    // stamp an Oscar chip on the same person's 1955 BAFTA card.
+    const externalBatch = externalBatchAll.filter(row => row.year === n.year);
     const badges = computeBadgesFromBatch(externalBatch, [film.id], peopleIds, n.category_name, rpMappings, n.song_title, peopleNames);
     const awardContexts = buildAwardContextsFromBatch(externalBatch, n.category_name, rpMappings);
 
@@ -497,7 +503,8 @@ export default async function FilmPage(props: Props) {
     badgeMap.set(n.nomination_id, { badges, awardContexts, peopleIds });
   }
 
-  let externalWins = 0;
+  // Counted straight from this film's own nominations (one per nomination, any year),
+  // not from card badges, so nothing is double-counted or missed.
   const ceremonyStats = {
     oscar: { w: 0, n: 0 },
     globe: { w: 0, n: 0 },
@@ -505,23 +512,22 @@ export default async function FilmPage(props: Props) {
     dga: { w: 0, n: 0 },
     bafta: { w: 0, n: 0 },
     spirit: { w: 0, n: 0 },
+    nbr: { w: 0, n: 0 },
   };
-
-  for (const n of nominations) {
-    const entry = badgeMap.get(n.nomination_id);
-    if (!entry) continue;
-    const { badges } = entry;
-    let wonExternal = false;
-    for (const key of ['oscar', 'globe', 'sag', 'dga', 'bafta', 'spirit'] as const) {
-      if (badges[key]) {
-        ceremonyStats[key].n += 1;
-        if (badges[key] === "won") {
-          ceremonyStats[key].w += 1;
-          wonExternal = true;
-        }
-      }
+  const STAT_ORGS: Record<string, keyof typeof ceremonyStats> = {
+    Oscars: 'oscar', Globes: 'globe', SAG: 'sag', DGA: 'dga', BAFTA: 'bafta', Spirit: 'spirit', NBR: 'nbr',
+  };
+  const countedNominations = new Set<number>();
+  let externalWins = 0;
+  for (const r of rawAllNominations) {
+    const key = STAT_ORGS[r.org_name];
+    if (!key || countedNominations.has(r.nomination_id)) continue;
+    countedNominations.add(r.nomination_id);
+    ceremonyStats[key].n += 1;
+    if (r.win) {
+      ceremonyStats[key].w += 1;
+      if (key !== 'nbr') externalWins++;
     }
-    if (wonExternal) externalWins++;
   }
 
   // Build RP popover contexts for the R hex badge on each nomination card.
@@ -762,7 +768,7 @@ export default async function FilmPage(props: Props) {
                 <div className="text-[10px] text-muted-foreground uppercase tracking-wider mb-2 font-semibold">By Ceremony</div>
                 {Object.entries(ceremonyStats).map(([key, stats]) => {
                   if (stats.n === 0) return null;
-                  const labels: Record<string, string> = { oscar: "Oscars", globe: "Golden Globes", sag: "SAG Awards", dga: "DGA Awards", bafta: "BAFTAs", spirit: "Spirit Awards" };
+                  const labels: Record<string, string> = { oscar: "Oscars", globe: "Golden Globes", sag: "SAG Awards", dga: "DGA Awards", bafta: "BAFTAs", spirit: "Spirit Awards", nbr: "National Board of Review" };
                   return (
                     <div key={key} className="flex items-center justify-between py-1.5 border-b border-border/30 last:border-0">
                       <span className="text-xs text-muted-foreground">{labels[key]}</span>
